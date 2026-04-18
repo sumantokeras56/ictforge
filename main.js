@@ -136,10 +136,8 @@ function setInstrument(key, btn) {
   else if (key === 'ym') { setPlaceholder('entryPrice','39500'); setPlaceholder('slPrice','39400'); setPlaceholder('tpPrice','39700'); }
   else { setPlaceholder('entryPrice','1.08500'); setPlaceholder('slPrice','1.08300'); setPlaceholder('tpPrice','1.08900'); }
   
-  const chips = document.getElementById('instrChips');
-  if (chips) chips.innerHTML = inst.chips.map(c => `<span class="pill pill-gold">${escapeHtml(c)}</span>`).join('');
-  const instrInfo = document.getElementById('instrInfo');
-  if (instrInfo) instrInfo.classList.add('show');
+if (chips) chips.innerHTML = inst.chips.map(c => `<span class="pill pill-gold">${escapeHtml(c)}</span>`).join('');(c => `<span class="pill pill-gold">${escapeHtml(c)}</span>`).join('');
+  document.getElementById('instrInfo').classList.add('show');
   clearCalculator(); // V13: langsung di sini, tidak perlu override window.setInstrument
 }
 
@@ -1565,20 +1563,23 @@ function updateCOTStatusPanel(ny) {
 
 
 function clearCalculator() {
-  document.getElementById('entryPrice').value = '';
-  document.getElementById('slPrice').value = '';
-  document.getElementById('tpPrice').value = '';
-  document.getElementById('calcResult').classList.remove('show');
-  document.getElementById('riskAmount').textContent = '—';
-  document.getElementById('slPips').textContent = '—';
-  document.getElementById('tpPips').textContent = '—';
-  document.getElementById('lotSize').textContent = '—';
-  document.getElementById('potProfit').textContent = '—';
-  document.getElementById('rrRatio').textContent = '—';
-  document.getElementById('rrBar').style.width = '0%';
+  const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+  const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  setVal('entryPrice', '');
+  setVal('slPrice', '');
+  setVal('tpPrice', '');
+  const calcResult = document.getElementById('calcResult');
+  if (calcResult) calcResult.classList.remove('show');
+  setText('riskAmount', '—');
+  setText('slPips', '—');
+  setText('tpPips', '—');
+  setText('lotSize', '—');
+  setText('potProfit', '—');
+  setText('rrRatio', '—');
+  const rrBar = document.getElementById('rrBar');
+  if (rrBar) rrBar.style.width = '0%';
   const verdict = document.getElementById('rrVerdict');
-  verdict.className = 'rr-verdict';
-  verdict.textContent = '';
+  if (verdict) { verdict.className = 'rr-verdict'; verdict.textContent = ''; }
 }
 
 // V13: setInstrument sudah include clearCalculator langsung (tidak perlu override)
