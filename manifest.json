@@ -2,8 +2,8 @@
   "name": "ICT Forge",
   "short_name": "ICT Forge",
   "description": "ICT Forge — Platform trading Smart Money Concepts.",
-  "start_url": "/ictmasterclass/",
-  "scope": "/ictmasterclass/",
+  "start_url": "/ictforge/",
+  "scope": "/ictforge/",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "background_color": "#0A0A0B",
@@ -36,7 +36,7 @@
       "name": "Kalkulator RR",
       "short_name": "Kalkulator",
       "description": "Position size & risk kalkulator",
-      "url": "/ictmasterclass/?shortcut=rr-calc"
+      "url": "/ictforge/?shortcut=rr-calc"
     }
   ]
 }

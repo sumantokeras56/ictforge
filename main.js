@@ -118,13 +118,16 @@ function setInstrument(key, btn) {
   document.querySelectorAll('.inst-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
   const inst = instruments[key];
-  document.getElementById('instrName').textContent = inst.name;
-  document.getElementById('instrDesc').textContent = inst.desc;
-  document.getElementById('pipValue').value = inst.pipValueDefault;
-  document.getElementById('pipValLabel').textContent = inst.pipLabel;
-  document.getElementById('slLabel').textContent = inst.slLabel;
-  document.getElementById('tpLabel').textContent = inst.tpLabel;
-  document.getElementById('sizeLabel').textContent = inst.sizeLabel;
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+  
+  set('instrName', inst.name);
+  set('instrDesc', inst.desc);
+  setVal('pipValue', inst.pipValueDefault);
+  set('pipValLabel', inst.pipLabel);
+  set('slLabel', inst.slLabel);
+  set('tpLabel', inst.tpLabel);
+  set('sizeLabel', inst.sizeLabel);
   // Update placeholder hints
   if (key === 'nq') { document.getElementById('entryPrice').placeholder = '17000.00'; document.getElementById('slPrice').placeholder = '16980.00'; document.getElementById('tpPrice').placeholder = '17040.00'; }
   else if (key === 'es') { document.getElementById('entryPrice').placeholder = '5300.00'; document.getElementById('slPrice').placeholder = '5290.00'; document.getElementById('tpPrice').placeholder = '5320.00'; }
