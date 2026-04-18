@@ -1,0 +1,282 @@
+
+   <!-- ════════════════════════════════════════════
+       PINESCRIPT TOOLS (ICT Forge v1.0)
+  ════════════════════════════════════════════ -->
+  <div class="section" id="tab-pinescript">
+    <div class="section-header">
+     <div class="section-number">
+      ⚡
+     </div>
+     <div class="section-title-wrap">
+      <h2>
+       PineScript Tools
+       <span class="v14-badge" style="background:rgba(201,168,76,0.15);color:var(--gold);border-color:var(--gold-dim);">
+        v1.0
+       </span>
+      </h2>
+      <p>
+       Modifikasi · Merge · Convert ke v6 (Offline) · AI Error Fixer (Claude API)
+      </p>
+     </div>
+    </div>
+    <!-- Mode selector -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:24px;margin-bottom:24px;">
+     <button class="ps-mode-btn ps-mode-active" id="psBtn-modify" onclick="setPSMode('modify',this)">
+      🔧 Modifikasi &amp; Perbaiki
+     </button>
+     <button class="ps-mode-btn" id="psBtn-merge" onclick="setPSMode('merge',this)">
+      🔗 Merge Engine
+     </button>
+     <button class="ps-mode-btn" id="psBtn-convert" onclick="setPSMode('convert',this)">
+      🔄 Convert v4/v5 → v6
+     </button>
+     <button class="ps-mode-btn" id="psBtn-aifixer" onclick="setPSMode('aifixer',this)" style="border-color:rgba(155,89,182,0.5);color:var(--purple);">
+      🤖 AI Error Fixer
+     </button>
+    </div>
+    <!-- Loading overlay -->
+    <div id="ps-loading" style="display:none;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:40px 20px;margin-bottom:24px;">
+     <div style="display:flex;flex-direction:column;align-items:center;gap:18px;">
+      <div style="position:relative;width:52px;height:52px;">
+       <div style="position:absolute;inset:0;border-radius:50%;border:2px solid rgba(201,168,76,0.15);animation:pulse 1.5s infinite;">
+       </div>
+       <div style="position:absolute;inset:4px;border-radius:50%;border:3px solid transparent;border-top-color:var(--gold);border-right-color:var(--gold-dim);animation:spin 0.9s linear infinite;">
+       </div>
+       <div style="position:absolute;inset:14px;border-radius:50%;background:rgba(201,168,76,0.1);display:flex;align-items:center;justify-content:center;font-size:14px;">
+        ⚡
+       </div>
+      </div>
+      <div style="text-align:center;">
+       <div id="ps-loading-text" style="font-family:'DM Mono',monospace;font-size:12px;color:var(--gold);letter-spacing:2px;margin-bottom:6px;">
+        MEMPROSES SCRIPT...
+       </div>
+       <div id="ps-loading-sub" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;">
+        PineScript v6 Engine
+       </div>
+      </div>
+      <div style="width:240px;height:3px;background:var(--dark4);border-radius:2px;overflow:hidden;">
+       <div id="ps-progress-bar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:2px;transition:width 0.3s;">
+       </div>
+      </div>
+     </div>
+    </div>
+    <!-- ── PANEL 1: MODIFY ── -->
+    <div class="ps-panel" id="ps-panel-modify">
+     <div style="background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:24px;margin-bottom:20px;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--gold-dim);text-transform:uppercase;margin-bottom:16px;">
+       🔧 MODIFIKASI &amp; PERBAIKI SCRIPT (OFFLINE)
+      </div>
+      <div style="margin-bottom:14px;">
+       <label style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">
+        Kode PineScript
+       </label>
+       <textarea id="ps-modify-code" placeholder="//@version=6
+indicator('My Script')
+
+// Paste kode PineScript di sini..." rows="12" style="width:100%;background:var(--dark4);border:1px solid var(--border);border-radius:4px;padding:12px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;resize:vertical;outline:none;line-height:1.6;"></textarea>
+      </div>
+      <div style="margin-bottom:14px;">
+       <label style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">
+        Instruksi Perubahan
+       </label>
+       <textarea id="ps-modify-instr" placeholder="Contoh: Upgrade ke v6, ganti study() dengan indicator(), tambahkan alert saat EMA cross..." rows="3" style="width:100%;background:var(--dark4);border:1px solid var(--border);border-radius:4px;padding:10px 12px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;resize:vertical;outline:none;"></textarea>
+      </div>
+      <button class="calc-btn" onclick="runPSModify()">
+       ⚡ Jalankan Modifikasi (Offline)
+      </button>
+      <div id="ps-modify-out" style="display:none;margin-top:20px;">
+      </div>
+     </div>
+    </div>
+    <!-- ── PANEL 2: MERGE ── -->
+    <div class="ps-panel" id="ps-panel-merge" style="display:none;">
+     <div style="background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:24px;margin-bottom:20px;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--gold-dim);text-transform:uppercase;margin-bottom:16px;">
+       🔗 MERGE ENGINE (OFFLINE)
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;">
+       <div>
+        <label style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">
+         Script 1
+        </label>
+        <textarea id="ps-merge-a" placeholder="//@version=6
+// Script pertama..." rows="12" style="width:100%;background:var(--dark4);border:1px solid var(--border);border-radius:4px;padding:10px;color:var(--text);font-family:'DM Mono',monospace;font-size:11px;resize:vertical;outline:none;"></textarea>
+       </div>
+       <div>
+        <label style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">
+         Script 2
+        </label>
+        <textarea id="ps-merge-b" placeholder="//@version=6
+// Script kedua..." rows="12" style="width:100%;background:var(--dark4);border:1px solid var(--border);border-radius:4px;padding:10px;color:var(--text);font-family:'DM Mono',monospace;font-size:11px;resize:vertical;outline:none;"></textarea>
+       </div>
+      </div>
+      <button class="calc-btn" onclick="runPSMerge()">
+       🔗 Merge Scripts (Offline)
+      </button>
+      <div id="ps-merge-out" style="display:none;margin-top:20px;">
+      </div>
+     </div>
+    </div>
+    <!-- ── PANEL 3: CONVERT ── -->
+    <div class="ps-panel" id="ps-panel-convert" style="display:none;">
+     <div style="background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:24px;margin-bottom:20px;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--gold-dim);text-transform:uppercase;margin-bottom:16px;">
+       🔄 CONVERT v4/v5 → v6 (OFFLINE)
+      </div>
+      <div style="margin-bottom:14px;">
+       <label style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">
+        Kode PineScript v4/v5
+       </label>
+       <textarea id="ps-convert-code" placeholder="//@version=5
+study('My Old Script')
+
+// Paste kode v4/v5 di sini..." rows="14" style="width:100%;background:var(--dark4);border:1px solid var(--border);border-radius:4px;padding:12px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;resize:vertical;outline:none;line-height:1.6;"></textarea>
+      </div>
+      <button class="calc-btn" onclick="runPSConvert()">
+       🔄 Convert ke v6 (Offline)
+      </button>
+      <div id="ps-convert-out" style="display:none;margin-top:20px;">
+      </div>
+     </div>
+    </div>
+    <!-- ── PANEL 4: AI ERROR FIXER ── -->
+    <div class="ps-panel" id="ps-panel-aifixer" style="display:none;">
+     <div style="background:var(--dark3);border:1px solid rgba(155,89,182,0.35);border-radius:8px;padding:24px;margin-bottom:20px;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+       <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--purple);">
+        🤖 AI Error Fixer
+       </div>
+       <span style="font-family:'DM Mono',monospace;font-size:10px;padding:3px 8px;border-radius:3px;background:rgba(155,89,182,0.15);color:var(--purple);border:1px solid rgba(155,89,182,0.4);">
+        CLAUDE API
+       </span>
+      </div>
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:20px;">
+       Tempelkan kode PineScript yang error. Claude AI akan menganalisis dan memberikan kode yang sudah diperbaiki dengan penjelasan.
+      </div>
+      <!-- API Key input -->
+      <div style="margin-bottom:14px;">
+       <label style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">
+        Claude API Key
+        <span style="color:var(--red);">
+         *WAJIB
+        </span>
+       </label>
+       <div style="display:flex;gap:8px;align-items:center;">
+        <input id="ps-ai-apikey" oninput="syncAPIKey(this.value)" placeholder="sk-ant-api03-..." style="flex:1;background:var(--dark4);border:1px solid var(--border);border-radius:4px;padding:10px 12px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;outline:none;" type="password"/>
+        <button onclick="toggleAPIKeyVis()" style="background:var(--dark4);border:1px solid var(--border);border-radius:4px;padding:10px 12px;color:var(--text-muted);cursor:pointer;font-size:13px;" title="Tampilkan/sembunyikan API key">
+         👁
+        </button>
+       </div>
+       <div style="margin-top:6px;display:flex;align-items:center;gap:10px;">
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace;">
+         <input id="ps-ai-save-key" onchange="handleSaveAPIKey(this.checked)" style="accent-color:var(--gold);" type="checkbox"/>
+         Ingat API Key (disimpan lokal)
+        </label>
+        <a href="https://console.anthropic.com/account/keys" style="font-size:11px;color:var(--gold);font-family:'DM Mono',monospace;text-decoration:none;" target="_blank">
+         🔗 Dapatkan API Key
+        </a>
+       </div>
+      </div>
+      <!-- Error code textarea -->
+      <div style="margin-bottom:14px;">
+       <label style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">
+        Kode PineScript yang Error
+        <span style="color:var(--red);">
+         *WAJIB
+        </span>
+       </label>
+       <textarea id="ps-ai-code" placeholder="//@version=6
+
+// Paste kode yang error di sini..." rows="12" style="width:100%;background:var(--dark4);border:1px solid var(--border);border-radius:4px;padding:12px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;resize:vertical;outline:none;line-height:1.6;"></textarea>
+      </div>
+      <!-- Problem description -->
+      <div style="margin-bottom:14px;">
+       <label style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">
+        Deskripsi Masalah (opsional)
+       </label>
+       <textarea id="ps-ai-desc" placeholder="Contoh: Error CE10156 di baris 45, atau: indikator tidak muncul di chart..." rows="2" style="width:100%;background:var(--dark4);border:1px solid var(--border);border-radius:4px;padding:10px 12px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;resize:vertical;outline:none;"></textarea>
+      </div>
+      <!-- Warning -->
+      <div style="background:rgba(155,89,182,0.08);border:1px solid rgba(155,89,182,0.25);border-radius:6px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--text-muted);">
+       ⚠️
+       <strong style="color:var(--purple);">
+        Catatan:
+       </strong>
+       Fitur ini menggunakan Claude Sonnet API (berbayar). Biaya ~$0.001–$0.003 per request tergantung panjang kode. API key disimpan di browser Anda — tidak dikirim ke server kami.
+      </div>
+      <!-- Error validation display -->
+      <div id="ps-ai-validation" style="display:none;background:rgba(231,76,60,0.1);border:1px solid rgba(231,76,60,0.3);border-radius:6px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:var(--red);">
+      </div>
+      <button class="calc-btn" id="ps-ai-run-btn" onclick="runAIErrorFixer()" style="background:var(--purple);border:none;">
+       🤖 Perbaiki dengan Claude AI
+      </button>
+      <!-- AI Loading -->
+      <div id="ps-ai-loading" style="display:none;margin-top:20px;text-align:center;padding:20px;">
+       <div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--purple);letter-spacing:2px;animation:pulse 1.5s infinite;">
+        🤖 Claude sedang menganalisis kode...
+       </div>
+       <div style="margin-top:8px;font-size:11px;color:var(--text-muted);">
+        Mungkin perlu 10–30 detik tergantung panjang kode
+       </div>
+      </div>
+      <!-- Result output -->
+      <div id="ps-ai-result" style="display:none;margin-top:20px;">
+       <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:10px;">
+        🤖 Hasil Claude AI
+       </div>
+       <div id="ps-ai-result-text" style="background:var(--dark4);border:1px solid var(--border);border-radius:6px;padding:16px;font-size:13px;color:var(--text-dim);line-height:1.7;white-space:pre-wrap;max-height:500px;overflow-y:auto;">
+       </div>
+       <button onclick="copyAIResult()" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)';" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)';" style="margin-top:10px;background:var(--dark4);border:1px solid var(--border);color:var(--text-muted);padding:8px 16px;border-radius:4px;cursor:pointer;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;transition:all 0.2s;">
+        📋 Copy Hasil
+       </button>
+      </div>
+     </div>
+    </div>
+    <!-- Info cards for mode 1-3 -->
+    <div class="cards-grid" style="margin-top:12px;">
+     <div class="card highlight">
+      <div class="card-label">
+       Modifikasi
+      </div>
+      <h3>
+       🔧 Upgrade &amp; Perbaiki Script
+      </h3>
+      <p style="font-size:13px;">
+       Offline engine — upgrade syntax, modernize kode, terapkan instruksi tanpa AI. Cocok untuk perbaikan cepat.
+      </p>
+     </div>
+     <div class="card">
+      <div class="card-label">
+       Merge Engine
+      </div>
+      <h3>
+       🔗 Smart Merge (Offline)
+      </h3>
+      <p style="font-size:13px;">
+       Gabungkan 2 script menjadi satu, unify input, hilangkan duplikasi variabel secara otomatis.
+      </p>
+     </div>
+     <div class="card">
+      <div class="card-label">
+       Convert
+      </div>
+      <h3>
+       🔄 Upgrade v4/v5 → v6
+      </h3>
+      <p style="font-size:13px;">
+       Upgrade semua syntax deprecated: study() → indicator(), ta. prefix, na checks modern, dan lainnya.
+      </p>
+     </div>
+     <div class="card" style="border-color:rgba(155,89,182,0.35);background:linear-gradient(135deg,var(--dark3),rgba(155,89,182,0.05));">
+      <div class="card-label" style="color:var(--purple);">
+       AI Error Fixer
+      </div>
+      <h3 style="color:var(--purple);">
+       🤖 Claude API Error Fix
+      </h3>
+      <p style="font-size:13px;">
+       AI-powered — Claude Sonnet menganalisis error kompleks yang tidak bisa ditangani offline. Wajib API key.
+      </p>
+     </div>
+    </div>
+   </div>

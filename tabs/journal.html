@@ -1,0 +1,125 @@
+   <!-- ════════════════════════════════════════════
+       TRADING JOURNAL
+  ════════════════════════════════════════════ -->
+  <div class="section" id="tab-journal">
+    <div class="section-header">
+     <div class="section-number">
+      13
+     </div>
+     <div class="section-title-wrap">
+      <h2>
+       Trading Journal
+      </h2>
+      <p>
+       Catat &amp; Analisis Semua Trade Kamu — 100% Privat (localStorage)
+      </p>
+     </div>
+    </div>
+    <div class="journal-wrapper">
+     <div class="journal-stats" id="journalStats">
+      <div class="journal-stat">
+       📊 Total Trades:
+       <span id="statTotal">
+        0
+       </span>
+      </div>
+      <div class="journal-stat">
+       ✅ Win Rate:
+       <span id="statWinRate">
+        0%
+       </span>
+      </div>
+      <div class="journal-stat">
+       💰 Profit Factor:
+       <span id="statProfitFactor">
+        0
+       </span>
+      </div>
+      <div class="journal-stat">
+       📈 Avg R:R:
+       <span id="statAvgRR">
+        0
+       </span>
+      </div>
+     </div>
+     <div class="journal-form">
+      <input id="journalSymbol" placeholder="Symbol (NQ, ES, EUR, dll)" type="text"/>
+      <select id="journalSide">
+       <option value="long">
+        📈 LONG (Buy)
+       </option>
+       <option value="short">
+        📉 SHORT (Sell)
+       </option>
+      </select>
+      <input id="journalEntry" placeholder="Entry Price" step="any" type="number"/>
+      <input id="journalSL" placeholder="Stop Loss" step="any" type="number"/>
+      <input id="journalTP" placeholder="Take Profit" step="any" type="number"/>
+      <input id="journalRr" placeholder="R:R (contoh: 2)" step="0.1" type="number"/>
+      <select id="journalResult">
+       <option value="win">
+        ✅ WIN
+       </option>
+       <option value="loss">
+        ❌ LOSS
+       </option>
+       <option value="pending">
+        ⏳ Pending
+       </option>
+      </select>
+      <input id="journalNote" placeholder="Catatan (opsional)" type="text"/>
+      <button class="calc-btn" onclick="addJournalEntry()" style="padding:8px 16px;">
+       ➕ Tambah Trade
+      </button>
+     </div>
+     <button class="action-btn" onclick="exportJournalCSV()" style="margin-bottom:12px;">
+      ⬇ Export CSV
+     </button>
+     <button class="action-btn" onclick="exportJournalPDF()" style="margin-bottom:12px;">
+      ⬡ Export PDF Journal
+     </button>
+     <button class="action-btn" onclick="clearJournal()" style="margin-bottom:12px;background:rgba(231,76,60,0.1);border-color:var(--red);color:var(--red);">
+      🗑 Hapus Semua
+     </button>
+     <div style="overflow-x:auto;">
+      <table class="journal-table" id="journalTable">
+       <thead>
+        <tr>
+         <th>
+          Tanggal
+         </th>
+         <th>
+          Symbol
+         </th>
+         <th>
+          Side
+         </th>
+         <th>
+          Entry
+         </th>
+         <th>
+          SL
+         </th>
+         <th>
+          TP
+         </th>
+         <th>
+          R:R
+         </th>
+         <th>
+          Result
+         </th>
+         <th>
+          Catatan
+         </th>
+         <th>
+          Aksi
+         </th>
+        </tr>
+       </thead>
+       <tbody id="journalBody">
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>

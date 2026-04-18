@@ -1,0 +1,439 @@
+  <!-- ════════════════════════════════════════════
+       CHECKLIST
+  ════════════════════════════════════════════ -->
+  <div class="section" id="tab-checklist">
+    <div class="section-header">
+     <div class="section-number">
+      09
+     </div>
+     <div class="section-title-wrap">
+      <h2>
+       Trade Checklist
+      </h2>
+      <p>
+       ICT 8AM Strategy — Pre-Trade Verification
+      </p>
+     </div>
+    </div>
+    <div class="checklist-wrapper">
+     <div class="checklist-title">
+      8AM ICT SETUP CHECKLIST
+     </div>
+     <div class="checklist-sub">
+      Centang semua item sebelum eksekusi trade
+     </div>
+     <div class="checklist-progress">
+      <div class="progress-bar">
+       <div class="progress-fill" id="progressFill">
+       </div>
+      </div>
+      <div class="progress-text">
+       Progress
+      </div>
+      <div class="progress-count" id="progressCount">
+       0 / 16
+      </div>
+     </div>
+     <div class="checklist-group">
+      <div class="checklist-group-title">
+       1. HTF Bias &amp; Context
+      </div>
+      <div aria-checked="false" class="check-item check-critical" onclick="toggleCheck(this)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(this)" role="checkbox" tabindex="0">
+       <div class="check-box">
+       </div>
+       <div>
+        <div class="check-text">
+         HTF bias sudah ditentukan (Bullish / Bearish) dari Daily atau 4H
+        </div>
+        <div class="check-note">
+         Jangan trade tanpa bias HTF yang jelas
+        </div>
+       </div>
+      </div>
+      <div aria-checked="false" class="check-item check-critical" onclick="toggleCheck(this)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(this)" role="checkbox" tabindex="0">
+       <div class="check-box">
+       </div>
+       <div>
+        <div class="check-text">
+         Struktur HTF mendukung arah entry (HH/HL untuk long, LH/LL untuk short)
+        </div>
+       </div>
+      </div>
+      <div aria-checked="false" class="check-item" onclick="toggleCheck(this)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(this)" role="checkbox" tabindex="0">
+       <div class="check-box">
+       </div>
+       <div>
+        <div class="check-text">
+         Tidak ada news besar / high-impact event dalam 30 menit ke depan
+        </div>
+        <div class="check-note">
+         Cek economic calendar (Forex Factory / Bloomberg)
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="checklist-group">
+      <div class="checklist-group-title">
+       2. 8AM Candle Setup (Step 1 &amp; 2)
+      </div>
+      <div aria-checked="false" class="check-item check-critical" onclick="toggleCheck(this)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(this)" role="checkbox" tabindex="0">
+       <div class="check-box">
+       </div>
+       <div>
+        <div class="check-text">
+         High dan Low candle 1H pukul 08:00 NY (UTC–4) sudah ditandai dengan garis horizontal
+        </div>
+       </div>
+      </div>
+      <div aria-checked="false" class="check-item check-critical" onclick="toggleCheck(this)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(this)" role="checkbox" tabindex="0">
+       <div class="check-box">
+       </div>
+       <div>
+        <div class="check-text">
+         Terjadi sweep di salah satu level (High atau Low) — fake break atau wick panjang melampaui level
+        </div>
+        <div class="check-note">
+         Sweep harus terjadi dalam window NY Kill Zone (08:30–11:00 NY)
+        </div>
+       </div>
+      </div>
+      <div aria-checked="false" class="check-item" onclick="toggleCheck(this)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(this)" role="checkbox" tabindex="0">
+       <div class="check-box">
+       </div>
+       <div>
+        <div class="check-text">
+         Arah sweep sesuai dengan HTF bias (Bearish bias → sweep High, Bullish bias → sweep Low)
+        </div>
+       </div>
+      </div>
+      <div aria-checked="false" class="check-item" onclick="toggleCheck(this)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(this)" role="checkbox" tabindex="0">
+       <div class="check-box">
+       </div>
+       <div>
+        <div class="check-text">
+         Sweep candle menunjukkan reaksi balik (rejection, reversal wick, atau candle close berlawanan)
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="checklist-group">
+      <div class="checklist-group-title">
+       3. MSS M5 Konfirmasi (Step 3)
+      </div>
+      <div aria-checked="false" class="check-item check-critical" onclick="toggleCheck(this)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(this)" role="checkbox" tabindex="0">
+       <div class="check-box">
+       </div>
+       <div>
+        <div class="check-text">
+         MSS M5 sudah terkonfirmasi — ada displacement candle impulsif berlawanan dari arah sweep
+        </div>
+        <div class="check-note">
+         Kritis: tanpa MSS, tidak ada trade
+        </div>
+       </div>
+      </div>
+      <div aria-checked="false" class="check-item check-critical" onclick="toggleCheck(this)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(this)" role="checkbox" tabindex="0">
+       <div class="check-box">
+       </div>
+       <div>
+        <div class="check-text">
+         FVG atau OB M5 terbentuk dari displacement candle MSS — ini adalah zona entry
+        </div>
+       </div>
+      </div>
+      <div aria-checked="false" class="check-item" onclick="toggleCheck(this)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(this)" role="checkbox" tabindex="0">
+       <div class="check-box">
+       </div>
+       <div>
+        <div class="check-text">
+         Harga belum terlalu jauh bergerak dari zona entry — tidak late entry
+        </div>
+        <div class="check-note">
+         Jika FVG sudah dilewati lebih dari 70%, cari retest atau skip
+        </div>
+       </div>
+      </div>
+      <div aria-checked="false" class="check-item" onclick="toggleCheck(this)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(this)" role="checkbox" tabindex="0">
+       <div class="check-box">
+       </div>
+       <div>
+        <div class="check-text">
+         Entry zone (FVG / OB M5) berada di area Premium/Discount yang benar sesuai HTF range
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="checklist-group">
+      <div class="checklist-group-title">
+       4. Risk &amp; Reward (Step 4)
+      </div>
+      <div aria-checked="false" class="check-item check-critical" onclick="toggleCheck(this)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(this)" role="checkbox" tabindex="0">
+       <div class="check-box">
+       </div>
+       <div>
+        <div class="check-text">
+         SL ditempatkan 2–5 pip di luar extreme sweep candle (di luar zona likuiditas)
+        </div>
+       </div>
+      </div>
+      <div aria-checked="false" class="check-item check-critical" onclick="toggleCheck(this)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(this)" role="checkbox" tabindex="0">
+       <div class="check-box">
+       </div>
+       <div>
+        <div class="check-text">
+         Target TP minimal 1:2 RR tersedia sebelum HTF resistance/support berikutnya
+        </div>
+        <div class="check-note">
+         Jika tidak ada ruang 1:2, SKIP trade ini
+        </div>
+       </div>
+      </div>
+      <div aria-checked="false" class="check-item" onclick="toggleCheck(this)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(this)" role="checkbox" tabindex="0">
+       <div class="check-box">
+       </div>
+       <div>
+        <div class="check-text">
+         Risk per trade tidak melebihi 1–2% account
+        </div>
+       </div>
+      </div>
+      <div aria-checked="false" class="check-item" onclick="toggleCheck(this)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(this)" role="checkbox" tabindex="0">
+       <div class="check-box">
+       </div>
+       <div>
+        <div class="check-text">
+         Target TP2 sudah diidentifikasi (PDH/PDL, FVG HTF, OB HTF, atau likuiditas berikutnya)
+        </div>
+       </div>
+      </div>
+      <div aria-checked="false" class="check-item" onclick="toggleCheck(this)" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(this)" role="checkbox" tabindex="0">
+       <div class="check-box">
+       </div>
+       <div>
+        <div class="check-text">
+         Rencana partial close dan move-to-breakeven sudah ditetapkan sebelum entry
+        </div>
+       </div>
+      </div>
+     </div>
+     <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:8px;">
+      <button class="reset-btn" onclick="resetChecklist()">
+       Reset Checklist
+      </button>
+      <button class="action-btn" onclick="exportChecklist()">
+       ⬡ Export PDF
+      </button>
+      <div id="verdictMsg" style="font-family:'DM Mono',monospace;font-size:13px;color:var(--text-muted);">
+      </div>
+     </div>
+    </div>
+    <!-- Common Mistakes Section -->
+    <div style="margin-top:36px;">
+     <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--red);text-transform:uppercase;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid rgba(231,76,60,0.25);">
+      ⚠ Common Mistakes Trader ICT — Kesalahan Paling Sering Terjadi
+     </div>
+     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;">
+      <div style="background:var(--dark3);border:1px solid rgba(231,76,60,0.2);border-radius:6px;padding:18px;">
+       <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--red);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">
+        Mistake #1
+       </div>
+       <h4 style="font-size:15px;color:var(--text);margin-bottom:8px;">
+        Trading Tanpa HTF Bias
+       </h4>
+       <p style="font-size:13px;color:var(--text-dim);line-height:1.7;">
+        Langsung entry di LTF tanpa mengecek Weekly/Daily. Hasilnya: setup LTF terlihat bagus tapi melawan arus besar HTF.
+        <strong style="color:var(--gold)">
+         Fix:
+        </strong>
+        selalu mulai dari Weekly → Daily sebelum menyentuh LTF.
+       </p>
+      </div>
+      <div style="background:var(--dark3);border:1px solid rgba(231,76,60,0.2);border-radius:6px;padding:18px;">
+       <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--red);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">
+        Mistake #2
+       </div>
+       <h4 style="font-size:15px;color:var(--text);margin-bottom:8px;">
+        Masuk Saat CHoCH, Bukan MSS
+       </h4>
+       <p style="font-size:13px;color:var(--text-dim);line-height:1.7;">
+        CHoCH adalah sinyal awal, bukan konfirmasi. Entry di CHoCH tanpa displacement sering berakhir dengan stop loss terkena sebelum harga berbalik.
+        <strong style="color:var(--gold)">
+         Fix:
+        </strong>
+        tunggu MSS dengan displacement candle yang valid.
+       </p>
+      </div>
+      <div style="background:var(--dark3);border:1px solid rgba(231,76,60,0.2);border-radius:6px;padding:18px;">
+       <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--red);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">
+        Mistake #3
+       </div>
+       <h4 style="font-size:15px;color:var(--text);margin-bottom:8px;">
+        Trading di Luar Kill Zone
+       </h4>
+       <p style="font-size:13px;color:var(--text-dim);line-height:1.7;">
+        PD Array muncul tapi waktunya jam 14:00 WIB (mid-Asia session) — bukan Kill Zone. Pasar low volume dan noise tinggi.
+        <strong style="color:var(--gold)">
+         Fix:
+        </strong>
+        setup ICT hanya valid di London KZ atau NY KZ. Titik.
+       </p>
+      </div>
+      <div style="background:var(--dark3);border:1px solid rgba(231,76,60,0.2);border-radius:6px;padding:18px;">
+       <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--red);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">
+        Mistake #4
+       </div>
+       <h4 style="font-size:15px;color:var(--text);margin-bottom:8px;">
+        Terlalu Banyak Confluence
+       </h4>
+       <p style="font-size:13px;color:var(--text-dim);line-height:1.7;">
+        "Harus ada OB + FVG + EQL + SMT + OTE + Kill Zone sekaligus." Ini paralisis analisis. Tidak ada trade yang sempurna.
+        <strong style="color:var(--gold)">
+         Fix:
+        </strong>
+        cukup 3 confluence kuat: HTF Bias + Kill Zone + 1 PD Array di zona yang benar.
+       </p>
+      </div>
+      <div style="background:var(--dark3);border:1px solid rgba(231,76,60,0.2);border-radius:6px;padding:18px;">
+       <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--red);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">
+        Mistake #5
+       </div>
+       <h4 style="font-size:15px;color:var(--text);margin-bottom:8px;">
+        Masuk di FVG yang Salah Premium/Discount
+       </h4>
+       <p style="font-size:13px;color:var(--text-dim);line-height:1.7;">
+        Ada FVG bullish tapi harga sedang berada di area Premium HTF. Instituisi tidak akan buy di Premium.
+        <strong style="color:var(--gold)">
+         Fix:
+        </strong>
+        selalu cek apakah PD Array berada di zona yang "masuk akal" — Buy di Discount, Sell di Premium.
+       </p>
+      </div>
+      <div style="background:var(--dark3);border:1px solid rgba(231,76,60,0.2);border-radius:6px;padding:18px;">
+       <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--red);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">
+        Mistake #6
+       </div>
+       <h4 style="font-size:15px;color:var(--text);margin-bottom:8px;">
+        Mengabaikan Judas Swing
+       </h4>
+       <p style="font-size:13px;color:var(--text-dim);line-height:1.7;">
+        Masuk saat London open ke arah yang sama dengan pergerakan pertama. Lupa bahwa gerakan pertama London sering adalah Manipulation.
+        <strong style="color:var(--gold)">
+         Fix:
+        </strong>
+        tunggu sweep likuiditas terlebih dahulu sebelum mencari entry.
+       </p>
+      </div>
+      <div style="background:var(--dark3);border:1px solid rgba(231,76,60,0.2);border-radius:6px;padding:18px;">
+       <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--red);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">
+        Mistake #7
+       </div>
+       <h4 style="font-size:15px;color:var(--text);margin-bottom:8px;">
+        Mengejar Harga (Late Entry)
+       </h4>
+       <p style="font-size:13px;color:var(--text-dim);line-height:1.7;">
+        Melihat harga sudah bergerak jauh dari FVG/OB tapi tetap masuk. RR jadi buruk, SL tidak logical.
+        <strong style="color:var(--gold)">
+         Fix:
+        </strong>
+        jika FVG sudah dilewati &gt;70%, lewati setup ini. Selalu ada setup berikutnya.
+       </p>
+      </div>
+      <div style="background:var(--dark3);border:1px solid rgba(231,76,60,0.2);border-radius:6px;padding:18px;">
+       <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--red);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">
+        Mistake #8
+       </div>
+       <h4 style="font-size:15px;color:var(--text);margin-bottom:8px;">
+        SL Terlalu Ketat / TP Terlalu Dekat
+       </h4>
+       <p style="font-size:13px;color:var(--text-dim);line-height:1.7;">
+        SL di dalam candle body (bukan di luar sweep extreme), atau TP di 1:1 padahal ada ruang ke 1:3.
+        <strong style="color:var(--gold)">
+         Fix:
+        </strong>
+        SL harus di luar zona likuiditas, TP minimal 1:2 dan idealnya di PD Array HTF berikutnya.
+       </p>
+      </div>
+     </div>
+    </div>
+    <!-- Universal Confluence Checklist -->
+    <div style="margin-top:32px;">
+     <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--gold-dim);text-transform:uppercase;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border);">
+      Universal ICT Confluence Checklist (Berlaku untuk Semua Model)
+     </div>
+     <div style="background:var(--dark3);border:1px solid var(--border-bright);border-radius:8px;padding:24px;">
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:20px;">
+       Checklist ini berlaku untuk
+       <em>
+        semua
+       </em>
+       ICT model — bukan hanya 8AM Strategy. Sebelum entry apapun, pertanyaan-pertanyaan ini harus terjawab:
+      </p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
+       <div style="background:var(--dark4);border-radius:4px;padding:14px;border-left:3px solid var(--gold-dim);">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">
+         Bias &amp; Context
+        </div>
+        <ul style="font-size:12px;color:var(--text-dim);padding-left:14px;line-height:2;">
+         <li>
+          HTF bias jelas? (Weekly/Daily)
+         </li>
+         <li>
+          Apakah harga di Premium atau Discount?
+         </li>
+         <li>
+          Ada high-impact news dalam 30 menit?
+         </li>
+        </ul>
+       </div>
+       <div style="background:var(--dark4);border-radius:4px;padding:14px;border-left:3px solid var(--green);">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">
+         Timing
+        </div>
+        <ul style="font-size:12px;color:var(--text-dim);padding-left:14px;line-height:2;">
+         <li>
+          Apakah ini Kill Zone?
+         </li>
+         <li>
+          AMD phase: sudah melewati Manipulation?
+         </li>
+         <li>
+          Model yang dipakai punya window waktu ini?
+         </li>
+        </ul>
+       </div>
+       <div style="background:var(--dark4);border-radius:4px;padding:14px;border-left:3px solid var(--blue);">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--blue);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">
+         Structure &amp; Entry
+        </div>
+        <ul style="font-size:12px;color:var(--text-dim);padding-left:14px;line-height:2;">
+         <li>
+          MSS dikonfirmasi dengan displacement?
+         </li>
+         <li>
+          PD Array (OB/FVG) ada di zona entry?
+         </li>
+         <li>
+          Entry tidak late (&lt;70% FVG terisi)?
+         </li>
+        </ul>
+       </div>
+       <div style="background:var(--dark4);border-radius:4px;padding:14px;border-left:3px solid var(--orange);">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--orange);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">
+         Risk &amp; Target
+        </div>
+        <ul style="font-size:12px;color:var(--text-dim);padding-left:14px;line-height:2;">
+         <li>
+          SL di luar zona likuiditas?
+         </li>
+         <li>
+          Ruang ke TP minimal 1:2?
+         </li>
+         <li>
+          Target TP adalah PD Array atau Liquidity?
+         </li>
+        </ul>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>

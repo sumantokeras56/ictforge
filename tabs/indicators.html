@@ -1,0 +1,309 @@
+ <!-- ════════════════════════════════════════════
+       INDIKATOR SIAP PAKAI
+  ════════════════════════════════════════════ -->
+  <div class="section" id="tab-indicators">
+    <div class="section-header">
+     <div class="section-number">
+      ⬡
+     </div>
+     <div class="section-title-wrap">
+      <h2>
+       Indikator Siap Pakai
+      </h2>
+      <p>
+       Copy-paste langsung ke TradingView Pine Script Editor — v6 tested
+      </p>
+     </div>
+    </div>
+    <div style="background:rgba(201,168,76,0.05);border:1px solid var(--gold-dim);border-radius:8px;padding:18px 22px;margin-top:20px;font-size:13px;color:var(--text-dim);line-height:1.7;">
+     <strong style="color:var(--gold);">
+      📋 Cara Pakai:
+     </strong>
+     Klik tombol
+     <span style="color:var(--green);font-family:'DM Mono',monospace;">
+      Copy Code
+     </span>
+     di bawah masing-masing indikator → Buka TradingView → Pine Script Editor → New → Paste → Save → Add to Chart. Setiap indikator sudah diverifikasi syntax Pine Script v6.
+    </div>
+    <!-- INDICATOR 1: Session Dashboard Pro v10 -->
+    <div style="margin-top:32px;">
+     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border);">
+      <div>
+       <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--gold-dim);text-transform:uppercase;margin-bottom:4px;">
+        Indikator #1 — Overlay
+       </div>
+       <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:#fff;">
+        Session Dashboard Pro v10
+       </div>
+       <div style="font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;margin-top:2px;">
+        TTrades Daily Bias · Monte Carlo PDH/PDL · ML 9:30 Engine · Kill Zone Boxes
+       </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+       <span class="pill pill-blue">
+        Overlay
+       </span>
+       <span class="pill pill-gold">
+        ICT Bias
+       </span>
+       <span class="pill pill-green">
+        VWAP Weekly
+       </span>
+       <span class="pill pill-purple">
+        Monte Carlo
+       </span>
+      </div>
+     </div>
+     <!-- Feature boxes - only boxes ON -->
+     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:20px;">
+      <div style="background:var(--dark3);border:1px solid rgba(46,204,113,0.3);border-radius:6px;padding:14px;">
+       <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;">
+        ✅ AKTIF
+       </div>
+       <div style="font-size:13px;color:var(--text);font-weight:600;">
+        Kill Zone Boxes
+       </div>
+       <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">
+        Asia · London · NY AM · NY PM — background highlight otomatis tiap sesi
+       </div>
+      </div>
+      <div style="background:var(--dark3);border:1px solid rgba(46,204,113,0.3);border-radius:6px;padding:14px;">
+       <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;">
+        ✅ AKTIF
+       </div>
+       <div style="font-size:13px;color:var(--text);font-weight:600;">
+        TTrades Daily Bias
+       </div>
+       <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">
+        6 kondisi prioritas persis TTrades TFO — label alasan bias di chart
+       </div>
+      </div>
+      <div style="background:var(--dark3);border:1px solid rgba(46,204,113,0.3);border-radius:6px;padding:14px;">
+       <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;">
+        ✅ AKTIF
+       </div>
+       <div style="font-size:13px;color:var(--text);font-weight:600;">
+        PDH/PDL + Monte Carlo
+       </div>
+       <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">
+        Probabilitas hit PDH vs PDL dari 12 parameter pasar nyata
+       </div>
+      </div>
+      <div style="background:var(--dark3);border:1px solid rgba(46,204,113,0.3);border-radius:6px;padding:14px;">
+       <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;">
+        ✅ AKTIF
+       </div>
+       <div style="font-size:13px;color:var(--text);font-weight:600;">
+        NY 9:30 Open Analysis
+       </div>
+       <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">
+        Klasifikasi candle 9:30: Manipulasi / Impulse / Neutral via EMA 9/21
+       </div>
+      </div>
+      <div style="background:var(--dark3);border:1px solid rgba(46,204,113,0.3);border-radius:6px;padding:14px;">
+       <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;">
+        ✅ AKTIF
+       </div>
+       <div style="font-size:13px;color:var(--text);font-weight:600;">
+        VWAP Weekly + Daily
+       </div>
+       <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">
+        Bias mingguan dari VWAP Weekly slope + ATR distance
+       </div>
+      </div>
+      <div style="background:var(--dark3);border:1px solid rgba(46,204,113,0.3);border-radius:6px;padding:14px;">
+       <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;">
+        ✅ AKTIF
+       </div>
+       <div style="font-size:13px;color:var(--text);font-weight:600;">
+        Opening Candle Lines
+       </div>
+       <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">
+        08:30 London, 09:30 NY — garis open otomatis extend
+       </div>
+      </div>
+     </div>
+     <div style="position:relative;background:var(--dark4);border:1px solid var(--border);border-radius:6px;overflow:hidden;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--dark3);border-bottom:1px solid var(--border);">
+       <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);">
+        Pine Script v6 · Session Dashboard Pro v10 [MC+ML 9:30]
+       </span>
+       <button onclick="copyIndicator('ind-session-code')" style="background:var(--gold);color:var(--dark);border:none;padding:5px 14px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;border-radius:3px;cursor:pointer;">
+        📋 Copy Code
+       </button>
+      </div>
+      <pre id="ind-session-code" style="padding:20px;font-family:'DM Mono',monospace;font-size:11.5px;color:var(--text-dim);overflow-x:auto;max-height:380px;overflow-y:auto;line-height:1.6;margin:0;white-space:pre;">Memuat kode…</pre>
+     </div>
+    </div>
+    <!-- INDICATOR 2: Quantum Veil Trend Engine -->
+    <div style="margin-top:40px;">
+     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border);">
+      <div>
+       <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--gold-dim);text-transform:uppercase;margin-bottom:4px;">
+        Indikator #2 — Overlay
+       </div>
+       <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:#fff;">
+        Quantum Veil Trend Engine
+       </div>
+       <div style="font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;margin-top:2px;">
+        EMA 9/21 · 12-Feature ML Composite Score · Continuation vs Reversal Probability
+       </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+       <span class="pill pill-green">
+        Overlay
+       </span>
+       <span class="pill pill-cyan">
+        AI Score
+       </span>
+       <span class="pill pill-blue">
+        EMA Ribbon
+       </span>
+       <span class="pill pill-orange">
+        Probability
+       </span>
+      </div>
+     </div>
+     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:20px;">
+      <div style="background:var(--dark3);border:1px solid rgba(46,204,113,0.3);border-radius:6px;padding:14px;">
+       <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;">
+        ✅ AKTIF
+       </div>
+       <div style="font-size:13px;color:var(--text);font-weight:600;">
+        EMA 9/21 Ribbon
+       </div>
+       <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">
+        Ribbon warna bull/bear + crossover label otomatis
+       </div>
+      </div>
+      <div style="background:var(--dark3);border:1px solid rgba(46,204,113,0.3);border-radius:6px;padding:14px;">
+       <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;">
+        ✅ AKTIF
+       </div>
+       <div style="font-size:13px;color:var(--text);font-weight:600;">
+        ML Dashboard Table
+       </div>
+       <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">
+        12 fitur: EMA separation, RSI, MACD, BB, OBV, VWAP dll
+       </div>
+      </div>
+      <div style="background:var(--dark3);border:1px solid rgba(46,204,113,0.3);border-radius:6px;padding:14px;">
+       <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;">
+        ✅ AKTIF
+       </div>
+       <div style="font-size:13px;color:var(--text);font-weight:600;">
+        Continuation % Bar
+       </div>
+       <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">
+        Visual bar probabilitas lanjut trend vs potensi reversal
+       </div>
+      </div>
+      <div style="background:var(--dark3);border:1px solid rgba(46,204,113,0.3);border-radius:6px;padding:14px;">
+       <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;">
+        ✅ AKTIF
+       </div>
+       <div style="font-size:13px;color:var(--text);font-weight:600;">
+        Candle BG Cross
+       </div>
+       <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">
+        Background candle hijau/merah saat EMA cross terjadi
+       </div>
+      </div>
+      <div style="background:var(--dark3);border:1px solid rgba(46,204,113,0.3);border-radius:6px;padding:14px;">
+       <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;">
+        ✅ AKTIF
+       </div>
+       <div style="font-size:13px;color:var(--text);font-weight:600;">
+        Smart Alerts
+       </div>
+       <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">
+        Bull/Bear cross + AI confirm · cross + reversal risk
+       </div>
+      </div>
+      <div style="background:var(--dark3);border:1px solid rgba(46,204,113,0.3);border-radius:6px;padding:14px;">
+       <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--green);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;">
+        ✅ AKTIF
+       </div>
+       <div style="font-size:13px;color:var(--text);font-weight:600;">
+        Logistic Score
+       </div>
+       <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">
+        Composite score via logistic function — HIGH / MEDIUM / LOW confidence
+       </div>
+      </div>
+     </div>
+     <div style="position:relative;background:var(--dark4);border:1px solid var(--border);border-radius:6px;overflow:hidden;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--dark3);border-bottom:1px solid var(--border);">
+       <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);">
+        Pine Script v6 · Quantum Veil Trend Engine
+       </span>
+       <button onclick="copyIndicator('ind-qvte-code')" style="background:var(--gold);color:var(--dark);border:none;padding:5px 14px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;border-radius:3px;cursor:pointer;">
+        📋 Copy Code
+       </button>
+      </div>
+      <pre id="ind-qvte-code" style="padding:20px;font-family:'DM Mono',monospace;font-size:11.5px;color:var(--text-dim);overflow-x:auto;max-height:380px;overflow-y:auto;line-height:1.6;margin:0;white-space:pre;">Memuat kode…</pre>
+     </div>
+    </div>
+    <!-- Notes -->
+    <div style="margin-top:32px;background:var(--dark3);border:1px solid var(--border);border-radius:6px;padding:20px;">
+     <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--gold-dim);text-transform:uppercase;margin-bottom:12px;">
+      ⚠ Catatan Penting
+     </div>
+     <ul style="font-size:13px;color:var(--text-dim);line-height:1.9;padding-left:18px;">
+      <li>
+       <strong style="color:var(--text);">
+        Timeframe:
+       </strong>
+       Session Dashboard optimal di M1–H1. Quantum Veil optimal di M5–H4.
+      </li>
+      <li>
+       <strong style="color:var(--text);">
+        Prop Firm:
+       </strong>
+       Kedua indikator bersifat analitik, bukan trading bot — tidak ada auto-entry.
+      </li>
+      <li>
+       <strong style="color:var(--text);">
+        Session Dashboard:
+       </strong>
+       Pastikan timezone chart TradingView sudah diset ke
+       <code style="color:var(--cyan);">
+        America/New_York
+       </code>
+       atau aktifkan Auto Timezone.
+      </li>
+      <li>
+       <strong style="color:var(--text);">
+        Quantum Veil:
+       </strong>
+       Score ML bukan signal tunggal — gunakan sebagai konfirmator bias, bukan trigger entry.
+      </li>
+      <li>
+       <strong style="color:var(--text);">
+        Testing:
+       </strong>
+       Selalu replay/backtest dulu di timeframe yang ingin digunakan sebelum live.
+      </li>
+     </ul>
+    </div>
+   </div>
+  </div>
+  <!-- /container -->
+  <div class="footer" style="text-align:center;padding:32px;border-top:1px solid var(--border);margin-top:40px;">
+   <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:2px;">
+    ICT FORGE v1.0 · EDUCATIONAL PURPOSE ONLY
+   </div>
+   <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);margin-top:6px;">
+    Based on teachings of Michael J. Huddleston (@InnerCircleTrader)
+   </div>
+   <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);margin-top:4px;">
+    Built by
+    <span style="color:var(--gold);">
+     Rizky Saputra
+    </span>
+    · ICT SMC Researcher
+   </div>
+   <div style="font-size:12px;color:var(--text-muted);margin-top:10px;">
+    Trading involves significant risk of loss. This is not financial advice.
+   </div>
+  </div>

@@ -1,0 +1,196 @@
+
+   <!-- ════════════════════════════════════════════
+       ECONOMIC CALENDAR & MARKET HOURS
+  ════════════════════════════════════════════ -->
+  <div class="section" id="tab-calendar">
+    <div class="section-header">
+     <div class="section-number">
+      14
+     </div>
+     <div class="section-title-wrap">
+      <h2>
+       Calendar &amp; Market Hours
+       <span class="v14-badge">
+        v1.0
+       </span>
+      </h2>
+      <p>
+       Live Market Status · Event Countdown · Sesi Trading Real-Time
+      </p>
+     </div>
+    </div>
+    <!-- V14: LIVE MARKET STATUS CARD -->
+    <div class="market-status-card" id="marketStatusCard">
+     <div class="status-dot-big" id="statusDotBig">
+     </div>
+     <div style="flex:1;">
+      <div class="status-main-label" id="statusMainLabel">
+       MEMERIKSA...
+      </div>
+      <div class="status-reason" id="statusReason">
+       Mendeteksi sesi &amp; kondisi pasar saat ini
+      </div>
+      <div class="status-sub" id="statusSub">
+       —
+      </div>
+     </div>
+     <div class="status-recommend rec-caution" id="statusRecommend">
+      ⏳ Loading
+     </div>
+    </div>
+    <!-- V14: SESSION PROGRESS BAR -->
+    <div class="session-progress-wrap">
+     <div class="session-progress-header">
+      <span class="session-progress-name" id="progSessionName">
+       ⏳ NEXT SESSION
+      </span>
+      <span class="session-progress-time" id="progSessionTime">
+       --
+      </span>
+     </div>
+     <div class="session-progress-bar-bg">
+      <div class="session-progress-bar-fill" id="progBarFill" style="width:0%;--pb-c1:var(--gold-dim);--pb-c2:var(--gold);">
+      </div>
+     </div>
+     <div class="session-progress-footer">
+      <span id="progBarStart">
+       --
+      </span>
+      <span id="progBarPct" style="color:var(--gold);">
+       0%
+      </span>
+      <span id="progBarEnd">
+       --
+      </span>
+     </div>
+    </div>
+    <!-- Market Hours Countdown -->
+    <div class="market-hours" style="margin-top:20px;">
+     <div class="v14-subheader">
+      ⏰ COUNTDOWN KE SESI TRADING
+     </div>
+     <div class="market-hour-item">
+      <span class="market-name">
+       🇬🇧 LONDON OPEN (03:00 NY)
+      </span>
+      <span class="market-countdown" id="countdownLondon">
+       --:--:--
+      </span>
+     </div>
+     <div class="market-hour-item">
+      <span class="market-name">
+       🇺🇸 NY OPEN (08:30 NY)
+      </span>
+      <span class="market-countdown" id="countdownNY">
+       --:--:--
+      </span>
+     </div>
+     <div class="market-hour-item">
+      <span class="market-name">
+       🇺🇸 NY CLOSE (16:00 NY)
+      </span>
+      <span class="market-countdown" id="countdownNYClose">
+       --:--:--
+      </span>
+     </div>
+     <div class="market-hour-item">
+      <span class="market-name">
+       🇯🇵 TOKYO OPEN (19:00 NY)
+      </span>
+      <span class="market-countdown" id="countdownTokyo">
+       --:--:--
+      </span>
+     </div>
+    </div>
+    <!-- WIB Market Panel (v14.1.5) -->
+    <div style="background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin-top:16px;">
+     <div class="v14-subheader" style="margin-bottom:12px;">
+      🇮🇩 JAM PASAR — WIB (UTC+7)
+     </div>
+     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+      <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text-dim);">
+       Status Pasar
+      </span>
+      <span id="wib-market-status" style="font-family:'DM Mono',monospace;font-size:12px;font-weight:600;color:var(--green);">
+       --
+      </span>
+     </div>
+     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text-dim);">
+       Countdown
+      </span>
+      <span id="wib-market-countdown" style="font-family:'DM Mono',monospace;font-size:12px;color:var(--gold);">
+       --
+      </span>
+     </div>
+     <div style="border-top:1px solid var(--border);padding-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+      <div style="font-size:11px;font-family:'DM Mono',monospace;">
+       <span style="color:var(--text-muted);">
+        Buka
+       </span>
+       <br/>
+       <span style="color:var(--green);">
+        Senin 05:00 WIB
+       </span>
+      </div>
+      <div style="font-size:11px;font-family:'DM Mono',monospace;">
+       <span style="color:var(--text-muted);">
+        Tutup
+       </span>
+       <br/>
+       <span style="color:var(--red);">
+        Sabtu 04:00 WIB
+       </span>
+      </div>
+      <div style="font-size:11px;font-family:'DM Mono',monospace;">
+       <span style="color:var(--text-muted);">
+        London KZ
+       </span>
+       <br/>
+       <span style="color:var(--blue);">
+        10:00–15:30 WIB
+       </span>
+      </div>
+      <div style="font-size:11px;font-family:'DM Mono',monospace;">
+       <span style="color:var(--text-muted);">
+        NY KZ
+       </span>
+       <br/>
+       <span style="color:var(--gold);">
+        15:30–23:00 WIB
+       </span>
+      </div>
+     </div>
+    </div>
+    <!-- V14: EVENT COUNTDOWN -->
+    <div style="background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:20px;margin-top:20px;">
+     <div class="v14-subheader">
+      <span>
+       📅 EVENT COUNTDOWN — HIGH IMPACT
+      </span>
+      <span style="font-size:9px;color:var(--text-muted);text-transform:none;letter-spacing:0;">
+       Semua waktu NY · Market buka Minggu 18:00 NY – Jumat 17:00 NY
+      </span>
+     </div>
+     <div class="event-countdown-grid" id="eventCountdownGrid">
+      <!-- diisi JS -->
+      <div style="color:var(--text-muted);font-size:13px;padding:8px;">
+       Memuat countdown...
+      </div>
+     </div>
+    </div>
+    <!-- Economic Calendar -->
+    <div class="econ-calendar">
+     <div class="v14-subheader">
+      📰 ECONOMIC CALENDAR (HIGH IMPACT)
+     </div>
+     <div id="econEventsList">
+      <div style="text-align:center;padding:20px;color:var(--text-muted);">
+       Memuat data ekonomi...
+      </div>
+     </div>
+     <div style="font-size:11px;color:var(--text-muted);margin-top:12px;">
+      ⚠ Hindari trading 15 menit sebelum &amp; sesudah event High Impact. Gunakan Event Countdown di atas untuk persiapan.
+     </div>
+    </div>
+   </div>
