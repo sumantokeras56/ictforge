@@ -129,11 +129,13 @@ function setInstrument(key, btn) {
   set('tpLabel', inst.tpLabel);
   set('sizeLabel', inst.sizeLabel);
   // Update placeholder hints
-  if (key === 'nq') { document.getElementById('entryPrice').placeholder = '17000.00'; document.getElementById('slPrice').placeholder = '16980.00'; document.getElementById('tpPrice').placeholder = '17040.00'; }
-  else if (key === 'es') { document.getElementById('entryPrice').placeholder = '5300.00'; document.getElementById('slPrice').placeholder = '5290.00'; document.getElementById('tpPrice').placeholder = '5320.00'; }
-  else if (key === 'ym') { document.getElementById('entryPrice').placeholder = '39500'; document.getElementById('slPrice').placeholder = '39400'; document.getElementById('tpPrice').placeholder = '39700'; }
-  else { document.getElementById('entryPrice').placeholder = '1.08500'; document.getElementById('slPrice').placeholder = '1.08300'; document.getElementById('tpPrice').placeholder = '1.08900'; }
+  const setPlaceholder = (id, val) => { const el = document.getElementById(id); if (el) el.placeholder = val; };
 
+  if (key === 'nq') { setPlaceholder('entryPrice','17000.00'); setPlaceholder('slPrice','16980.00'); setPlaceholder('tpPrice','17040.00'); }
+  else if (key === 'es') { setPlaceholder('entryPrice','5300.00'); setPlaceholder('slPrice','5290.00'); setPlaceholder('tpPrice','5320.00'); }
+  else if (key === 'ym') { setPlaceholder('entryPrice','39500'); setPlaceholder('slPrice','39400'); setPlaceholder('tpPrice','39700'); }
+  else { setPlaceholder('entryPrice','1.08500'); setPlaceholder('slPrice','1.08300'); setPlaceholder('tpPrice','1.08900'); }
+  
   const chips = document.getElementById('instrChips');
   chips.innerHTML = inst.chips.map(c => `<span class="pill pill-gold">${escapeHtml(c)}</span>`).join('');
   document.getElementById('instrInfo').classList.add('show');
