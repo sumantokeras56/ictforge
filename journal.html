@@ -1,5 +1,5 @@
-   <!-- ════════════════════════════════════════════
-       TRADING JOURNAL
+  <!-- ════════════════════════════════════════════
+       TRADING JOURNAL — ICT FORGE ENHANCED
   ════════════════════════════════════════════ -->
   <div class="section" id="tab-journal">
     <div class="section-header">
@@ -23,8 +23,14 @@
       <!-- ── EQUITY CURVE CHART ─────────────────────────────────── -->
       <div style="margin-bottom:20px;">
         <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
-          text-transform:uppercase;color:var(--gold-dim);margin-bottom:8px;">
-          📈 EQUITY CURVE (R-Multiple)
+          text-transform:uppercase;color:var(--gold-dim);margin-bottom:8px;
+          display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+          <span>📈 EQUITY CURVE (R-Multiple)</span>
+          <div style="display:flex;gap:12px;align-items:center;">
+            <span style="font-size:9px;color:var(--text-muted);">Max DD: <span id="equityMaxDD" style="color:var(--red);">0R</span></span>
+            <span style="font-size:9px;color:var(--text-muted);">Peak: <span id="equityPeak" style="color:var(--green);">0R</span></span>
+            <span style="font-size:9px;color:var(--text-muted);">Total: <span id="equityTotal" style="color:var(--gold);">0R</span></span>
+          </div>
         </div>
         <div style="background:var(--dark3);border:1px solid var(--border);
           border-radius:8px;padding:12px;position:relative;">
@@ -34,6 +40,21 @@
             margin-top:6px;text-align:right;letter-spacing:0.5px;">
             Setiap WIN = +RR · Setiap LOSS = −1R
           </div>
+        </div>
+      </div>
+
+      <!-- ── MISTAKE TAG ANALYTICS ──────────────────────────────── -->
+      <div style="margin-bottom:20px;">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
+          text-transform:uppercase;color:var(--gold-dim);margin-bottom:8px;">
+          🧠 MISTAKE TAG ANALYTICS
+        </div>
+        <div id="mistakeTagCloud" style="display:flex;flex-wrap:wrap;gap:6px;
+          background:var(--dark3);border:1px solid var(--border);
+          border-radius:8px;padding:12px;min-height:48px;">
+          <span style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace;">
+            Belum ada mistake tag — isi data trade terlebih dahulu.
+          </span>
         </div>
       </div>
 
@@ -74,51 +95,217 @@
           <option value="loss">❌ LOSS</option>
         </select>
         <input id="journalNote" placeholder="Catatan (opsional)" type="text"/>
-        <button class="calc-btn" onclick="addJournalEntry()" style="padding:8px 16px;">
+
+        <!-- MISTAKE TAGS -->
+        <div style="grid-column:1/-1;margin-top:4px;">
+          <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;
+            color:var(--gold-dim);margin-bottom:6px;">
+            🏷 MISTAKE TAGS <span style="color:var(--text-muted);font-size:9px;">(opsional, pilih semua yang berlaku)</span>
+          </div>
+          <div id="mistakeTagButtons" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+          <input id="journalCustomTag" placeholder="+ Tag custom (tekan Enter untuk tambah)" type="text"
+            style="margin-top:6px;width:100%;background:var(--dark3);
+              border:1px solid var(--border);border-radius:4px;
+              padding:6px 10px;color:var(--text);font-family:'DM Mono',monospace;
+              font-size:11px;outline:none;box-sizing:border-box;"
+            onfocus="this.style.borderColor='var(--gold-dim)'"
+            onblur="this.style.borderColor='var(--border)'"
+            onkeydown="if(event.key==='Enter'){addCustomMistakeTag();event.preventDefault();}"/>
+        </div>
+
+        <!-- SCREENSHOT UPLOAD -->
+        <div style="grid-column:1/-1;margin-top:4px;">
+          <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;
+            color:var(--gold-dim);margin-bottom:6px;">
+            📸 SCREENSHOT CHART <span style="color:var(--text-muted);font-size:9px;">(opsional — upload atau Ctrl+V paste)</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <!-- Before -->
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <span style="font-size:10px;color:var(--text-muted);font-family:'DM Mono',monospace;
+                min-width:52px;font-weight:bold;">BEFORE:</span>
+              <label style="cursor:pointer;background:var(--dark3);border:1px dashed var(--border);
+                border-radius:6px;padding:6px 14px;font-size:11px;color:var(--text-muted);
+                font-family:'DM Mono',monospace;transition:all 0.2s;flex:1;text-align:center;
+                min-width:120px;"
+                onmouseover="this.style.borderColor='var(--gold-dim)';this.style.color='var(--gold)'"
+                onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">
+                ⬆ Upload File
+                <input type="file" accept="image/*" id="screenshotBeforeInput"
+                  style="display:none;" onchange="jrnlPreviewSS('before', this)"/>
+              </label>
+              <div id="screenshotBeforeThumb" style="display:none;position:relative;">
+                <img id="screenshotBeforeImg" style="height:40px;border-radius:4px;
+                  border:1px solid var(--border);cursor:pointer;"
+                  onclick="jrnlOpenModal('before')" title="Klik untuk perbesar"/>
+                <span onclick="jrnlClearSS('before')"
+                  style="position:absolute;top:-6px;right:-6px;background:var(--red);
+                    color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;
+                    display:flex;align-items:center;justify-content:center;cursor:pointer;">✕</span>
+              </div>
+            </div>
+            <!-- After -->
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <span style="font-size:10px;color:var(--text-muted);font-family:'DM Mono',monospace;
+                min-width:52px;font-weight:bold;">AFTER:</span>
+              <label style="cursor:pointer;background:var(--dark3);border:1px dashed var(--border);
+                border-radius:6px;padding:6px 14px;font-size:11px;color:var(--text-muted);
+                font-family:'DM Mono',monospace;transition:all 0.2s;flex:1;text-align:center;
+                min-width:120px;"
+                onmouseover="this.style.borderColor='var(--gold-dim)';this.style.color='var(--gold)'"
+                onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">
+                ⬆ Upload File
+                <input type="file" accept="image/*" id="screenshotAfterInput"
+                  style="display:none;" onchange="jrnlPreviewSS('after', this)"/>
+              </label>
+              <div id="screenshotAfterThumb" style="display:none;position:relative;">
+                <img id="screenshotAfterImg" style="height:40px;border-radius:4px;
+                  border:1px solid var(--border);cursor:pointer;"
+                  onclick="jrnlOpenModal('after')" title="Klik untuk perbesar"/>
+                <span onclick="jrnlClearSS('after')"
+                  style="position:absolute;top:-6px;right:-6px;background:var(--red);
+                    color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;
+                    display:flex;align-items:center;justify-content:center;cursor:pointer;">✕</span>
+              </div>
+            </div>
+            <div style="font-size:9px;color:var(--text-muted);font-family:'DM Mono',monospace;">
+              💡 Paste Ctrl+V langsung ke halaman ini untuk screenshot dari clipboard (before slot diisi duluan)
+            </div>
+          </div>
+        </div>
+
+        <button class="calc-btn" onclick="addJournalEntry()" style="padding:8px 16px;grid-column:1/-1;margin-top:4px;">
           ➕ Tambah Trade
         </button>
       </div>
 
+      <!-- ── COMPOUNDING CALCULATOR ─────────────────────────────── -->
+      <div style="margin-bottom:20px;margin-top:8px;">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
+          text-transform:uppercase;color:var(--gold-dim);margin-bottom:8px;
+          display:flex;align-items:center;justify-content:space-between;cursor:pointer;"
+          onclick="toggleCompoundCalc()">
+          <span>🔢 COMPOUNDING CALCULATOR — FUNDED ACCOUNT</span>
+          <span id="compoundToggleIcon" style="font-size:12px;color:var(--text-muted);">▼</span>
+        </div>
+        <div id="compoundCalcBody" style="background:var(--dark3);border:1px solid var(--border);
+          border-radius:8px;padding:16px;">
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px;">
+            <div>
+              <label style="font-family:'DM Mono',monospace;font-size:9px;color:var(--text-muted);
+                letter-spacing:1px;display:block;margin-bottom:4px;">ACCOUNT SIZE ($)</label>
+              <input id="ccAccountSize" type="number" value="50000" step="1000"
+                style="width:100%;background:var(--dark2);border:1px solid var(--border);
+                  border-radius:4px;padding:6px 10px;color:var(--text);
+                  font-family:'DM Mono',monospace;font-size:12px;outline:none;box-sizing:border-box;"
+                onfocus="this.style.borderColor='var(--gold-dim)'"
+                onblur="this.style.borderColor='var(--border)';calcCompounding()"/>
+            </div>
+            <div>
+              <label style="font-family:'DM Mono',monospace;font-size:9px;color:var(--text-muted);
+                letter-spacing:1px;display:block;margin-bottom:4px;">DAILY TARGET (%)</label>
+              <input id="ccDailyTarget" type="number" value="1" step="0.1" min="0.1"
+                style="width:100%;background:var(--dark2);border:1px solid var(--border);
+                  border-radius:4px;padding:6px 10px;color:var(--text);
+                  font-family:'DM Mono',monospace;font-size:12px;outline:none;box-sizing:border-box;"
+                onfocus="this.style.borderColor='var(--gold-dim)'"
+                onblur="this.style.borderColor='var(--border)';calcCompounding()"/>
+            </div>
+            <div>
+              <label style="font-family:'DM Mono',monospace;font-size:9px;color:var(--text-muted);
+                letter-spacing:1px;display:block;margin-bottom:4px;">TRADING DAYS</label>
+              <input id="ccDays" type="number" value="20" step="1" min="1"
+                style="width:100%;background:var(--dark2);border:1px solid var(--border);
+                  border-radius:4px;padding:6px 10px;color:var(--text);
+                  font-family:'DM Mono',monospace;font-size:12px;outline:none;box-sizing:border-box;"
+                onfocus="this.style.borderColor='var(--gold-dim)'"
+                onblur="this.style.borderColor='var(--border)';calcCompounding()"/>
+            </div>
+            <div>
+              <label style="font-family:'DM Mono',monospace;font-size:9px;color:var(--text-muted);
+                letter-spacing:1px;display:block;margin-bottom:4px;">PAYOUT SPLIT (%)</label>
+              <input id="ccPayoutSplit" type="number" value="80" step="5" min="0" max="100"
+                style="width:100%;background:var(--dark2);border:1px solid var(--border);
+                  border-radius:4px;padding:6px 10px;color:var(--text);
+                  font-family:'DM Mono',monospace;font-size:12px;outline:none;box-sizing:border-box;"
+                onfocus="this.style.borderColor='var(--gold-dim)'"
+                onblur="this.style.borderColor='var(--border)';calcCompounding()"/>
+            </div>
+            <div>
+              <label style="font-family:'DM Mono',monospace;font-size:9px;color:var(--text-muted);
+                letter-spacing:1px;display:block;margin-bottom:4px;">CONSISTENCY MAX (%)</label>
+              <input id="ccConsistency" type="number" value="30" step="1" min="0" max="100"
+                title="Batas maks % dari total profit yang boleh diraih dalam 1 hari (0 = tidak ada aturan)"
+                style="width:100%;background:var(--dark2);border:1px solid var(--border);
+                  border-radius:4px;padding:6px 10px;color:var(--text);
+                  font-family:'DM Mono',monospace;font-size:12px;outline:none;box-sizing:border-box;"
+                onfocus="this.style.borderColor='var(--gold-dim)'"
+                onblur="this.style.borderColor='var(--border)';calcCompounding()"/>
+            </div>
+            <div>
+              <label style="font-family:'DM Mono',monospace;font-size:9px;color:var(--text-muted);
+                letter-spacing:1px;display:block;margin-bottom:4px;">PAYOUT EVERY (DAYS)</label>
+              <input id="ccPayoutAfter" type="number" value="14" step="1" min="1"
+                style="width:100%;background:var(--dark2);border:1px solid var(--border);
+                  border-radius:4px;padding:6px 10px;color:var(--text);
+                  font-family:'DM Mono',monospace;font-size:12px;outline:none;box-sizing:border-box;"
+                onfocus="this.style.borderColor='var(--gold-dim)'"
+                onblur="this.style.borderColor='var(--border)';calcCompounding()"/>
+            </div>
+          </div>
+
+          <!-- Results Summary -->
+          <div id="ccResults" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+            gap:8px;margin-bottom:14px;"></div>
+
+          <!-- Consistency Alert -->
+          <div id="ccConsistencyAlert" style="display:none;background:rgba(231,76,60,0.08);
+            border:1px solid var(--red);border-radius:6px;padding:10px;
+            font-family:'DM Mono',monospace;font-size:11px;color:var(--red);margin-bottom:12px;
+            line-height:1.6;"></div>
+
+          <!-- Compound Table -->
+          <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;font-family:'DM Mono',monospace;font-size:11px;">
+              <thead>
+                <tr style="border-bottom:1px solid var(--border);">
+                  <th style="padding:6px 8px;text-align:left;color:var(--text-muted);font-weight:normal;letter-spacing:1px;">DAY</th>
+                  <th style="padding:6px 8px;text-align:right;color:var(--text-muted);font-weight:normal;letter-spacing:1px;">BALANCE</th>
+                  <th style="padding:6px 8px;text-align:right;color:var(--text-muted);font-weight:normal;letter-spacing:1px;">DAILY GAIN</th>
+                  <th style="padding:6px 8px;text-align:right;color:var(--text-muted);font-weight:normal;letter-spacing:1px;">PAYOUT</th>
+                  <th style="padding:6px 8px;text-align:right;color:var(--text-muted);font-weight:normal;letter-spacing:1px;">CONSISTENCY</th>
+                </tr>
+              </thead>
+              <tbody id="ccTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
       <!-- ── ACTION BUTTONS ────────────────────────────────────── -->
       <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
-        <!-- Export -->
-        <button class="action-btn" onclick="exportJournalCSV()"
-          style="flex:1;min-width:130px;">
+        <button class="action-btn" onclick="exportJournalCSV()" style="flex:1;min-width:130px;">
           ⬇ Export CSV
         </button>
-        <button class="action-btn" onclick="exportJournalPDF()"
-          style="flex:1;min-width:130px;">
+        <button class="action-btn" onclick="exportJournalPDF()" style="flex:1;min-width:130px;">
           ⬡ Export PDF
         </button>
-
-        <!-- Backup / Restore -->
         <button class="action-btn" onclick="backupJournal()"
-          title="Download semua data journal sebagai file JSON"
-          style="flex:1;min-width:130px;
-            background:rgba(46,204,113,0.08);
-            border-color:rgba(46,204,113,0.35);
-            color:var(--green);">
+          style="flex:1;min-width:130px;background:rgba(46,204,113,0.08);
+            border-color:rgba(46,204,113,0.35);color:var(--green);">
           💾 Backup JSON
         </button>
         <label class="action-btn"
-          title="Upload file backup JSON untuk memulihkan data"
-          style="flex:1;min-width:130px;cursor:pointer;
-            background:rgba(91,155,213,0.08);
-            border-color:rgba(91,155,213,0.35);
-            color:var(--blue);text-align:center;
+          style="flex:1;min-width:130px;cursor:pointer;background:rgba(91,155,213,0.08);
+            border-color:rgba(91,155,213,0.35);color:var(--blue);text-align:center;
             display:flex;align-items:center;justify-content:center;">
           📂 Restore JSON
-          <input type="file" accept=".json"
-            onchange="restoreJournal(this)"
-            style="display:none;"/>
+          <input type="file" accept=".json" onchange="restoreJournal(this)" style="display:none;"/>
         </label>
-
-        <!-- Hapus Semua -->
         <button class="action-btn" onclick="clearJournal()"
-          style="flex:1;min-width:130px;
-            background:rgba(231,76,60,0.08);
-            border-color:var(--red);
-            color:var(--red);">
+          style="flex:1;min-width:130px;background:rgba(231,76,60,0.08);
+            border-color:var(--red);color:var(--red);">
           🗑 Hapus Semua
         </button>
       </div>
@@ -136,7 +323,9 @@
               <th>TP</th>
               <th>R:R</th>
               <th>Result</th>
+              <th>Tags</th>
               <th>Catatan</th>
+              <th>SS</th>
               <th>Aksi</th>
             </tr>
           </thead>
@@ -146,3 +335,603 @@
 
     </div><!-- /.journal-wrapper -->
   </div>
+
+  <!-- ── SCREENSHOT LIGHTBOX MODAL ────────────────────────────── -->
+  <div id="jrnlSSModal" onclick="jrnlCloseModal()"
+    style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);
+      z-index:9999;align-items:center;justify-content:center;padding:20px;">
+    <div onclick="event.stopPropagation()"
+      style="max-width:95vw;max-height:90vh;position:relative;text-align:center;">
+      <img id="jrnlSSModalImg"
+        style="max-width:100%;max-height:82vh;border-radius:8px;
+          border:1px solid var(--border);display:block;margin:0 auto;"/>
+      <div id="jrnlSSModalLabel"
+        style="margin-top:8px;font-family:'DM Mono',monospace;font-size:11px;
+          color:var(--text-muted);letter-spacing:1px;"></div>
+      <button onclick="jrnlCloseModal()"
+        style="position:absolute;top:-14px;right:-14px;background:var(--red);
+          color:#fff;border:none;border-radius:50%;width:28px;height:28px;
+          font-size:14px;cursor:pointer;line-height:28px;text-align:center;">✕</button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       JOURNAL JAVASCRIPT — ENHANCED v2
+  ════════════════════════════════════════════ -->
+  <script>
+  (function() {
+    'use strict';
+
+    const STORAGE_KEY  = 'ictforge_journal_v2';
+    const BIAS_KEY     = 'ictforge_daily_bias';
+    const COMPOUND_KEY = 'ictforge_compound_cfg';
+
+    const MISTAKE_TAGS = [
+      { id: 'fomo',        label: '😱 FOMO',           color: '#e74c3c' },
+      { id: 'overlev',     label: '💣 Over-leverage',   color: '#e67e22' },
+      { id: 'late_entry',  label: '⏰ Late Entry',       color: '#f39c12' },
+      { id: 'no_plan',     label: '🎲 No Plan',          color: '#9b59b6' },
+      { id: 'revenge',     label: '🔥 Revenge Trade',    color: '#e74c3c' },
+      { id: 'early_exit',  label: '🏃 Early Exit',       color: '#3498db' },
+      { id: 'move_sl',     label: '🚫 Moved SL',         color: '#e67e22' },
+      { id: 'overtrade',   label: '📉 Overtrade',        color: '#95a5a6' },
+      { id: 'news_ignore', label: '📰 Ignore News',      color: '#1abc9c' },
+      { id: 'bias_wrong',  label: '🧭 Wrong Bias',       color: '#e74c3c' },
+    ];
+
+    // State
+    let _selTags = [];
+    let _ssBefore = null;
+    let _ssAfter  = null;
+
+    // ── HELPERS ──────────────────────────────────────────────────
+    const $  = id => document.getElementById(id);
+    const fmtUSD = n => '$' + n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+
+    function loadData()     { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; } }
+    function saveData(d)    { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); }
+
+    // ── INIT ─────────────────────────────────────────────────────
+    function init() {
+      buildTagButtons();
+      const bias = $('dailyBiasNote');
+      if (bias) {
+        bias.value = localStorage.getItem(BIAS_KEY) || '';
+        bias.addEventListener('input', () => {
+          localStorage.setItem(BIAS_KEY, bias.value);
+          const s = $('dailyNoteSaved');
+          if (s) { s.style.opacity = '1'; setTimeout(() => s.style.opacity = '0', 1500); }
+        });
+      }
+      loadCompoundCfg();
+      calcCompounding();
+      renderJournal();
+      setupPaste();
+    }
+
+    // ── MISTAKE TAGS ─────────────────────────────────────────────
+    function buildTagButtons() {
+      const c = $('mistakeTagButtons');
+      if (!c) return;
+      c.innerHTML = '';
+      MISTAKE_TAGS.forEach(t => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.dataset.id = t.id;
+        b.textContent = t.label;
+        applyTagStyle(b, t.color, false);
+        b.onclick = () => {
+          const on = _selTags.includes(t.id);
+          if (on) _selTags = _selTags.filter(x => x !== t.id);
+          else _selTags.push(t.id);
+          applyTagStyle(b, t.color, !on);
+        };
+        c.appendChild(b);
+      });
+    }
+
+    function applyTagStyle(btn, color, active) {
+      btn.style.cssText = `
+        padding:4px 10px;border-radius:20px;font-size:10px;cursor:pointer;
+        font-family:'DM Mono',monospace;letter-spacing:0.5px;transition:all 0.15s;
+        border:1px solid ${active ? color : color+'40'};
+        background:${active ? color+'40' : color+'15'};
+        color:${color};
+        box-shadow:${active ? '0 0 6px '+color+'50' : 'none'};`;
+    }
+
+    window.addCustomMistakeTag = function() {
+      const inp = $('journalCustomTag');
+      if (!inp || !inp.value.trim()) return;
+      const val = inp.value.trim();
+      const id  = 'custom_' + val.toLowerCase().replace(/\s+/g, '_');
+      const c   = $('mistakeTagButtons');
+      if (!c) return;
+      if (!_selTags.includes(id)) {
+        _selTags.push(id);
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = '🏷 ' + val;
+        applyTagStyle(b, '#b0b0b0', true);
+        c.appendChild(b);
+      }
+      inp.value = '';
+    };
+
+    function resetForm() {
+      ['journalSymbol','journalEntry','journalSL','journalTP','journalRr','journalNote'].forEach(id => {
+        const el = $(id); if (el) el.value = '';
+      });
+      const s = $('journalSide'); if (s) s.selectedIndex = 0;
+      const r = $('journalResult'); if (r) r.selectedIndex = 0;
+      _selTags = [];
+      buildTagButtons();
+      _ssBefore = _ssAfter = null;
+      jrnlClearSS('before');
+      jrnlClearSS('after');
+    }
+
+    // ── SCREENSHOTS ───────────────────────────────────────────────
+    window.jrnlPreviewSS = function(side, input) {
+      const file = input.files[0];
+      if (!file) return;
+      const fr = new FileReader();
+      fr.onload = e => jrnlSetSS(side, e.target.result);
+      fr.readAsDataURL(file);
+    };
+
+    function jrnlSetSS(side, dataUrl) {
+      if (side === 'before') {
+        _ssBefore = dataUrl;
+        const img = $('screenshotBeforeImg'), th = $('screenshotBeforeThumb');
+        if (img) img.src = dataUrl;
+        if (th) th.style.display = 'block';
+      } else {
+        _ssAfter = dataUrl;
+        const img = $('screenshotAfterImg'), th = $('screenshotAfterThumb');
+        if (img) img.src = dataUrl;
+        if (th) th.style.display = 'block';
+      }
+    }
+
+    window.jrnlClearSS = function(side) {
+      if (side === 'before') {
+        _ssBefore = null;
+        const th = $('screenshotBeforeThumb'), inp = $('screenshotBeforeInput');
+        if (th) th.style.display = 'none';
+        if (inp) inp.value = '';
+      } else {
+        _ssAfter = null;
+        const th = $('screenshotAfterThumb'), inp = $('screenshotAfterInput');
+        if (th) th.style.display = 'none';
+        if (inp) inp.value = '';
+      }
+    };
+
+    function setupPaste() {
+      document.addEventListener('paste', e => {
+        if (!$('tab-journal')) return;
+        const items = e.clipboardData && e.clipboardData.items;
+        if (!items) return;
+        for (const item of items) {
+          if (item.type.startsWith('image/')) {
+            const fr = new FileReader();
+            fr.onload = ev => jrnlSetSS(_ssBefore ? 'after' : 'before', ev.target.result);
+            fr.readAsDataURL(item.getAsFile());
+            break;
+          }
+        }
+      });
+    }
+
+    window.jrnlOpenModal = function(sideOrUrl, dataUrl) {
+      const modal = $('jrnlSSModal'), img = $('jrnlSSModalImg'), lbl = $('jrnlSSModalLabel');
+      if (!modal || !img) return;
+      const src = dataUrl || (sideOrUrl === 'before' ? _ssBefore : _ssAfter);
+      if (!src) return;
+      img.src = src;
+      if (lbl) lbl.textContent = (sideOrUrl === 'before' || sideOrUrl === 'after')
+        ? (sideOrUrl === 'before' ? '📸 SCREENSHOT — BEFORE TRADE' : '📸 SCREENSHOT — AFTER TRADE')
+        : '📸 SCREENSHOT';
+      modal.style.display = 'flex';
+    };
+
+    window.jrnlCloseModal = function() {
+      const m = $('jrnlSSModal'); if (m) m.style.display = 'none';
+    };
+
+    // ── ADD TRADE ─────────────────────────────────────────────────
+    window.addJournalEntry = function() {
+      const symbol = ($('journalSymbol')?.value || '').trim().toUpperCase();
+      const entry  = parseFloat($('journalEntry')?.value);
+      if (!symbol || isNaN(entry)) { alert('Symbol dan Entry Price wajib diisi!'); return; }
+
+      const data = loadData();
+      data.push({
+        id: Date.now(),
+        date: new Date().toLocaleDateString('id-ID', { day:'2-digit', month:'short', year:'numeric' }),
+        symbol,
+        side:   $('journalSide')?.value || 'long',
+        entry,
+        sl:     parseFloat($('journalSL')?.value) || null,
+        tp:     parseFloat($('journalTP')?.value) || null,
+        rr:     parseFloat($('journalRr')?.value) || null,
+        result: $('journalResult')?.value || 'pending',
+        note:   ($('journalNote')?.value || '').trim(),
+        tags:   [..._selTags],
+        ssBefore: _ssBefore,
+        ssAfter:  _ssAfter,
+      });
+      saveData(data);
+      resetForm();
+      renderJournal();
+    };
+
+    window.deleteJournalEntry = function(id) {
+      if (!confirm('Hapus trade ini?')) return;
+      saveData(loadData().filter(e => e.id !== id));
+      renderJournal();
+    };
+
+    window.clearJournal = function() {
+      if (!confirm('Hapus SEMUA data journal? Tidak bisa dibatalkan!')) return;
+      saveData([]);
+      renderJournal();
+    };
+
+    // ── RENDER ────────────────────────────────────────────────────
+    function renderJournal() {
+      const data   = loadData();
+      const closed = data.filter(e => e.result === 'win' || e.result === 'loss');
+      const wins   = closed.filter(e => e.result === 'win');
+      const losses = closed.filter(e => e.result === 'loss');
+      const winPF  = wins.reduce((s, e) => s + (e.rr || 1), 0);
+      const lossPF = losses.length;
+
+      const setEl = (id, v) => { const el = $(id); if (el) el.textContent = v; };
+      setEl('statTotal',        data.length);
+      setEl('statWinRate',      closed.length ? ((wins.length / closed.length * 100).toFixed(1) + '%') : '0%');
+      setEl('statProfitFactor', lossPF ? (winPF / lossPF).toFixed(2) : (wins.length ? '∞' : '0'));
+      setEl('statAvgRR',        wins.length ? (winPF / wins.length).toFixed(2) : '0');
+
+      // Table
+      const tbody = $('journalBody');
+      if (tbody) {
+        if (!data.length) {
+          tbody.innerHTML = `<tr><td colspan="12" style="text-align:center;color:var(--text-muted);
+            font-family:'DM Mono',monospace;font-size:11px;padding:20px;">
+            Belum ada trade — tambahkan trade pertama kamu! 🚀</td></tr>`;
+        } else {
+          tbody.innerHTML = data.slice().reverse().map(e => {
+            const rcls   = e.result === 'win' ? 'color:var(--green)' : e.result === 'loss' ? 'color:var(--red)' : '';
+            const rlbl   = e.result === 'win' ? '✅ WIN' : e.result === 'loss' ? '❌ LOSS' : '⏳';
+            const slbl   = e.side === 'long' ? '📈 L' : '📉 S';
+            const tagHtml = (e.tags||[]).length
+              ? (e.tags||[]).map(tid => {
+                  const d = MISTAKE_TAGS.find(t => t.id === tid);
+                  const c = d ? d.color : '#888';
+                  const l = d ? d.label : '🏷 ' + tid.replace('custom_','').replace(/_/g,' ');
+                  return `<span style="display:inline-block;padding:1px 6px;border-radius:10px;
+                    font-size:9px;background:${c}20;color:${c};border:1px solid ${c}40;
+                    margin:1px;white-space:nowrap;">${l}</span>`;
+                }).join('')
+              : '<span style="color:var(--text-muted);">—</span>';
+            const ssHtml = [
+              e.ssBefore ? `<span style="cursor:pointer;font-size:15px;" title="Before"
+                onclick="jrnlOpenModal('before','${e.ssBefore.substring(0,60)}...' )">📸</span>` : '',
+              e.ssAfter  ? `<span style="cursor:pointer;font-size:15px;" title="After"
+                onclick="jrnlOpenModal('after','${e.ssAfter.substring(0,60)}...' )">📷</span>` : '',
+            ].filter(Boolean).join(' ') || '<span style="color:var(--text-muted);">—</span>';
+
+            // Use data attribute to avoid inline huge base64
+            return `<tr>
+              <td style="font-size:10px;white-space:nowrap;">${e.date||'—'}</td>
+              <td style="font-weight:bold;">${e.symbol}</td>
+              <td>${slbl}</td>
+              <td>${e.entry||'—'}</td>
+              <td>${e.sl||'—'}</td>
+              <td>${e.tp||'—'}</td>
+              <td>${e.rr||'—'}</td>
+              <td style="${rcls}">${rlbl}</td>
+              <td style="max-width:150px;">${tagHtml}</td>
+              <td style="font-size:10px;color:var(--text-muted);max-width:120px;">${e.note||'—'}</td>
+              <td style="text-align:center;white-space:nowrap;"
+                data-id="${e.id}" class="ss-cell">
+                ${(e.ssBefore||e.ssAfter) ? '<span class="ss-icons">📸</span>' : '<span style="color:var(--text-muted);">—</span>'}
+              </td>
+              <td><button onclick="deleteJournalEntry(${e.id})"
+                style="background:transparent;border:1px solid var(--red);color:var(--red);
+                  border-radius:4px;padding:2px 8px;font-size:10px;cursor:pointer;">✕</button></td>
+            </tr>`;
+          }).join('');
+
+          // Attach screenshot click handlers correctly (avoid inline base64 in onclick)
+          document.querySelectorAll('.ss-cell').forEach(cell => {
+            const id  = parseInt(cell.dataset.id);
+            const row = data.find(e => e.id === id);
+            if (!row) return;
+            const span = cell.querySelector('.ss-icons');
+            if (span && (row.ssBefore || row.ssAfter)) {
+              span.style.cursor = 'pointer';
+              span.title = (row.ssBefore ? 'Before ✓' : '') + (row.ssAfter ? ' After ✓' : '');
+              span.onclick = () => {
+                const modal = $('jrnlSSModal'), img = $('jrnlSSModalImg'), lbl = $('jrnlSSModalLabel');
+                if (!modal || !img) return;
+                img.src = row.ssBefore || row.ssAfter;
+                if (lbl) lbl.textContent = row.ssBefore
+                  ? (row.ssAfter ? '📸 BEFORE  |  Klik gambar untuk AFTER' : '📸 BEFORE TRADE')
+                  : '📸 AFTER TRADE';
+                modal.style.display = 'flex';
+                // Click image to toggle before/after
+                img.onclick = () => {
+                  if (row.ssBefore && row.ssAfter) {
+                    const showing = img.src === row.ssBefore || img.src.endsWith(row.ssBefore.slice(-20));
+                    img.src = showing ? row.ssAfter : row.ssBefore;
+                    if (lbl) lbl.textContent = showing ? '📷 AFTER TRADE' : '📸 BEFORE TRADE';
+                  }
+                };
+              };
+            }
+          });
+        }
+      }
+
+      drawEquityCurve(data);
+      renderTagCloud(data);
+    }
+
+    // ── EQUITY CURVE ──────────────────────────────────────────────
+    function drawEquityCurve(data) {
+      const canvas = $('equityCanvas');
+      if (!canvas) return;
+      const dpr = window.devicePixelRatio || 1;
+      const W   = canvas.offsetWidth || canvas.parentElement.offsetWidth || 300;
+      const H   = 160;
+      canvas.width  = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.height = H + 'px';
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, W, H);
+
+      const closed = data.filter(e => e.result === 'win' || e.result === 'loss');
+      if (!closed.length) {
+        ctx.fillStyle = '#555';
+        ctx.font = '11px DM Mono, monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('Belum ada closed trade', W / 2, H / 2);
+        return;
+      }
+
+      let cumR = 0, peak = 0, maxDD = 0;
+      const pts = [0];
+      closed.forEach(e => {
+        cumR += e.result === 'win' ? (e.rr || 1) : -1;
+        pts.push(cumR);
+        if (cumR > peak) peak = cumR;
+        const dd = peak - cumR;
+        if (dd > maxDD) maxDD = dd;
+      });
+
+      const minR  = Math.min(...pts);
+      const maxR  = Math.max(...pts);
+      const range = maxR - minR || 1;
+      const pad   = { t: 16, b: 20, l: 8, r: 12 };
+      const tx    = i => pad.l + (i / (pts.length - 1)) * (W - pad.l - pad.r);
+      const ty    = v => pad.t + (1 - (v - minR) / range) * (H - pad.t - pad.b);
+
+      // Zero line
+      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.moveTo(pad.l, ty(0)); ctx.lineTo(W - pad.r, ty(0)); ctx.stroke();
+      ctx.setLineDash([]);
+
+      const finalR = pts[pts.length - 1];
+      const color  = finalR >= 0 ? '#2ecc71' : '#e74c3c';
+
+      // Fill
+      const grad = ctx.createLinearGradient(0, 0, 0, H);
+      grad.addColorStop(0, color + '38'); grad.addColorStop(1, color + '00');
+      ctx.beginPath();
+      ctx.moveTo(tx(0), ty(pts[0]));
+      pts.forEach((v, i) => { if (i > 0) ctx.lineTo(tx(i), ty(v)); });
+      ctx.lineTo(tx(pts.length - 1), H - pad.b);
+      ctx.lineTo(tx(0), H - pad.b);
+      ctx.closePath();
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      // Line
+      ctx.beginPath();
+      ctx.moveTo(tx(0), ty(pts[0]));
+      pts.forEach((v, i) => { if (i > 0) ctx.lineTo(tx(i), ty(v)); });
+      ctx.strokeStyle = color; ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Label
+      ctx.fillStyle = color;
+      ctx.font = 'bold 11px DM Mono, monospace';
+      ctx.textAlign = 'right';
+      ctx.fillText(finalR.toFixed(2) + 'R', W - pad.r, ty(finalR) - 5);
+
+      const set = (id, v) => { const el = $(id); if (el) el.textContent = v; };
+      set('equityMaxDD', maxDD.toFixed(2) + 'R');
+      set('equityPeak',  peak.toFixed(2) + 'R');
+      set('equityTotal', finalR.toFixed(2) + 'R');
+    }
+
+    // ── MISTAKE TAG CLOUD ─────────────────────────────────────────
+    function renderTagCloud(data) {
+      const c = $('mistakeTagCloud');
+      if (!c) return;
+      const cnt = {};
+      data.forEach(e => (e.tags||[]).forEach(t => cnt[t] = (cnt[t]||0)+1));
+      const entries = Object.entries(cnt).sort((a,b) => b[1]-a[1]);
+      if (!entries.length) {
+        c.innerHTML = `<span style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace;">
+          Belum ada mistake tag.</span>`;
+        return;
+      }
+      c.innerHTML = entries.map(([id, n]) => {
+        const def   = MISTAKE_TAGS.find(t => t.id === id);
+        const color = def ? def.color : '#888';
+        const lbl   = def ? def.label : '🏷 ' + id.replace('custom_','').replace(/_/g,' ');
+        const fs    = 10 + Math.min(n * 2, 8);
+        return `<span style="display:inline-flex;align-items:center;gap:4px;padding:4px 12px;
+          border-radius:20px;font-size:${fs}px;background:${color}20;color:${color};
+          border:1px solid ${color}50;font-family:'DM Mono',monospace;letter-spacing:0.5px;"
+          title="${n} trade dengan tag ini">
+          ${lbl} <span style="font-size:10px;opacity:0.7;">${n}×</span></span>`;
+      }).join('');
+    }
+
+    // ── COMPOUNDING CALC ──────────────────────────────────────────
+    window.toggleCompoundCalc = function() {
+      const body = $('compoundCalcBody'), icon = $('compoundToggleIcon');
+      if (!body) return;
+      const open = body.style.display !== 'none';
+      body.style.display = open ? 'none' : 'block';
+      if (icon) icon.textContent = open ? '▶' : '▼';
+    };
+
+    function loadCompoundCfg() {
+      try {
+        const s = JSON.parse(localStorage.getItem(COMPOUND_KEY) || 'null');
+        if (!s) return;
+        ['ccAccountSize','ccDailyTarget','ccDays','ccPayoutSplit','ccConsistency','ccPayoutAfter']
+          .forEach(id => { const el = $(id); if (el && s[id] !== undefined) el.value = s[id]; });
+      } catch {}
+    }
+
+    window.calcCompounding = function() {
+      const cfg = {};
+      ['ccAccountSize','ccDailyTarget','ccDays','ccPayoutSplit','ccConsistency','ccPayoutAfter']
+        .forEach(id => { const el = $(id); if (el) cfg[id] = el.value; });
+      localStorage.setItem(COMPOUND_KEY, JSON.stringify(cfg));
+
+      const acct      = parseFloat(cfg.ccAccountSize)  || 50000;
+      const dailyPct  = parseFloat(cfg.ccDailyTarget)   || 1;
+      const days      = parseInt(cfg.ccDays)            || 20;
+      const split     = parseFloat(cfg.ccPayoutSplit)   || 80;
+      const conMax    = parseFloat(cfg.ccConsistency)   || 0;
+      const payEvery  = parseInt(cfg.ccPayoutAfter)     || 14;
+
+      let bal = acct, totalProfit = 0, totalPayout = 0;
+      const violations = [], rows = [];
+
+      for (let d = 1; d <= days; d++) {
+        const gain = bal * (dailyPct / 100);
+        totalProfit += gain;
+        bal         += gain;
+
+        let payout = 0;
+        if (d % payEvery === 0) {
+          payout = totalProfit * (split / 100);
+          totalPayout += payout;
+        }
+
+        let flag = '';
+        if (conMax > 0 && totalProfit > 0) {
+          const pct = (gain / totalProfit) * 100;
+          if (pct > conMax) { flag = `⚠ ${pct.toFixed(0)}%`; violations.push(d); }
+        }
+
+        rows.push({ d, bal, gain, payout, flag });
+      }
+
+      const results = $('ccResults');
+      if (results) {
+        results.innerHTML = [
+          { lbl: 'Final Balance', val: fmtUSD(bal),              color: 'var(--green)' },
+          { lbl: 'Total Profit',  val: fmtUSD(bal - acct),       color: 'var(--gold)' },
+          { lbl: 'Your Payout',   val: fmtUSD(totalPayout),      color: 'var(--blue)' },
+          { lbl: 'Growth',        val: '+' + (((bal-acct)/acct)*100).toFixed(1)+'%', color: 'var(--green)' },
+        ].map(i => `<div style="background:var(--dark2);border:1px solid var(--border);
+          border-radius:6px;padding:10px;text-align:center;">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--text-muted);
+            letter-spacing:1px;margin-bottom:4px;">${i.lbl}</div>
+          <div style="font-family:'DM Mono',monospace;font-size:16px;font-weight:bold;
+            color:${i.color};">${i.val}</div></div>`).join('');
+      }
+
+      const alert = $('ccConsistencyAlert');
+      if (alert) {
+        if (violations.length) {
+          alert.style.display = 'block';
+          alert.textContent = `⚠ CONSISTENCY RULE — Hari ${violations.join(', ')} melebihi batas ${conMax}% dari total profit harian. Prop firm bisa mendisqualifikasi payout kamu. Pertimbangkan target harian yang lebih merata.`;
+        } else {
+          alert.style.display = 'none';
+        }
+      }
+
+      const tbody = $('ccTableBody');
+      if (tbody) {
+        tbody.innerHTML = rows.map(r => `
+          <tr style="${r.payout ? 'background:rgba(52,152,219,0.06);' : ''}">
+            <td style="padding:5px 8px;border-bottom:1px solid var(--border);font-family:'DM Mono',monospace;">${r.d}</td>
+            <td style="padding:5px 8px;border-bottom:1px solid var(--border);font-family:'DM Mono',monospace;text-align:right;color:var(--text);">${fmtUSD(r.bal)}</td>
+            <td style="padding:5px 8px;border-bottom:1px solid var(--border);font-family:'DM Mono',monospace;text-align:right;color:var(--green);">+${fmtUSD(r.gain)}</td>
+            <td style="padding:5px 8px;border-bottom:1px solid var(--border);font-family:'DM Mono',monospace;text-align:right;color:${r.payout ? 'var(--blue)' : 'var(--text-muted)'};">
+              ${r.payout ? '💰 ' + fmtUSD(r.payout) : '—'}</td>
+            <td style="padding:5px 8px;border-bottom:1px solid var(--border);font-family:'DM Mono',monospace;text-align:right;color:${r.flag ? 'var(--red)' : 'var(--text-muted)'};">
+              ${r.flag || '✓'}</td>
+          </tr>`).join('');
+      }
+    };
+
+    // ── EXPORT / BACKUP / RESTORE ─────────────────────────────────
+    window.exportJournalCSV = function() {
+      const data = loadData();
+      if (!data.length) { alert('Journal kosong!'); return; }
+      const hdr  = 'Tanggal,Symbol,Side,Entry,SL,TP,R:R,Result,Tags,Catatan';
+      const rows = data.map(e =>
+        [e.date,e.symbol,e.side,e.entry,e.sl,e.tp,e.rr,e.result,
+         (e.tags||[]).join('|'),`"${(e.note||'').replace(/"/g,'""')}"`].join(','));
+      const url = URL.createObjectURL(new Blob([hdr+'\n'+rows.join('\n')], {type:'text/csv'}));
+      const a = Object.assign(document.createElement('a'), {href:url, download:'ictforge_journal.csv'});
+      a.click(); URL.revokeObjectURL(url);
+    };
+
+    window.exportJournalPDF = function() { window.print(); };
+
+    window.backupJournal = function() {
+      const data = loadData();
+      const url  = URL.createObjectURL(new Blob([JSON.stringify(data,null,2)], {type:'application/json'}));
+      const a    = Object.assign(document.createElement('a'), {
+        href: url,
+        download: 'ictforge_journal_' + new Date().toISOString().slice(0,10) + '.json'
+      });
+      a.click(); URL.revokeObjectURL(url);
+    };
+
+    window.restoreJournal = function(input) {
+      const file = input.files[0];
+      if (!file) return;
+      const fr = new FileReader();
+      fr.onload = e => {
+        try {
+          const d = JSON.parse(e.target.result);
+          if (!Array.isArray(d)) throw new Error('Format tidak valid');
+          if (!confirm(`Restore ${d.length} trade? Data saat ini akan diganti.`)) return;
+          saveData(d);
+          renderJournal();
+          alert('✅ Restore berhasil!');
+        } catch (err) { alert('❌ Gagal: ' + err.message); }
+      };
+      fr.readAsText(file);
+    };
+
+    // ── RESIZE ────────────────────────────────────────────────────
+    let _rt;
+    window.addEventListener('resize', () => {
+      clearTimeout(_rt);
+      _rt = setTimeout(() => drawEquityCurve(loadData()), 200);
+    });
+
+    // ── START ─────────────────────────────────────────────────────
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
+
+  })();
+  </script>
