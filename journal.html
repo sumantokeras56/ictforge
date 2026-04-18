@@ -1,0 +1,148 @@
+   <!-- ════════════════════════════════════════════
+       TRADING JOURNAL
+  ════════════════════════════════════════════ -->
+  <div class="section" id="tab-journal">
+    <div class="section-header">
+     <div class="section-number">13</div>
+     <div class="section-title-wrap">
+      <h2>Trading Journal</h2>
+      <p>Catat &amp; Analisis Semua Trade Kamu — 100% Privat (localStorage)</p>
+     </div>
+    </div>
+
+    <div class="journal-wrapper">
+
+      <!-- ── STATS ROW ──────────────────────────────────────────── -->
+      <div class="journal-stats" id="journalStats">
+        <div class="journal-stat">📊 Total Trades: <span id="statTotal">0</span></div>
+        <div class="journal-stat">✅ Win Rate: <span id="statWinRate">0%</span></div>
+        <div class="journal-stat">💰 Profit Factor: <span id="statProfitFactor">0</span></div>
+        <div class="journal-stat">📈 Avg R:R: <span id="statAvgRR">0</span></div>
+      </div>
+
+      <!-- ── EQUITY CURVE CHART ─────────────────────────────────── -->
+      <div style="margin-bottom:20px;">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
+          text-transform:uppercase;color:var(--gold-dim);margin-bottom:8px;">
+          📈 EQUITY CURVE (R-Multiple)
+        </div>
+        <div style="background:var(--dark3);border:1px solid var(--border);
+          border-radius:8px;padding:12px;position:relative;">
+          <canvas id="equityCanvas"
+            style="width:100%;height:160px;display:block;border-radius:4px;"></canvas>
+          <div style="font-size:9px;color:var(--text-muted);font-family:'DM Mono',monospace;
+            margin-top:6px;text-align:right;letter-spacing:0.5px;">
+            Setiap WIN = +RR · Setiap LOSS = −1R
+          </div>
+        </div>
+      </div>
+
+      <!-- ── DAILY BIAS NOTE ───────────────────────────────────── -->
+      <div style="margin-bottom:20px;">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
+          text-transform:uppercase;color:var(--gold-dim);margin-bottom:8px;
+          display:flex;align-items:center;justify-content:space-between;">
+          <span>📝 CATATAN BIAS HARIAN</span>
+          <span id="dailyNoteSaved" style="font-size:9px;color:var(--green);
+            opacity:0;transition:opacity 0.4s;">✓ Tersimpan</span>
+        </div>
+        <textarea id="dailyBiasNote"
+          placeholder="Contoh: Bias BULLISH NQ minggu ini. COT Commercial long. Cari buy saat NY Open di FVG 17,480–17,500. Hindari entry sebelum CPI Selasa..."
+          style="width:100%;min-height:80px;background:var(--dark3);
+            border:1px solid var(--border);border-radius:6px;
+            padding:12px;color:var(--text);font-family:'DM Mono',monospace;
+            font-size:12px;line-height:1.6;resize:vertical;outline:none;
+            transition:border-color 0.2s;"
+          onfocus="this.style.borderColor='var(--gold-dim)'"
+          onblur="this.style.borderColor='var(--border)'"></textarea>
+      </div>
+
+      <!-- ── FORM TAMBAH TRADE ─────────────────────────────────── -->
+      <div class="journal-form">
+        <input id="journalSymbol" placeholder="Symbol (NQ, ES, EUR, dll)" type="text"/>
+        <select id="journalSide">
+          <option value="long">📈 LONG (Buy)</option>
+          <option value="short">📉 SHORT (Sell)</option>
+        </select>
+        <input id="journalEntry"  placeholder="Entry Price"  step="any" type="number"/>
+        <input id="journalSL"     placeholder="Stop Loss"    step="any" type="number"/>
+        <input id="journalTP"     placeholder="Take Profit"  step="any" type="number"/>
+        <input id="journalRr"     placeholder="R:R (contoh: 2)" step="0.1" type="number"/>
+        <select id="journalResult">
+          <option value="pending">⏳ Pending</option>
+          <option value="win">✅ WIN</option>
+          <option value="loss">❌ LOSS</option>
+        </select>
+        <input id="journalNote" placeholder="Catatan (opsional)" type="text"/>
+        <button class="calc-btn" onclick="addJournalEntry()" style="padding:8px 16px;">
+          ➕ Tambah Trade
+        </button>
+      </div>
+
+      <!-- ── ACTION BUTTONS ────────────────────────────────────── -->
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+        <!-- Export -->
+        <button class="action-btn" onclick="exportJournalCSV()"
+          style="flex:1;min-width:130px;">
+          ⬇ Export CSV
+        </button>
+        <button class="action-btn" onclick="exportJournalPDF()"
+          style="flex:1;min-width:130px;">
+          ⬡ Export PDF
+        </button>
+
+        <!-- Backup / Restore -->
+        <button class="action-btn" onclick="backupJournal()"
+          title="Download semua data journal sebagai file JSON"
+          style="flex:1;min-width:130px;
+            background:rgba(46,204,113,0.08);
+            border-color:rgba(46,204,113,0.35);
+            color:var(--green);">
+          💾 Backup JSON
+        </button>
+        <label class="action-btn"
+          title="Upload file backup JSON untuk memulihkan data"
+          style="flex:1;min-width:130px;cursor:pointer;
+            background:rgba(91,155,213,0.08);
+            border-color:rgba(91,155,213,0.35);
+            color:var(--blue);text-align:center;
+            display:flex;align-items:center;justify-content:center;">
+          📂 Restore JSON
+          <input type="file" accept=".json"
+            onchange="restoreJournal(this)"
+            style="display:none;"/>
+        </label>
+
+        <!-- Hapus Semua -->
+        <button class="action-btn" onclick="clearJournal()"
+          style="flex:1;min-width:130px;
+            background:rgba(231,76,60,0.08);
+            border-color:var(--red);
+            color:var(--red);">
+          🗑 Hapus Semua
+        </button>
+      </div>
+
+      <!-- ── TABEL JOURNAL ─────────────────────────────────────── -->
+      <div style="overflow-x:auto;">
+        <table class="journal-table" id="journalTable">
+          <thead>
+            <tr>
+              <th>Tanggal</th>
+              <th>Symbol</th>
+              <th>Side</th>
+              <th>Entry</th>
+              <th>SL</th>
+              <th>TP</th>
+              <th>R:R</th>
+              <th>Result</th>
+              <th>Catatan</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="journalBody"></tbody>
+        </table>
+      </div>
+
+    </div><!-- /.journal-wrapper -->
+  </div>

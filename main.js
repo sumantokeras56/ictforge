@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   // Also update Asia KZ card
   if (typeof updateAsiaKZCard === 'function') updateAsiaKZCard();
+  // Init daily bias note autosave
+  initDailyBiasNote();
 });
 console.log('[ICT Forge v1.0] Loaded. PineScript AI Error Fixer ready.');
 
@@ -459,16 +461,12 @@ function sendTestNotification() {
     showToast('⚠️ Aktifkan notifikasi terlebih dahulu');
     return;
   }
-  try {
-    new Notification('ICT Forge — Test Notifikasi ✅', {
-      body: '🟢 Notifikasi berfungsi! Kamu akan dapat notif saat Kill Zone buka.',
-      icon: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>',
-      requireInteraction: false
-    });
-    showToast('✅ Test notifikasi berhasil dikirim!');
-  } catch(e) {
-    showToast('❌ Gagal kirim notifikasi: ' + e.message);
-  }
+  _sendNotif(
+    'ICT Forge — Test Notifikasi ✅',
+    '🟢 Notifikasi berfungsi! Kamu akan dapat notif saat Kill Zone buka.',
+    'ictforge-test'
+  );
+  showToast('✅ Test notifikasi berhasil dikirim!');
 }
 
 function updateNotifUI() {
@@ -494,15 +492,27 @@ function requestNotificationPermission() {
   }
 }
 
+// ── HELPER: Kirim notifikasi via Service Worker (kompatibel HP/mobile)
+// new Notification() tidak berfungsi di background pada mobile — harus via SW
+function _sendNotif(title, body, tag) {
+  if (!_notifEnabled || Notification.permission !== 'granted') return;
+  // Coba via Service Worker dulu (paling kompatibel, termasuk HP Android)
+  if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+    navigator.serviceWorker.controller.postMessage({
+      type: 'SHOW_NOTIFICATION',
+      title: title,
+      body:  body,
+      tag:   tag || 'ictforge-notif'
+    });
+  } else {
+    // Fallback: new Notification() untuk desktop/saat SW belum aktif
+    try { new Notification(title, { body, tag, icon: '/ictforge/icon-192.png' }); } catch(e) {}
+  }
+}
+
 function sendSessionNotif(sessionName, message) {
   if (!_notifEnabled || Notification.permission !== 'granted') return;
-  try {
-    new Notification('ICT Masterclass — ' + sessionName, {
-      body: message,
-      icon: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>',
-      tag: sessionName // prevent duplicate notifs
-    });
-  } catch(e) {}
+  _sendNotif('ICT Forge — ' + sessionName, message, 'sess-' + sessionName);
 }
 
 function sendNewsNotif(eventName, minLeft) {
@@ -515,13 +525,7 @@ function sendNewsNotif(eventName, minLeft) {
   } else {
     msg = '🔴 ' + eventName + ' baru saja dirilis — tunggu settle 10-15 mnt';
   }
-  try {
-    new Notification('ICT — HIGH IMPACT NEWS ⚠️', {
-      body: msg,
-      tag: 'news-' + eventName + '-' + minLeft,
-      icon: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚠️</text></svg>'
-    });
-  } catch(e) {}
+  _sendNotif('ICT — HIGH IMPACT NEWS ⚠️', msg, 'news-' + eventName + '-' + minLeft);
 }
 
 function inSession(h, m, s) {
@@ -1851,6 +1855,9 @@ function renderJournal() {
   if (statWinRate) statWinRate.textContent = winRate + '%';
   if (statProfitFactor) statProfitFactor.textContent = profitFactor;
   if (statAvgRR) statAvgRR.textContent = avgRR;
+
+  // Gambar ulang equity curve setiap render
+  requestAnimationFrame(drawEquityCurve);
 }
 
 function addJournalEntry() {
@@ -2011,6 +2018,207 @@ function exportJournalPDF() {
   if (!win) { alert('Pop-up diblokir browser. Izinkan pop-up untuk domain ini.'); URL.revokeObjectURL(url); return; }
   setTimeout(() => { URL.revokeObjectURL(url); win.print(); }, 600);
 }
+
+// ── BACKUP JOURNAL → JSON ──────────────────────────────────────────
+function backupJournal() {
+  if (journalEntries.length === 0) {
+    showToast('⚠️ Tidak ada data untuk dibackup');
+    return;
+  }
+  const payload = {
+    version:   '1.0',
+    app:       'ICT Forge',
+    exported:  new Date().toISOString(),
+    count:     journalEntries.length,
+    entries:   journalEntries
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = `ICT_Journal_Backup_${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('✅ Backup berhasil — ' + journalEntries.length + ' trade disimpan!');
+}
+
+// ── RESTORE JOURNAL ← JSON ─────────────────────────────────────────
+function restoreJournal(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      let data = JSON.parse(e.target.result);
+      // Support both raw array dan format {entries:[...]}
+      if (data && data.entries && Array.isArray(data.entries)) data = data.entries;
+      if (!Array.isArray(data)) throw new Error('Format tidak valid');
+      if (data.length === 0) { showToast('⚠️ File backup kosong'); return; }
+
+      const action = confirm(
+        `📂 Ditemukan ${data.length} trade di file backup.\n\n` +
+        `✅ OK     → Gabungkan dengan data yang ada (${journalEntries.length} trade)\n` +
+        `❌ Cancel → Timpa semua data lama dengan data backup ini`
+      );
+      if (action) {
+        // Merge — deduplikasi berdasarkan date+symbol+entry
+        const existingKeys = new Set(journalEntries.map(j => j.date + j.symbol + j.entry));
+        const newEntries   = data.filter(j => !existingKeys.has(j.date + j.symbol + j.entry));
+        journalEntries = [...journalEntries, ...newEntries];
+        showToast('✅ Merge selesai — ' + newEntries.length + ' trade baru ditambahkan!');
+      } else {
+        journalEntries = data;
+        showToast('✅ Restore selesai — ' + data.length + ' trade dipulihkan!');
+      }
+      saveJournal();
+    } catch (err) {
+      showToast('❌ Gagal restore: file rusak atau format salah');
+    }
+  };
+  reader.readAsText(file);
+  input.value = ''; // reset agar bisa upload file sama lagi
+}
+
+// ── EQUITY CURVE CHART (Canvas API) ───────────────────────────────
+function drawEquityCurve() {
+  const canvas = document.getElementById('equityCanvas');
+  if (!canvas) return;
+
+  const ctx    = canvas.getContext('2d');
+  const dpr    = window.devicePixelRatio || 1;
+  const W      = canvas.offsetWidth;
+  const H      = 160;
+
+  canvas.width  = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.height = H + 'px';
+  ctx.scale(dpr, dpr);
+
+  ctx.clearRect(0, 0, W, H);
+
+  if (journalEntries.length < 1) {
+    ctx.fillStyle = 'rgba(201,168,76,0.25)';
+    ctx.font = '12px DM Mono, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('Belum ada data trade', W / 2, H / 2);
+    return;
+  }
+
+  // Urutkan dari terlama ke terbaru
+  const sorted = [...journalEntries]
+    .filter(t => t.result === 'win' || t.result === 'loss')
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  if (sorted.length < 1) {
+    ctx.fillStyle = 'rgba(201,168,76,0.25)';
+    ctx.font = '12px DM Mono, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('Belum ada trade WIN/LOSS', W / 2, H / 2);
+    return;
+  }
+
+  // Hitung equity dalam R-multiple (tiap trade = +RR atau -1)
+  let balance = 0;
+  const points = [0];
+  sorted.forEach(t => {
+    balance += t.result === 'win' ? parseFloat(t.rr || 1) : -1;
+    points.push(parseFloat(balance.toFixed(2)));
+  });
+
+  const maxVal = Math.max(...points, 1);
+  const minVal = Math.min(...points, -1);
+  const range  = maxVal - minVal || 1;
+  const pad    = { top: 16, bottom: 24, left: 36, right: 12 };
+  const plotW  = W - pad.left - pad.right;
+  const plotH  = H - pad.top - pad.bottom;
+
+  const xOf = i => pad.left + (i / (points.length - 1)) * plotW;
+  const yOf = v => pad.top + plotH - ((v - minVal) / range) * plotH;
+
+  // Grid & zero line
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 1;
+  [-1, 0, 1].forEach(tier => {
+    const gridY = yOf(tier * Math.ceil(maxVal / 2));
+    ctx.beginPath(); ctx.moveTo(pad.left, gridY); ctx.lineTo(W - pad.right, gridY); ctx.stroke();
+  });
+
+  // Zero line
+  const zeroY = yOf(0);
+  ctx.strokeStyle = 'rgba(201,168,76,0.3)';
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath(); ctx.moveTo(pad.left, zeroY); ctx.lineTo(W - pad.right, zeroY); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Fill gradient bawah kurva
+  const grad = ctx.createLinearGradient(0, pad.top, 0, H - pad.bottom);
+  grad.addColorStop(0, 'rgba(201,168,76,0.20)');
+  grad.addColorStop(1, 'rgba(201,168,76,0.00)');
+  ctx.beginPath();
+  ctx.moveTo(xOf(0), yOf(points[0]));
+  points.forEach((v, i) => { if (i > 0) ctx.lineTo(xOf(i), yOf(v)); });
+  ctx.lineTo(xOf(points.length - 1), H - pad.bottom);
+  ctx.lineTo(xOf(0), H - pad.bottom);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Kurva utama
+  ctx.strokeStyle = '#C9A84C';
+  ctx.lineWidth   = 2;
+  ctx.lineJoin    = 'round';
+  ctx.beginPath();
+  points.forEach((v, i) => {
+    i === 0 ? ctx.moveTo(xOf(i), yOf(v)) : ctx.lineTo(xOf(i), yOf(v));
+  });
+  ctx.stroke();
+
+  // Titik terakhir
+  const lastX = xOf(points.length - 1);
+  const lastY = yOf(points[points.length - 1]);
+  const lastVal = points[points.length - 1];
+  ctx.beginPath();
+  ctx.arc(lastX, lastY, 4, 0, Math.PI * 2);
+  ctx.fillStyle = lastVal >= 0 ? '#2ECC71' : '#E74C3C';
+  ctx.fill();
+
+  // Label Y kiri
+  ctx.fillStyle  = 'rgba(201,168,76,0.6)';
+  ctx.font       = '9px DM Mono, monospace';
+  ctx.textAlign  = 'right';
+  ctx.fillText(maxVal.toFixed(1) + 'R', pad.left - 4, pad.top + 8);
+  ctx.fillText('0R', pad.left - 4, zeroY + 4);
+  ctx.fillText(minVal.toFixed(1) + 'R', pad.left - 4, H - pad.bottom);
+
+  // Label nilai terakhir
+  ctx.fillStyle = lastVal >= 0 ? 'rgba(46,204,113,0.9)' : 'rgba(231,76,60,0.9)';
+  ctx.textAlign = 'left';
+  ctx.font      = '10px DM Mono, monospace';
+  ctx.fillText((lastVal >= 0 ? '+' : '') + lastVal.toFixed(2) + 'R', lastX + 6, lastY + 4);
+}
+
+// ── DAILY BIAS NOTE (autosave) ─────────────────────────────────────
+function initDailyBiasNote() {
+  const el      = document.getElementById('dailyBiasNote');
+  const savedEl = document.getElementById('dailyNoteSaved');
+  if (!el) return;
+  el.value = localStorage.getItem('ict-daily-note') || '';
+  let saveTimer;
+  el.addEventListener('input', () => {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      localStorage.setItem('ict-daily-note', el.value);
+      // Tampilkan indikator "Tersimpan" lalu fade out
+      if (savedEl) {
+        savedEl.style.opacity = '1';
+        setTimeout(() => { savedEl.style.opacity = '0'; }, 1500);
+      }
+    }, 400);
+  });
+}
+
 
 // ==================== ECONOMIC CALENDAR (Static Data) ====================
 const economicEvents = [
@@ -3675,7 +3883,7 @@ function outputCodeBlock(panelOutId, code, title, notes) {
 // ── OFFLINE MODIFY ────────────────────────────────────────────────
 function runPSModify() {
   const code  = document.getElementById('ps-modify-code')?.value.trim();
-  const instr = document.getElementById('ps-modify-instruction')?.value.trim();
+  const instr = document.getElementById('ps-modify-instr')?.value.trim();
   if (!code) { showToast('⚠️ Paste kode PineScript terlebih dahulu'); return; }
 
   let result = code;
@@ -3768,7 +3976,7 @@ function runPSModify() {
     </div>
     ${checkerHtml ? `<div style="margin-top:16px;"><div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:10px;">🔍 STATIC CHECKER</div>${checkerHtml}</div>` : ''}
   `;
-  showPSPanelOutput('ps-out-modify-wrap', outHtml);
+  showPSPanelOutput('ps-modify-out', outHtml);
   const pre = document.getElementById('ps-out-modify');
   if (pre) pre.textContent = result;
   showToast('✅ Modifikasi offline selesai!');
@@ -3776,8 +3984,8 @@ function runPSModify() {
 
 // ── OFFLINE MERGE ─────────────────────────────────────────────────
 function runPSMerge() {
-  const codeA = document.getElementById('ps-merge-code1')?.value.trim();
-  const codeB = document.getElementById('ps-merge-code2')?.value.trim();
+  const codeA = document.getElementById('ps-merge-a')?.value.trim();
+  const codeB = document.getElementById('ps-merge-b')?.value.trim();
   if (!codeA || !codeB) { showToast('⚠️ Isi kedua textarea terlebih dahulu'); return; }
 
   const linesA = codeA.split('\n');
@@ -3837,7 +4045,7 @@ ${nonInputB.join('\n')}`;
     </div>
     ${checkerHtml ? `<div style="margin-top:16px;"><div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:10px;">🔍 STATIC CHECKER</div>${checkerHtml}</div>` : ''}
   `;
-  showPSPanelOutput('ps-out-merge-wrap', outHtml);
+  showPSPanelOutput('ps-merge-out', outHtml);
   const pre = document.getElementById('ps-out-merge');
   if (pre) pre.textContent = merged;
   showToast('✅ Merge selesai!');
@@ -3903,7 +4111,7 @@ function runPSConvert() {
     </div>
     ${checkerHtml ? `<div style="margin-top:16px;"><div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:10px;">🔍 STATIC CHECKER</div>${checkerHtml}</div>` : ''}
   `;
-  showPSPanelOutput('ps-out-convert-wrap', outHtml);
+  showPSPanelOutput('ps-convert-out', outHtml);
   const pre = document.getElementById('ps-out-convert');
   if (pre) pre.textContent = result;
   showToast('✅ Convert ke v6 selesai!');
@@ -4064,7 +4272,7 @@ function clearPSOutput(silent) {
   const progBar = document.getElementById('ps-progress-bar');
   if (progBar) progBar.style.width = '0%';
   // Clear new panel outputs
-  ['ps-out-modify-wrap','ps-out-merge-wrap','ps-out-convert-wrap'].forEach(id => {
+  ['ps-modify-out','ps-merge-out','ps-convert-out'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.innerHTML = ''; el.style.display = 'none'; }
   });
