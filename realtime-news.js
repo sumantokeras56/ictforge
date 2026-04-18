@@ -8,7 +8,10 @@
   'use strict';
 
   // ── CONFIG ────────────────────────────────────────────────────────
-  const NEWSDATA_API_KEY = 'pub_720f8970bca242bdb33001f15e59c9b2';
+  // ⚠️ PERINGATAN KEAMANAN: API key ini terlihat publik di source code.
+  // Untuk produksi, gunakan backend proxy atau environment variable.
+  // Ganti dengan key Anda sendiri dari: https://newsdata.io
+  const NEWSDATA_API_KEY = window._NEWSDATA_KEY || 'pub_720f8970bca242bdb33001f15e59c9b2';
   const CACHE_KEY        = 'ict-live-news-cache';
   const CACHE_TS_KEY     = 'ict-live-news-ts';
   const CACHE_TTL_MS     = 6 * 60 * 60 * 1000; // 6 jam (hemat quota API)
@@ -387,9 +390,23 @@
               font-weight:700;vertical-align:middle;">LIVE</span>`
           : '';
 
-        // Hitung sisa waktu ke event ini secara realtime
-        const evDt    = new Date(`${ev.date}T${ev.time}:00`);
-        const diffMs  = evDt - nowNY;
+        // Hitung sisa waktu ke event ini secara realtime (timezone-safe)
+        // Bangun timestamp event dalam NY timezone menggunakan UTC offset
+        let evMs = 0;
+        try {
+          const [ey, emo, ed] = ev.date.split('-').map(Number);
+          const [eh, em]      = (ev.time || '08:30').split(':').map(Number);
+          const utcMid        = Date.UTC(ey, emo - 1, ed);
+          // Cari offset NY pada hari itu (akurat DST)
+          const midObj   = new Date(utcMid + 12 * 3600000);
+          const midParts = new Intl.DateTimeFormat('en-US', {
+            timeZone: 'America/New_York', hour: '2-digit', hour12: false
+          }).formatToParts(midObj);
+          const midNYH   = parseInt(midParts.find(p => p.type === 'hour')?.value || '12');
+          const nyOff    = midNYH - 12; // EDT=-4, EST=-5
+          evMs = utcMid + (-nyOff) * 3600000 + (eh * 3600 + em * 60) * 1000;
+        } catch (_) {}
+        const diffMs  = evMs - Date.now();
         let countdownBadge = '';
         if (isToday && diffMs > 0) {
           const hLeft = Math.floor(diffMs / 3600000);
