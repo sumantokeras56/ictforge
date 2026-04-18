@@ -138,7 +138,8 @@ function setInstrument(key, btn) {
   
   const chips = document.getElementById('instrChips');
   if (chips) chips.innerHTML = inst.chips.map(c => `<span class="pill pill-gold">${escapeHtml(c)}</span>`).join('');
-  document.getElementById('instrInfo').classList.add('show');
+  const instrInfo = document.getElementById('instrInfo');
+  if (instrInfo) instrInfo.classList.add('show');
   clearCalculator(); // V13: langsung di sini, tidak perlu override window.setInstrument
 }
 
