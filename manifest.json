@@ -1,0 +1,42 @@
+{
+  "name": "ICT Forge",
+  "short_name": "ICT Forge",
+  "description": "ICT Forge — Platform trading Smart Money Concepts.",
+  "start_url": "/ictmasterclass/",
+  "scope": "/ictmasterclass/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "background_color": "#0A0A0B",
+  "theme_color": "#0A0A0B",
+  "orientation": "portrait-primary",
+  "lang": "id",
+  "categories": ["finance", "education"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjgwIiBmaWxsPSIjMEEwQTBCIi8+CiAgPHJlY3QgeD0iMjQiIHk9IjI0IiB3aWR0aD0iNDY0IiBoZWlnaHQ9IjQ2NCIgcng9IjU2IiBmaWxsPSJub25lIiBzdHJva2U9IiNDOUE4NEMiIHN0cm9rZS13aWR0aD0iNSIvPgogIDxyZWN0IHg9IjExMCIgeT0iMzQwIiB3aWR0aD0iMjkyIiBoZWlnaHQ9IjUyIiByeD0iMTAiIGZpbGw9IiNDOUE4NEMiLz4KICA8cGF0aCBkPSJNMTUwIDM0MCBMMTUwIDI2MCBRMTUwIDIyMCAxODUgMjIwIEwzMjcgMjIwIFEzNjIgMjIwIDM2MiAyNjAgTDM2MiAzNDAgWiIgZmlsbD0iI0M5QTg0QyIvPgogIDxwYXRoIGQ9Ik0xNTAgMjgwIFExMTAgMjcwIDk2IDI1NSBRMTEwIDI0MCAxNTAgMjYwIFoiIGZpbGw9IiNDOUE4NEMiLz4KICA8dGV4dCB4PSIyNTYiIHk9IjMwNSIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iNzIiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjMEEwQTBCIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iMiI+SUNUPC90ZXh0PgogIDx0ZXh0IHg9IjI1NiIgeT0iNDMwIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSI0NCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNDOUE4NEMiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGxldHRlci1zcGFjaW5nPSIxMCI+Rk9SR0U8L3RleHQ+CiAgPGxpbmUgeDE9IjEzMCIgeTE9IjQwMCIgeDI9IjM4MiIgeTI9IjQwMCIgc3Ryb2tlPSIjOEE2RTMwIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8L3N2Zz4=",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjgwIiBmaWxsPSIjMEEwQTBCIi8+CiAgPHJlY3QgeD0iMjQiIHk9IjI0IiB3aWR0aD0iNDY0IiBoZWlnaHQ9IjQ2NCIgcng9IjU2IiBmaWxsPSJub25lIiBzdHJva2U9IiNDOUE4NEMiIHN0cm9rZS13aWR0aD0iNSIvPgogIDxyZWN0IHg9IjExMCIgeT0iMzQwIiB3aWR0aD0iMjkyIiBoZWlnaHQ9IjUyIiByeD0iMTAiIGZpbGw9IiNDOUE4NEMiLz4KICA8cGF0aCBkPSJNMTUwIDM0MCBMMTUwIDI2MCBRMTUwIDIyMCAxODUgMjIwIEwzMjcgMjIwIFEzNjIgMjIwIDM2MiAyNjAgTDM2MiAzNDAgWiIgZmlsbD0iI0M5QTg0QyIvPgogIDxwYXRoIGQ9Ik0xNTAgMjgwIFExMTAgMjcwIDk2IDI1NSBRMTEwIDI0MCAxNTAgMjYwIFoiIGZpbGw9IiNDOUE4NEMiLz4KICA8dGV4dCB4PSIyNTYiIHk9IjMwNSIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iNzIiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjMEEwQTBCIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iMiI+SUNUPC90ZXh0PgogIDx0ZXh0IHg9IjI1NiIgeT0iNDMwIiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSI0NCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNDOUE4NEMiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGxldHRlci1zcGFjaW5nPSIxMCI+Rk9SR0U8L3RleHQ+CiAgPGxpbmUgeDE9IjEzMCIgeTE9IjQwMCIgeDI9IjM4MiIgeTI9IjQwMCIgc3Ryb2tlPSIjOEE2RTMwIiBzdHJva2Utd2lkdGg9IjEuNSIvPgo8L3N2Zz4=",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExMCIgZmlsbD0iIzBBMEEwQiIvPgogIDxyZWN0IHg9IjI0IiB5PSIyNCIgd2lkdGg9IjQ2NCIgaGVpZ2h0PSI0NjQiIHJ4PSI4NiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjQzlBODRDIiBzdHJva2Utd2lkdGg9IjUiLz4KICA8cmVjdCB4PSIxMTAiIHk9IjM0MCIgd2lkdGg9IjI5MiIgaGVpZ2h0PSI1MiIgcng9IjEwIiBmaWxsPSIjQzlBODRDIi8+CiAgPHBhdGggZD0iTTE1MCAzNDAgTDE1MCAyNjAgUTE1MCAyMjAgMTg1IDIyMCBMMzI3IDIyMCBRMzYyIDIyMCAzNjIgMjYwIEwzNjIgMzQwIFoiIGZpbGw9IiNDOUE4NEMiLz4KICA8cGF0aCBkPSJNMTUwIDI4MCBRMTEwIDI3MCA5NiAyNTUgUTExMCAyNDAgMTUwIDI2MCBaIiBmaWxsPSIjQzlBODRDIi8+CiAgPHRleHQgeD0iMjU2IiB5PSIzMDUiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLHNlcmlmIiBmb250LXNpemU9IjcyIiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iIzBBMEEwQiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9IjIiPklDVDwvdGV4dD4KICA8dGV4dCB4PSIyNTYiIHk9IjQzMCIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNDQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjQzlBODRDIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBsZXR0ZXItc3BhY2luZz0iMTAiPkZPUkdFPC90ZXh0PgogIDxsaW5lIHgxPSIxMzAiIHkxPSI0MDAiIHgyPSIzODIiIHkyPSI0MDAiIHN0cm9rZT0iIzhBNkUzMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPC9zdmc+",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Kalkulator RR",
+      "short_name": "Kalkulator",
+      "description": "Position size & risk kalkulator",
+      "url": "/ictmasterclass/?shortcut=rr-calc"
+    }
+  ]
+}

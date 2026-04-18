@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ICT Forge — Offline</title>
+  <style>
+    :root {
+      --gold: #C9A84C;
+      --gold-dim: #8A6E30;
+      --bg: #0A0A0B;
+      --bg2: #111113;
+      --text: #E8E0CC;
+      --text-dim: #6B6558;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Animated grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      animation: gridPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes gridPulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    .container {
+      position: relative;
+      text-align: center;
+      padding: 48px 32px;
+      max-width: 420px;
+      width: 90%;
+    }
+
+    /* Glowing circle */
+    .glow-ring {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 32px;
+      position: relative;
+    }
+
+    .glow-ring svg {
+      width: 100%;
+      height: 100%;
+      animation: spin 8s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .glow-ring::after {
+      content: '⚡';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 42px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(0.9); opacity: 0.7; }
+    }
+
+    .brand {
+      font-size: 11px;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: var(--text-dim);
+      line-height: 1.6;
+      margin-bottom: 36px;
+    }
+
+    /* Chart bars animation — decorative */
+    .chart {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 4px;
+      height: 48px;
+      margin-bottom: 36px;
+    }
+
+    .bar {
+      width: 6px;
+      background: var(--gold-dim);
+      border-radius: 3px 3px 0 0;
+      animation: barAnim 1.5s ease-in-out infinite;
+    }
+
+    .bar:nth-child(1) { height: 30%; animation-delay: 0s; }
+    .bar:nth-child(2) { height: 60%; animation-delay: 0.1s; }
+    .bar:nth-child(3) { height: 45%; animation-delay: 0.2s; }
+    .bar:nth-child(4) { height: 80%; animation-delay: 0.3s; background: var(--gold); }
+    .bar:nth-child(5) { height: 55%; animation-delay: 0.4s; }
+    .bar:nth-child(6) { height: 70%; animation-delay: 0.5s; }
+    .bar:nth-child(7) { height: 40%; animation-delay: 0.6s; }
+    .bar:nth-child(8) { height: 90%; animation-delay: 0.7s; background: var(--gold); }
+    .bar:nth-child(9) { height: 50%; animation-delay: 0.8s; }
+    .bar:nth-child(10) { height: 35%; animation-delay: 0.9s; }
+
+    @keyframes barAnim {
+      0%, 100% { opacity: 0.4; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.15); }
+    }
+
+    .divider {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+      margin: 0 auto 24px;
+    }
+
+    .tip {
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+
+    .tip strong {
+      color: var(--gold);
+    }
+
+    .retry-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .retry-btn:hover {
+      background: var(--gold);
+      color: var(--bg);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ef4444;
+      animation: blink 1.5s ease-in-out infinite;
+      display: inline-block;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .status-line {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="glow-ring">
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="46" stroke="#C9A84C" stroke-width="1.5"
+          stroke-dasharray="6 4" opacity="0.6"/>
+        <circle cx="50" cy="50" r="38" stroke="#8A6E30" stroke-width="1"
+          stroke-dasharray="3 8" opacity="0.4"/>
+      </svg>
+    </div>
+
+    <div class="brand">ICT Forge</div>
+    <h1>Sedang Offline</h1>
+    <p class="subtitle">Koneksi internet tidak tersedia saat ini.</p>
+
+    <div class="chart">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <p class="tip">
+      <strong>Journal, Checklist, dan Kalkulator RR</strong> tetap bisa digunakan saat offline —
+      data tersimpan di perangkat kamu.
+    </p>
+
+    <a href="/ictmasterclass/" class="retry-btn" onclick="window.location.reload(); return false;">
+      ↺ &nbsp;Coba Lagi
+    </a>
+
+    <p class="status-line">
+      <span class="status-dot"></span>
+      Menunggu koneksi...
+    </p>
+  </div>
+
+  <script>
+    // Auto-reload saat koneksi kembali
+    window.addEventListener('online', () => {
+      window.location.href = '/ictmasterclass/';
+    });
+  </script>
+</body>
+</html>
