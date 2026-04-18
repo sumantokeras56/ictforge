@@ -136,7 +136,8 @@ function setInstrument(key, btn) {
   else if (key === 'ym') { setPlaceholder('entryPrice','39500'); setPlaceholder('slPrice','39400'); setPlaceholder('tpPrice','39700'); }
   else { setPlaceholder('entryPrice','1.08500'); setPlaceholder('slPrice','1.08300'); setPlaceholder('tpPrice','1.08900'); }
   
-if (chips) chips.innerHTML = inst.chips.map(c => `<span class="pill pill-gold">${escapeHtml(c)}</span>`).join('');(c => `<span class="pill pill-gold">${escapeHtml(c)}</span>`).join('');
+  const chips = document.getElementById('instrChips');
+  if (chips) chips.innerHTML = inst.chips.map(c => `<span class="pill pill-gold">${escapeHtml(c)}</span>`).join('');
   document.getElementById('instrInfo').classList.add('show');
   clearCalculator(); // V13: langsung di sini, tidak perlu override window.setInstrument
 }

@@ -6,10 +6,10 @@ const FONT_CACHE = 'ictforge-fonts-v1';
 
 // File yang di-precache (app shell saja)
 const PRECACHE_URLS = [
-  '/ictmasterclass/',
-  '/ictmasterclass/index.html',
-  '/ictmasterclass/offline.html',
-  '/ictmasterclass/manifest.json'
+  '/ictforge/',
+  '/ictforge/index.html',
+  '/ictforge/offline.html',
+  '/ictforge/manifest.json'
 ];
 
 // ─── INSTALL ─────────────────────────────────────────────────────────────────
@@ -81,7 +81,7 @@ self.addEventListener('fetch', e => {
         })
         .catch(() =>
           caches.match(e.request).then(cached =>
-            cached || caches.match('/ictmasterclass/offline.html')
+            cached || caches.match('/ictforge/offline.html')
           )
         )
     );
@@ -113,12 +113,12 @@ self.addEventListener('push', e => {
 
   const options = {
     body: data.body || 'Notifikasi dari ICT Forge',
-    icon: '/ictmasterclass/icon-192.png',
-    badge: '/ictmasterclass/icon-192.png',
+    icon: '/ictforge/icon-192.png',
+    badge: '/ictforge/icon-192.png',
     vibrate: [200, 100, 200],
     tag: data.tag || 'ictforge-notif',
     renotify: true,
-    data: { url: data.url || '/ictmasterclass/' }
+    data: { url: data.url || '/ictforge/' }
   };
 
   e.waitUntil(
@@ -131,12 +131,12 @@ self.addEventListener('notificationclick', e => {
   e.notification.close();
   const target = (e.notification.data && e.notification.data.url)
     ? e.notification.data.url
-    : '/ictmasterclass/';
+    : '/ictforge/';
 
   e.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
       for (const client of list) {
-        if (client.url.includes('/ictmasterclass/') && 'focus' in client) {
+        if (client.url.includes('/ictforge/') && 'focus' in client) {
           return client.focus();
         }
       }
@@ -154,8 +154,8 @@ self.addEventListener('message', e => {
     const { title, body, tag } = e.data;
     self.registration.showNotification(title || 'ICT Forge', {
       body: body || 'Test notifikasi berhasil! 🔔',
-      icon: '/ictmasterclass/icon-192.png',
-      badge: '/ictmasterclass/icon-192.png',
+      icon: '/ictforge/icon-192.png',
+      badge: '/ictforge/icon-192.png',
       vibrate: [200, 100, 200],
       tag: tag || 'ictforge-test',
       renotify: true
