@@ -1,7 +1,7 @@
-// ICT Forge — Service Worker v2.0
+// ICT Forge — Service Worker v2.1
 // Fixes: notifikasi, cache versioning aman (user data tidak reset), offline page
 
-const CACHE_VERSION = 'ictforge-v2';
+const CACHE_VERSION = 'ictforge-v3';
 const FONT_CACHE = 'ictforge-fonts-v1';
 
 // File yang di-precache (app shell saja)
@@ -9,18 +9,20 @@ const PRECACHE_URLS = [
   '/ictforge/',
   '/ictforge/index.html',
   '/ictforge/offline.html',
-  '/ictforge/manifest.json'
+  '/ictforge/manifest.json',
+  '/ictforge/main.js',
+  '/ictforge/style.css',
+  '/ictforge/realtime-news.js'
 ];
 
 // ─── INSTALL ─────────────────────────────────────────────────────────────────
 self.addEventListener('install', e => {
-  self.skipWaiting();
   e.waitUntil(
     caches.open(CACHE_VERSION).then(c =>
       c.addAll(PRECACHE_URLS).catch(err => {
         console.warn('[SW] Precache partial fail (ok):', err);
       })
-    )
+    ).then(() => self.skipWaiting())
   );
 });
 
@@ -167,3 +169,4 @@ self.addEventListener('message', e => {
     self.skipWaiting();
   }
 });
+
