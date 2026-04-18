@@ -79,12 +79,12 @@ indicator('My Script')
        <label style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">
         Instruksi Perubahan
        </label>
-       <textarea id="ps-modify-instr" placeholder="Contoh: Upgrade ke v6, ganti study() dengan indicator(), tambahkan alert saat EMA cross..." rows="3" style="width:100%;background:var(--dark4);border:1px solid var(--border);border-radius:4px;padding:10px 12px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;resize:vertical;outline:none;"></textarea>
+       <textarea id="ps-modify-instruction" placeholder="Contoh: Upgrade ke v6, ganti study() dengan indicator(), tambahkan alert saat EMA cross..." rows="3" style="width:100%;background:var(--dark4);border:1px solid var(--border);border-radius:4px;padding:10px 12px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;resize:vertical;outline:none;"></textarea>
       </div>
       <button class="calc-btn" onclick="runPSModify()">
        ⚡ Jalankan Modifikasi (Offline)
       </button>
-      <div id="ps-modify-out" style="display:none;margin-top:20px;">
+      <div id="ps-out-modify-wrap" style="display:none;margin-top:20px;">
       </div>
      </div>
     </div>
@@ -99,21 +99,27 @@ indicator('My Script')
         <label style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">
          Script 1
         </label>
-        <textarea id="ps-merge-a" placeholder="//@version=6
+        <textarea id="ps-merge-code1" placeholder="//@version=6
 // Script pertama..." rows="12" style="width:100%;background:var(--dark4);border:1px solid var(--border);border-radius:4px;padding:10px;color:var(--text);font-family:'DM Mono',monospace;font-size:11px;resize:vertical;outline:none;"></textarea>
        </div>
        <div>
         <label style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">
          Script 2
         </label>
-        <textarea id="ps-merge-b" placeholder="//@version=6
+        <textarea id="ps-merge-code2" placeholder="//@version=6
 // Script kedua..." rows="12" style="width:100%;background:var(--dark4);border:1px solid var(--border);border-radius:4px;padding:10px;color:var(--text);font-family:'DM Mono',monospace;font-size:11px;resize:vertical;outline:none;"></textarea>
        </div>
       </div>
       <button class="calc-btn" onclick="runPSMerge()">
        🔗 Merge Scripts (Offline)
       </button>
-      <div id="ps-merge-out" style="display:none;margin-top:20px;">
+      <div style="margin-top:12px;">
+       <label style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">
+        Catatan Merge (opsional)
+       </label>
+       <input id="ps-merge-note" placeholder="Contoh: Prioritaskan logika Script 1 untuk entry..." style="width:100%;background:var(--dark4);border:1px solid var(--border);border-radius:4px;padding:8px 12px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;outline:none;" type="text"/>
+      </div>
+      <div id="ps-out-merge-wrap" style="display:none;margin-top:20px;">
       </div>
      </div>
     </div>
@@ -135,7 +141,7 @@ study('My Old Script')
       <button class="calc-btn" onclick="runPSConvert()">
        🔄 Convert ke v6 (Offline)
       </button>
-      <div id="ps-convert-out" style="display:none;margin-top:20px;">
+      <div id="ps-out-convert-wrap" style="display:none;margin-top:20px;">
       </div>
      </div>
     </div>
