@@ -1806,13 +1806,17 @@ function saveJournal() {
   renderJournal();
 }
 
+
+// ── renderJournal, addJournalEntry, drawEquityCurve ───────────────
+// OVERRIDDEN by journal-enhanced.js (v2.0)
+// Stub functions below kept for backward compatibility ONLY — 
+// they will be replaced at runtime by journal-enhanced.js definitions.
+
 function renderJournal() {
   const tbody = document.getElementById('journalBody');
   if (!tbody) return;
-  
   tbody.innerHTML = '';
-  const stats = { total: 0, wins: 0, totalRR: 0, profitFactorNumerator: 0, profitFactorDenominator: 0 };
-  
+  const stats = { total:0, wins:0, totalRR:0, pfNum:0, pfDen:0 };
   journalEntries.slice().reverse().forEach((entry, idx) => {
     const originalIdx = journalEntries.length - 1 - idx;
     const row = tbody.insertRow();
@@ -1820,7 +1824,7 @@ function renderJournal() {
     const sideIcon = entry.side === 'long' ? '📈' : '📉';
     const resultClass = entry.result === 'win' ? 'style="color:var(--green);"' : entry.result === 'loss' ? 'style="color:var(--red);"' : '';
     const resultText = entry.result === 'win' ? '✅ WIN' : entry.result === 'loss' ? '❌ LOSS' : '⏳ Pending';
-    // V13: escapeHtml untuk semua field dari user input
+    const tagsHtml = (entry.tags||[]).length ? (entry.tags||[]).map(t=>`<span class="mistake-badge ${t==='PERFECT'?'perfect':''}">${t}</span>`).join(' ') : '';
     row.innerHTML = `
       <td style="font-size:11px;">${escapeHtml(date)}</td>
       <td><strong>${escapeHtml(String(entry.symbol).toUpperCase())}</strong></td>
@@ -1830,34 +1834,26 @@ function renderJournal() {
       <td>${escapeHtml(String(entry.tp))}</td>
       <td>1:${escapeHtml(String(entry.rr))}</td>
       <td ${resultClass}>${resultText}</td>
-      <td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(entry.note || '-')}</td>
-      <td><button class="action-btn" onclick="deleteJournalEntry(${originalIdx})" style="padding:4px 8px;font-size:10px;">🗑</button></td>
-    `;
-    
+      <td>${tagsHtml}</td>
+      <td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(entry.note||'-')}</td>
+      <td><button class="action-btn" onclick="deleteJournalEntry(${originalIdx})" style="padding:4px 8px;font-size:10px;">🗑</button></td>`;
     stats.total++;
     if (entry.result === 'win') stats.wins++;
     if (entry.result === 'win' || entry.result === 'loss') {
       stats.totalRR += entry.rr;
-      if (entry.result === 'win') stats.profitFactorNumerator += entry.rr;
-      else stats.profitFactorDenominator += entry.rr;
+      if (entry.result === 'win') stats.pfNum += entry.rr;
+      else stats.pfDen += entry.rr;
     }
   });
-  
-  const winRate = stats.total > 0 ? ((stats.wins / stats.total) * 100).toFixed(1) : 0;
-  const avgRR = stats.total > 0 ? (stats.totalRR / stats.total).toFixed(2) : 0;
-  const profitFactor = stats.profitFactorDenominator > 0 ? (stats.profitFactorNumerator / stats.profitFactorDenominator).toFixed(2) : stats.profitFactorNumerator > 0 ? '∞' : '0';
-  
-  const statTotal = document.getElementById('statTotal');
-  const statWinRate = document.getElementById('statWinRate');
-  const statProfitFactor = document.getElementById('statProfitFactor');
-  const statAvgRR = document.getElementById('statAvgRR');
-  if (statTotal) statTotal.textContent = stats.total;
-  if (statWinRate) statWinRate.textContent = winRate + '%';
-  if (statProfitFactor) statProfitFactor.textContent = profitFactor;
-  if (statAvgRR) statAvgRR.textContent = avgRR;
-
-  // Gambar ulang equity curve setiap render
+  const winRate = stats.total > 0 ? ((stats.wins/stats.total)*100).toFixed(1) : 0;
+  const avgRR = stats.total > 0 ? (stats.totalRR/stats.total).toFixed(2) : 0;
+  const pf = stats.pfDen > 0 ? (stats.pfNum/stats.pfDen).toFixed(2) : stats.pfNum > 0 ? '∞' : '0';
+  ['statTotal','statWinRate','statProfitFactor','statAvgRR'].forEach((id,i) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = [stats.total, winRate+'%', pf, avgRR][i];
+  });
   requestAnimationFrame(drawEquityCurve);
+  if (typeof renderMistakeTagSummary === 'function') renderMistakeTagSummary();
 }
 
 function addJournalEntry() {
@@ -1869,22 +1865,18 @@ function addJournalEntry() {
   const rr = parseFloat(document.getElementById('journalRr')?.value);
   const result = document.getElementById('journalResult')?.value;
   const note = document.getElementById('journalNote')?.value.trim();
-  
   if (!symbol) { showToast('⚠️ Isi Symbol terlebih dahulu'); return; }
   if (isNaN(entry) || isNaN(sl) || isNaN(tp)) { showToast('⚠️ Isi Entry, SL, TP dengan angka valid'); return; }
   if (isNaN(rr) || rr <= 0) { showToast('⚠️ Isi R:R dengan angka positif'); return; }
-  
-  journalEntries.unshift({
-    date: new Date().toISOString(),
-    symbol, side, entry, sl, tp, rr, result, note: note || ''
-  });
-  
+  const tags = typeof getSelectedMistakeTags === 'function' ? getSelectedMistakeTags() : [];
+  const screenshots = typeof _pendingScreenshots !== 'undefined' ? _pendingScreenshots.map(s => s.dataUrl) : [];
+  journalEntries.unshift({ date: new Date().toISOString(), symbol, side, entry, sl, tp, rr, result, note: note||'', tags, screenshots });
   saveJournal();
-  ['journalSymbol', 'journalEntry', 'journalSL', 'journalTP', 'journalRr', 'journalNote'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
-  });
+  ['journalSymbol','journalEntry','journalSL','journalTP','journalRr','journalNote'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
   if (document.getElementById('journalResult')) document.getElementById('journalResult').value = 'pending';
+  if (typeof clearMistakeTags === 'function') clearMistakeTags();
+  if (typeof _pendingScreenshots !== 'undefined') { _pendingScreenshots = []; }
+  if (typeof renderScreenshotPreviews === 'function') renderScreenshotPreviews();
   showToast('✅ Trade berhasil ditambahkan!');
 }
 
@@ -2082,121 +2074,12 @@ function restoreJournal(input) {
 }
 
 // ── EQUITY CURVE CHART (Canvas API) ───────────────────────────────
+
+// drawEquityCurve — delegates to journal-enhanced.js helper
 function drawEquityCurve() {
-  const canvas = document.getElementById('equityCanvas');
-  if (!canvas) return;
-
-  const ctx    = canvas.getContext('2d');
-  const dpr    = window.devicePixelRatio || 1;
-  const W      = canvas.offsetWidth;
-  const H      = 160;
-
-  canvas.width  = W * dpr;
-  canvas.height = H * dpr;
-  canvas.style.height = H + 'px';
-  ctx.scale(dpr, dpr);
-
-  ctx.clearRect(0, 0, W, H);
-
-  if (journalEntries.length < 1) {
-    ctx.fillStyle = 'rgba(201,168,76,0.25)';
-    ctx.font = '12px DM Mono, monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText('Belum ada data trade', W / 2, H / 2);
-    return;
+  if (typeof drawEquityCurveOnCanvas === 'function') {
+    drawEquityCurveOnCanvas(document.getElementById('equityCanvas'), 160);
   }
-
-  // Urutkan dari terlama ke terbaru
-  const sorted = [...journalEntries]
-    .filter(t => t.result === 'win' || t.result === 'loss')
-    .sort((a, b) => new Date(a.date) - new Date(b.date));
-
-  if (sorted.length < 1) {
-    ctx.fillStyle = 'rgba(201,168,76,0.25)';
-    ctx.font = '12px DM Mono, monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText('Belum ada trade WIN/LOSS', W / 2, H / 2);
-    return;
-  }
-
-  // Hitung equity dalam R-multiple (tiap trade = +RR atau -1)
-  let balance = 0;
-  const points = [0];
-  sorted.forEach(t => {
-    balance += t.result === 'win' ? parseFloat(t.rr || 1) : -1;
-    points.push(parseFloat(balance.toFixed(2)));
-  });
-
-  const maxVal = Math.max(...points, 1);
-  const minVal = Math.min(...points, -1);
-  const range  = maxVal - minVal || 1;
-  const pad    = { top: 16, bottom: 24, left: 36, right: 12 };
-  const plotW  = W - pad.left - pad.right;
-  const plotH  = H - pad.top - pad.bottom;
-
-  const xOf = i => pad.left + (i / (points.length - 1)) * plotW;
-  const yOf = v => pad.top + plotH - ((v - minVal) / range) * plotH;
-
-  // Grid & zero line
-  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
-  ctx.lineWidth = 1;
-  [-1, 0, 1].forEach(tier => {
-    const gridY = yOf(tier * Math.ceil(maxVal / 2));
-    ctx.beginPath(); ctx.moveTo(pad.left, gridY); ctx.lineTo(W - pad.right, gridY); ctx.stroke();
-  });
-
-  // Zero line
-  const zeroY = yOf(0);
-  ctx.strokeStyle = 'rgba(201,168,76,0.3)';
-  ctx.setLineDash([4, 4]);
-  ctx.beginPath(); ctx.moveTo(pad.left, zeroY); ctx.lineTo(W - pad.right, zeroY); ctx.stroke();
-  ctx.setLineDash([]);
-
-  // Fill gradient bawah kurva
-  const grad = ctx.createLinearGradient(0, pad.top, 0, H - pad.bottom);
-  grad.addColorStop(0, 'rgba(201,168,76,0.20)');
-  grad.addColorStop(1, 'rgba(201,168,76,0.00)');
-  ctx.beginPath();
-  ctx.moveTo(xOf(0), yOf(points[0]));
-  points.forEach((v, i) => { if (i > 0) ctx.lineTo(xOf(i), yOf(v)); });
-  ctx.lineTo(xOf(points.length - 1), H - pad.bottom);
-  ctx.lineTo(xOf(0), H - pad.bottom);
-  ctx.closePath();
-  ctx.fillStyle = grad;
-  ctx.fill();
-
-  // Kurva utama
-  ctx.strokeStyle = '#C9A84C';
-  ctx.lineWidth   = 2;
-  ctx.lineJoin    = 'round';
-  ctx.beginPath();
-  points.forEach((v, i) => {
-    i === 0 ? ctx.moveTo(xOf(i), yOf(v)) : ctx.lineTo(xOf(i), yOf(v));
-  });
-  ctx.stroke();
-
-  // Titik terakhir
-  const lastX = xOf(points.length - 1);
-  const lastY = yOf(points[points.length - 1]);
-  const lastVal = points[points.length - 1];
-  ctx.beginPath();
-  ctx.arc(lastX, lastY, 4, 0, Math.PI * 2);
-  ctx.fillStyle = lastVal >= 0 ? '#2ECC71' : '#E74C3C';
-  ctx.fill();
-
-  // Label Y kiri
-  ctx.fillStyle  = 'rgba(201,168,76,0.6)';
-  ctx.font       = '9px DM Mono, monospace';
-  ctx.textAlign  = 'right';
-  ctx.fillText(maxVal.toFixed(1) + 'R', pad.left - 4, pad.top + 8);
-  ctx.fillText('0R', pad.left - 4, zeroY + 4);
-  ctx.fillText(minVal.toFixed(1) + 'R', pad.left - 4, H - pad.bottom);
-
-  // Label nilai terakhir
-  ctx.fillStyle = lastVal >= 0 ? 'rgba(46,204,113,0.9)' : 'rgba(231,76,60,0.9)';
-  ctx.textAlign = 'left';
-  ctx.font      = '10px DM Mono, monospace';
-  ctx.fillText((lastVal >= 0 ? '+' : '') + lastVal.toFixed(2) + 'R', lastX + 6, lastY + 4);
 }
 
 // ── DAILY BIAS NOTE (autosave) ─────────────────────────────────────
