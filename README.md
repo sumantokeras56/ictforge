@@ -1,691 +1,591 @@
-# 🔥 ICT Forge — Institutional Trading Hub
+<div align="center">
 
-![Release](https://img.shields.io/badge/Release-v1.0.0--Stable-gold)
-![Build](https://img.shields.io/badge/Build-Passing-brightgreen)
-![Platform](https://img.shields.io/badge/Platform-Web%20%7C%20iOS%20%7C%20Android%20%7C%20Desktop-blue)
-![Language](https://img.shields.io/badge/Language-HTML5%20%7C%20CSS3%20%7C%20Vanilla%20JS-yellow)
-![Methodology](https://img.shields.io/badge/Methodology-ICT%20%2F%20SMC-red)
-![License](https://img.shields.io/badge/License-Educational%20Use-orange)
-![Live](https://img.shields.io/badge/Live-sumantokeras56.github.io%2Fictmasterclass-brightgreen)
+<br/>
 
-> **"Retail trader kalah bukan karena kurang teknik, tapi karena mereka tidak mengerti siapa yang benar-benar menggerakkan pasar."**
-> — Michael J. Huddleston (ICT)
-
-**ICT Forge** adalah platform trading education dan tools berbasis web yang dibangun khusus untuk trader yang mempelajari metodologi **Inner Circle Trader (ICT)** dan **Smart Money Concepts (SMC)**. Bukan sekadar kumpulan artikel — ICT Forge adalah ekosistem lengkap yang menggabungkan edukasi mendalam, alat analisis profesional, jurnal trading, dan kalender ekonomi real-time dalam satu antarmuka yang cepat, ringan, dan bisa diinstall sebagai Progressive Web App (PWA) di semua perangkat.
-
----
-
-## 📖 Daftar Isi
-
-1. [Tentang ICT Forge](#-tentang-ict-forge)
-2. [Visi & Filosofi](#-visi--filosofi)
-3. [Fitur Lengkap](#-fitur-lengkap)
-4. [Modul Edukasi ICT](#-modul-edukasi-ict)
-5. [Daily Bias Helper](#-daily-bias-helper)
-6. [COT Analyzer](#-cot-analyzer)
-7. [Trading Journal](#-trading-journal)
-8. [Kalkulator RR & Position Sizer](#-kalkulator-rr--position-sizer)
-9. [Live Clock & Session Tracker](#-live-clock--session-tracker)
-10. [Economic Calendar Real-Time](#-economic-calendar-real-time)
-11. [Event Countdown](#-event-countdown)
-12. [PineScript Tools](#-pinescript-tools)
-13. [Indikator Siap Pakai](#-indikator-siap-pakai)
-14. [Notifikasi Browser](#-notifikasi-browser)
-15. [PWA — Install ke Homescreen](#-pwa--install-ke-homescreen)
-16. [Arsitektur & Teknologi](#-arsitektur--teknologi)
-17. [Struktur File](#-struktur-file)
-18. [Cara Deploy](#-cara-deploy)
-19. [Roadmap Pengembangan](#-roadmap-pengembangan)
-20. [Kredit & Atribusi](#-kredit--atribusi)
-21. [Disclaimer](#-disclaimer)
-
----
-
-## 🧠 Tentang ICT Forge
-
-ICT Forge lahir dari kebutuhan nyata seorang trader Indonesia yang mempelajari metodologi ICT secara serius. Alih-alih bergantung pada puluhan tab browser yang berbeda — satu untuk kalender ekonomi, satu untuk jurnal, satu untuk kalkulator RR, satu untuk membaca materi — ICT Forge menyatukan semuanya dalam satu aplikasi yang bisa dibuka di HP, tablet, maupun desktop.
-
-Nama **"Forge"** dipilih dengan alasan: layaknya sebuah tempaan besi, platform ini dirancang untuk membentuk trader yang kuat, presisi, dan berkarakter institusional. Setiap fitur dibangun berdasarkan prinsip-prinsip ICT yang telah terbukti — bukan indikator retail biasa, melainkan pemahaman mendalam tentang bagaimana institusi menggerakkan pasar.
-
-ICT Forge dikembangkan sepenuhnya oleh **Rizky Saputra**, seorang ICT SMC Researcher dan trader aktif di NQ/Nasdaq Futures dan Forex, yang telah melewati evaluasi prop firm dan terus mengembangkan pemahamannya tentang metodologi ICT. Seluruh konten dan logika dalam aplikasi ini mencerminkan pemahaman langsung dari penggunaan metodologi tersebut di pasar nyata.
-
----
-
-## 🎯 Visi & Filosofi
-
-### Masalah yang ICT Forge Selesaikan
-
-Dunia trading ritel dipenuhi dengan noise — indikator yang tumpang tindih, sinyal palsu, dan sistem yang dirancang untuk membuat trader kalah. Metodologi ICT hadir untuk membongkar ilusi tersebut dengan mengajarkan cara membaca pergerakan harga dari perspektif institusional.
-
-Namun mempelajari ICT sendiri juga punya tantangan: materinya sangat luas, tersebar di ratusan video YouTube, dan membutuhkan alat-alat bantu yang spesifik. Di sinilah ICT Forge berperan.
-
-### Tiga Pilar Utama
-
-**1. Edukasi Terstruktur**
-Semua materi ICT — dari konsep paling dasar hingga model-model lanjutan — disusun secara sistematis dan mudah diakses. Bukan ringkasan dangkal, melainkan pemahaman mendalam yang bisa langsung diaplikasikan ke chart.
-
-**2. Tools yang Relevan**
-Setiap alat yang ada di ICT Forge dirancang spesifik untuk kebutuhan trader ICT: bukan generic trading tool, melainkan tools yang berbicara bahasa yang sama dengan metodologi — Kill Zone, PD Array, AMD Cycle, COT positioning.
-
-**3. Efisiensi Workflow**
-Dari analisis HTF bias pagi hari, cek kalender berita, entry trade, hingga jurnal — semuanya bisa dilakukan dalam satu aplikasi tanpa berpindah-pindah. Ini mengurangi distraksi dan meningkatkan konsistensi.
-
----
-
-## ✨ Fitur Lengkap
-
-| Fitur | Status | Keterangan |
-|-------|--------|------------|
-| 🎓 ICT Masterclass (14 Modul) | ✅ Live | Materi lengkap dari dasar hingga lanjutan |
-| 🧠 Daily Bias Helper | ✅ Live | COT-aware, TTrades logic, multi-instrument |
-| 📈 COT Analyzer | ✅ Live | Upload TXT dari CFTC, parse otomatis |
-| 📓 Trading Journal | ✅ Live | Entry cepat + statistik + equity curve |
-| 🧮 Kalkulator RR | ✅ Live | NQ, ES, YM, Forex, JPY pairs, Custom |
-| 📅 Economic Calendar | ✅ Live | Real-time via newsdata.io API |
-| ⏰ Event Countdown | ✅ Live | NFP, CPI, FOMC, Jobless, COT — realtime |
-| 🕐 Live Clock | ✅ Live | NY, London, WIB — auto DST |
-| 🗓️ Calendar & Session Tracker | ✅ Live | Kill Zone, market hours, WIB countdown |
-| ⚡ PineScript Tools | ✅ Live | Modifikasi, Merge, Convert v4→v6, AI Fix |
-| 📦 Indikator Siap Pakai | ✅ Live | Session Dashboard Pro + Quantum Veil |
-| 🔔 Browser Notification | ✅ Live | Sesi & news alert otomatis |
-| 📲 PWA Support | ✅ Live | Install di iOS, Android, Desktop |
-| 🌓 Dark/Light Mode | ✅ Live | Toggle manual |
-| 📄 Export PDF/CSV | ✅ Live | Journal CSV, COT PDF, Checklist PDF |
-
----
-
-## 📚 Modul Edukasi ICT
-
-ICT Forge menyediakan **14 modul edukasi lengkap** yang mencakup seluruh spektrum metodologi ICT, dari landasan filosofis hingga model eksekusi presisi. Setiap modul dirancang dengan pendekatan yang praktis dan langsung bisa diaplikasikan ke chart.
-
-### Modul 00 — Ajaran Pertama ICT
-Fondasi dari segala fondasi. Modul ini membahas sejarah ICT, mengapa metodologi ini berbeda dari pendekatan teknikal konvensional, dan empat pilar utama ajaran ICT: Smart Money vs Retail, Price Delivery Theory, Time & Price Theory, dan HTF to LTF Analysis. Trader yang melewati modul ini akan memahami mengapa 95% retail trader kalah dan bagaimana cara keluar dari jebakan tersebut.
-
-### Modul 01 — ICT Overview
-Gambaran menyeluruh tentang framework ICT. Mencakup filosofi dasar Smart Money, konsep Price Delivery Algorithmic, pengenalan Kill Zone, dan pentingnya bias HTF sebelum setiap trading session. Modul ini menjadi jembatan antara pemahaman filosofis dan aplikasi praktis.
-
-### Modul 02 — Market Structure
-Pendalaman tentang BOS (Break of Structure), CHoCH (Change of Character), dan MSS (Market Structure Shift). Trader akan memahami perbedaan antara konfirmasi trend dan sinyal reversal, serta cara membaca struktur pasar dari HTF ke LTF secara konsisten. Termasuk konsep Premium vs Discount zone berdasarkan equilibrium 50%.
-
-### Modul 03 — PD Arrays
-PD Arrays (Premium/Discount Arrays) adalah inti dari metodologi ICT. Modul ini mencakup Fair Value Gap (FVG), Order Block (OB), Breaker Block, Mitigation Block, Rejection Block, Void, dan Propulsion Block. Setiap konsep dijelaskan dengan logika institusional yang jelas — mengapa area-area ini bekerja dan kapan harus dihindari.
-
-### Modul 04 — AMD Cycle
-Accumulation, Manipulation, Distribution — siklus pergerakan harga yang berulang di setiap timeframe dan setiap sesi. Modul ini mengajarkan cara mengidentifikasi fase mana yang sedang terjadi dan bagaimana mengambil posisi yang selaras dengan siklus institusional tersebut.
-
-### Modul 05 — Kill Zones
-Waktu adalah senjata trader ICT. Modul Kill Zone membahas secara detail empat window trading utama: Asia Session, London Kill Zone, New York AM Kill Zone, dan New York PM Session. Termasuk karakteristik pergerakan harga di masing-masing sesi dan instrumen mana yang paling optimal untuk setiap Kill Zone.
-
-### Modul 06 — Liquidity
-Konsep likuiditas adalah jantung dari ICT. Modul ini membahas Buy-side Liquidity (BSL), Sell-side Liquidity (SSL), Equal Highs/Lows, Liquidity Voids, dan cara membaca di mana institusi akan "mengambil" likuiditas sebelum melanjutkan pergerakan sesungguhnya. Tanpa pemahaman likuiditas, setup apapun menjadi gambling.
-
-### Modul 07 — 8AM Strategy (NY Open)
-Strategi spesifik untuk New York Open jam 8:00-9:30 AM NY. Mencakup analisis opening candle, identifikasi Judas Swing, dan teknik membaca manipulasi awal sesi sebelum distribusi harga yang sebenarnya dimulai pada 9:30 NY.
-
-### Modul 08 — ICT Models
-Kumpulan model trading konkret yang bisa langsung diaplikasikan: Silver Bullet (10:00-11:00 NY & 14:00-15:00 NY), OTE (Optimal Trade Entry), Power of 3 (PO3), IPDA (Interbank Price Delivery Algorithm), Midnight Open Model, dan beberapa model lanjutan lainnya. Setiap model disertai kondisi entry, SL placement, dan target berdasarkan prinsip ICT.
-
-### Modul 09 — Trade Checklist
-Checklist interaktif yang bisa diisi langsung di aplikasi sebelum eksekusi trade. Mencakup verifikasi HTF bias, konfirmasi Kill Zone, identifikasi PD Array, validasi liquidity target, dan risk management check. Checklist ini dirancang untuk mencegah impulsive entry dan memastikan setiap trade memenuhi kriteria metodologi.
-
-### Modul 10 — Kalkulator RR
-Kalkulator Risk-Reward terintegrasi yang mendukung berbagai instrumen trading. Lebih dari sekadar kalkulator biasa — ini adalah position sizer yang mempertimbangkan balance akun, persentase risiko, dan karakteristik spesifik setiap instrumen.
-
-### Modul 11 — Glossary
-Kamus lengkap terminologi ICT. Lebih dari 80 istilah teknis ICT/SMC dijelaskan dengan bahasa yang jelas dan contoh kontekstual. Dari AMD hingga VWAP, dari Buyside Liquidity hingga Turtle Soup — semua ada di sini.
-
-### Modul 12 — COT Analyzer
-Alat analisis Commitment of Traders yang terintegrasi langsung dengan data CFTC. Membantu trader memahami positioning institusional mingguan dan menggunakannya sebagai filter bias HTF yang powerful.
-
-### Modul 13 — Trading Journal
-Sistem pencatatan dan analisis trade yang komprehensif, dirancang untuk mendukung proses evaluasi dan peningkatan performa trading secara berkelanjutan.
-
----
-
-## 🧠 Daily Bias Helper
-
-Daily Bias Helper adalah salah satu fitur paling unik di ICT Forge. Alat ini membantu trader menentukan bias harian (Bullish/Bearish/Netral) berdasarkan kombinasi data COT, analisis PDH/PDL, dan kondisi pasar terkini.
-
-### Logika TTrades Six-Condition Priority
-
-Bias Helper menggunakan sistem prioritas enam kondisi berbasis metodologi TTrades TFO (Time Frame Overlay), yang merupakan interpretasi praktis dari prinsip ICT untuk menentukan arah harian:
-
-1. **Kondisi 1 — Gap Opening**: Jika harga gap di atas PDH → bias Bullish; gap di bawah PDL → bias Bearish
-2. **Kondisi 2 — PDH/PDL Breach**: Apakah harga sudah menembus PDH atau PDL pada sesi sebelumnya?
-3. **Kondisi 3 — NWOG/NDOG**: New Week/Day Opening Gap dan pengaruhnya terhadap arah pergerakan
-4. **Kondisi 4 — COT Positioning**: Apakah Commercial Hedgers net Long atau net Short secara signifikan?
-5. **Kondisi 5 — HTF Structure**: Konfirmasi BOS atau CHoCH di timeframe Daily/Weekly
-6. **Kondisi 6 — Session Context**: Kill Zone mana yang aktif dan bagaimana karakteristik pergerakannya?
-
-Sistem ini memastikan bias harian tidak pernah ditentukan secara arbitrary atau berdasarkan EMA semata — selalu mengikuti urutan prioritas institusional yang terstruktur.
-
-### Multi-Instrument Support
-
-Daily Bias Helper mendukung analisis untuk berbagai instrumen:
-- **Futures**: NQ (Nasdaq), ES (S&P 500), YM (Dow Jones), GC (Gold), CL (Crude Oil)
-- **Forex Majors**: EURUSD, GBPUSD, AUDUSD, USDJPY, USDCAD, USDCHF, NZDUSD
-- **Forex Minors**: GBPJPY, EURJPY, AUDJPY, dan pasangan lainnya
-
----
-
-## 📈 COT Analyzer
-
-Commitment of Traders (COT) Report adalah salah satu data paling berharga yang tersedia secara gratis dari CFTC (Commodity Futures Trading Commission). Sayangnya, format laporan aslinya sangat sulit dibaca — ribuan baris teks monospace yang membutuhkan keahlian khusus untuk diinterpretasi.
-
-ICT Forge COT Analyzer menyelesaikan masalah ini.
-
-### Cara Kerja
-
-1. **Download data** dari CFTC.gov — halaman Legacy Reports, format Long Format
-2. **Copy semua teks** dari halaman tersebut (Ctrl+A → Ctrl+C)
-3. **Paste ke Notepad** dan simpan sebagai file .TXT
-4. **Upload file .TXT** ke COT Analyzer di ICT Forge
-5. **Klik "Ekstrak dari TXT"** — sistem akan otomatis parse dan menampilkan:
-   - Net position Commercial (Hedgers)
-   - Net position Non-Commercial (Large Speculators)
-   - Net position Non-Reportable (Small Speculators)
-   - Perubahan minggu ke minggu
-   - Interpretasi bias berdasarkan ICT framework
-
-### Instrumen yang Didukung
-
-NQ (E-mini Nasdaq), ES (E-mini S&P), YM (E-mini Dow), Gold (GC), EUR/USD, GBP/USD, USD/JPY, AUD/USD, CAD/USD, CHF, NZD/USD.
-
-### Cara Membaca COT dalam Konteks ICT
-
-- **Commercial Net Long** → Smart Money akumulasi posisi beli → mendukung bias Bullish HTF → cari setup buy di Discount Zone + Kill Zone
-- **Commercial Net Short** → Smart Money distribusi/hedging ke bawah → mendukung bias Bearish HTF → cari setup sell di Premium Zone + Kill Zone
-- **COT bukan sinyal entry** → ini adalah filter bias Weekly/Monthly. Setelah COT menunjukkan arah, gunakan ICT framework (AMD, PD Arrays, Kill Zone) untuk eksekusi presisi
-- **Lag data 3 hari** → CFTC merilis COT setiap Jumat untuk posisi hari Selasa. Gunakan sebagai konfirmasi bias minggu depan, bukan untuk trading hari ini
-
----
-
-## 📓 Trading Journal
-
-Trading Journal di ICT Forge bukan sekadar tempat mencatat trade — ini adalah sistem analisis performa yang membantu trader mengidentifikasi pola kekuatan dan kelemahan dalam eksekusi mereka.
-
-### Entry Trade Cepat
-
-Modal panel yang bisa dibuka dari mana saja di aplikasi. Input yang diperlukan:
-- **Symbol**: Instrumen yang diperdagangkan
-- **Side**: Buy atau Sell
-- **Entry Price, Stop Loss, Take Profit**: Diisi manual atau import dari kalkulator
-- **R:R Ratio**: Dihitung otomatis berdasarkan input harga
-- **Result**: Win/Loss/Breakeven
-- **Note**: Catatan konteks trade (opsional)
-
-### Statistik Otomatis
-
-Setelah beberapa trade tercatat, Journal secara otomatis menghitung:
-- **Win Rate** keseluruhan dan per instrumen
-- **Average R:R** yang dicapai vs yang direncanakan
-- **Profit Factor**: rasio total profit terhadap total loss
-- **Equity Curve**: visualisasi grafis pertumbuhan akun
-- **Streak Analysis**: win streak dan loss streak terpanjang
-
-### Export Data
-
-Seluruh data journal bisa diekspor sebagai file **CSV** untuk dianalisis lebih lanjut di Excel atau Google Sheets. Ini memungkinkan trader melakukan analisis mendalam di luar aplikasi jika diperlukan.
-
----
-
-## 🧮 Kalkulator RR & Position Sizer
-
-Kalkulator RR ICT Forge adalah yang paling komprehensif untuk kebutuhan trader ICT, dengan dukungan penuh untuk instrumen futures yang sering digunakan dalam prop firm trading.
-
-### Instrumen yang Didukung
-
-**Forex Standard (non-JPY)**
-1 lot = 100,000 units. Pip = 0.0001. Pip value ~$10/lot. Cocok untuk EURUSD, GBPUSD, AUDUSD, XAUUSD.
-
-**JPY Pairs**
-1 lot = 100,000 units. Pip = 0.01. Pip value ~$7.6/lot (bervariasi). Cocok untuk USDJPY, GBPJPY, EURJPY.
-
-**NQ — E-mini Nasdaq-100 Futures**
-Tick = 0.25 poin. Tick value = $5. Full contract = $20/poin. Micro MNQ = 1/10 dari full contract.
-
-**ES — E-mini S&P 500 Futures**
-Tick = 0.25 poin. Tick value = $12.5. Full contract = $50/poin. Micro MES = 1/10.
-
-**YM — E-mini Dow Jones Futures**
-Tick = 1 poin. Tick value = $5. Full contract = $5/poin. Micro MYM = 1/10.
-
-**Custom Instrument**
-Input manual pip/tick value untuk instrumen apapun yang tidak tercakup di atas.
-
-### Input Kalkulasi
-
-- **Balance Akun**: Modal total atau allocated capital
-- **Risk %**: Persentase risiko per trade (default 1%)
-- **Entry Price**: Harga masuk
-- **Stop Loss**: Level stop loss
-- **Take Profit**: Target profit
-- **Tick/Pip Value**: Otomatis terisi berdasarkan instrumen yang dipilih
-
-### Output Kalkulasi
-
-- **Dollar Risk**: Nominal risiko dalam USD
-- **R:R Ratio**: Perbandingan risk vs reward
-- **Position Size**: Jumlah lot/contract yang optimal
-- **Potential Profit**: Proyeksi profit jika target tercapai
-- **Breakeven %**: Minimum win rate yang dibutuhkan untuk strategi ini profitable
-
----
-
-## 🕐 Live Clock & Session Tracker
-
-Salah satu fitur yang paling sering digunakan trader adalah Live Clock yang menampilkan waktu secara real-time di tiga timezone sekaligus.
-
-### Three-Timezone Display
-
-- **🇺🇸 UTC-4/5 New York** — Referensi utama semua analisis ICT. Otomatis beralih antara EDT (UTC-4) dan EST (UTC-5) mengikuti Daylight Saving Time Amerika.
-- **🇬🇧 UTC+0/+1 London** — Penting untuk monitoring London Kill Zone (03:00-08:30 NY). Otomatis beralih antara GMT dan BST.
-- **🇮🇩 UTC+7 WIB** — Waktu lokal Indonesia, tidak berubah (Jakarta tidak menggunakan DST).
-
-Semua jam menggunakan `Intl.DateTimeFormat` API — artinya akurasi dijamin oleh sistem operasi dan tidak bergantung pada hardcoded offset yang rentan salah saat pergantian DST.
-
-### Session Highlight
-
-Kill Zone yang sedang aktif otomatis di-highlight secara visual:
-- **Asia Session** (20:00-03:00 NY) — Biru
-- **London Kill Zone** (03:00-08:30 NY) — Gold
-- **New York Kill Zone** (08:30-16:00 NY) — Hijau
-- **NY PM Session** (13:00-16:00 NY) — Ungu
-
-### Market Status Card
-
-Kartu status pasar yang menampilkan kondisi terkini secara real-time:
-- 🟢 **LIQUID** — Kill Zone aktif, setup ICT valid
-- 🟡 **PRE-MARKET** — Menunggu NY Open
-- 🟡 **VOLATILE** — Sesi aktif tapi bukan prime Kill Zone
-- 🔴 **OFF HOURS** — Di luar semua Kill Zone
-- 🔴 **NEWS RISK** — 20 menit sebelum/10 menit setelah rilis data high-impact
-- 🔴 **MARKET CLOSED** — Weekend (Jumat 17:00 NY hingga Minggu 18:00 NY)
-
-### Session Progress Bar
-
-Progress bar yang menunjukkan seberapa jauh sesi yang sedang aktif telah berjalan, lengkap dengan countdown sisa waktu sesi dan estimasi sesi berikutnya.
-
-### WIB Market Hours
-
-Untuk kemudahan trader Indonesia, ICT Forge juga menampilkan jam pasar dalam format WIB:
-- **Market Buka**: Senin 05:00 WIB
-- **Market Tutup**: Sabtu 04:00 WIB
-- **London KZ**: 10:00–15:30 WIB
-- **NY KZ**: 15:30–23:00 WIB
-
----
-
-## 📅 Economic Calendar Real-Time
-
-Sejak update v1.1, ICT Forge mengintegrasikan kalender ekonomi real-time via **newsdata.io API**, menggantikan jadwal static yang sebelumnya di-hardcode.
-
-### Cara Kerja
-
-Saat aplikasi dibuka, `realtime-news.js` secara otomatis:
-1. Mengecek apakah ada data cache yang masih valid (TTL 6 jam)
-2. Jika cache sudah expired, fetch data baru dari newsdata.io
-3. Mendeteksi event high-impact dari artikel berita (NFP, CPI, FOMC, PPI, GDP, PCE, Retail Sales, ISM, Jobless Claims, BOE, ECB, BOJ, RBA, BOC)
-4. Merge dengan jadwal static 2026 yang sudah ada sebagai fallback
-5. Render kalender dengan tampilan yang jelas dan informatif
-
-### Tampilan Dual Timezone
-
-Setiap header tanggal menampilkan dua zona waktu sekaligus:
 ```
-🇺🇸  Jumat, 17 Apr 2026   [NY TODAY]
-🇮🇩  Sabtu, 18 Apr 2026   [WIB TODAY]
+██╗ ██████╗████████╗    ███████╗ ██████╗ ██████╗  ██████╗ ███████╗
+██║██╔════╝╚══██╔══╝    ██╔════╝██╔═══██╗██╔══██╗██╔════╝ ██╔════╝
+██║██║        ██║       █████╗  ██║   ██║██████╔╝██║  ███╗█████╗  
+██║██║        ██║       ██╔══╝  ██║   ██║██╔══██╗██║   ██║██╔══╝  
+██║╚██████╗   ██║       ██║     ╚██████╔╝██║  ██║╚██████╔╝███████╗
+╚═╝ ╚═════╝   ╚═╝       ╚═╝      ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝
 ```
 
-Ini memastikan trader Indonesia tidak salah menginterpretasi kapan sebenarnya event tersebut terjadi dalam konteks waktu lokal mereka.
+**Smart Money Concepts Trading Platform**
 
-### Badge Status
+[![Version](https://img.shields.io/badge/version-1.0.0-C9A84C?style=for-the-badge&logo=github)](https://github.com/sumantokeras56/ictforge)
+[![License](https://img.shields.io/badge/license-MIT-2ECC71?style=for-the-badge)](LICENSE)
+[![PWA](https://img.shields.io/badge/PWA-ready-5B9BD5?style=for-the-badge&logo=googlechrome)](https://sumantokeras56.github.io/ictforge/)
+[![Deploy](https://img.shields.io/badge/deploy-GitHub%20Pages-181717?style=for-the-badge&logo=github)](https://sumantokeras56.github.io/ictforge/)
+[![Language](https://img.shields.io/badge/language-Bahasa%20Indonesia-E74C3C?style=for-the-badge)](https://sumantokeras56.github.io/ictforge/)
 
-- **NY TODAY** (merah) — Event terjadi hari ini di NY
-- **NY BESOK** (biru) — Event terjadi besok di NY
-- **WIB TODAY** (cyan) — Event terjadi hari ini di Indonesia
-- **LIVE** (hijau) — Data berasal dari API real-time, bukan jadwal static
-- **⏱ Xj Ym lagi** — Countdown realtime untuk event hari ini
-- **🔴 BARU RILIS** — Event baru saja dirilis dalam 60 menit terakhir
+<br/>
 
-### Event yang Dipantau
+> **ICT Forge** adalah platform trading all-in-one berbasis **Inner Circle Trader (ICT)** dan **Smart Money Concepts (SMC)** — dibangun sepenuhnya di atas teknologi web modern tanpa backend, 100% berjalan di browser, dan dapat diinstall sebagai aplikasi native di perangkat apapun.
 
-| Event | Frekuensi | Waktu NY | Dampak |
-|-------|-----------|----------|--------|
-| NFP (Non-Farm Payrolls) | Jumat Pertama/Bulan | 08:30 | 🔴 HIGH |
-| CPI (Consumer Price Index) | ~Pertengahan Bulan | 08:30 | 🔴 HIGH |
-| FOMC Rate Decision | 8× per Tahun | 14:00 | 🔴 HIGH |
-| Initial Jobless Claims | Setiap Kamis | 08:30 | 🔴 HIGH |
-| PPI (Producer Price Index) | Bulanan | 08:30 | 🔴 HIGH |
-| GDP | Kuartalan | 08:30 | 🔴 HIGH |
-| PCE | Bulanan | 08:30 | 🔴 HIGH |
-| Retail Sales | Bulanan | 08:30 | 🔴 HIGH |
-| ISM Manufacturing/Services | Bulanan | 10:00 | 🔴 HIGH |
-| BOE Rate Decision | 8× per Tahun | 07:00 | 🔴 HIGH |
-| ECB Rate Decision | 8× per Tahun | 07:45 | 🔴 HIGH |
-| BOJ Policy | Bulanan | 23:00 | 🔴 HIGH |
-| COT Report Release | Setiap Jumat | 15:30 | 📊 MEDIUM |
+<br/>
+
+[🚀 Buka Aplikasi](https://sumantokeras56.github.io/ictforge/) · [📖 Dokumentasi](#-dokumentasi-fitur) · [🐛 Laporkan Bug](https://github.com/sumantokeras56/ictforge/issues) · [💡 Request Fitur](https://github.com/sumantokeras56/ictforge/issues/new)
+
+<br/>
 
 ---
 
-## ⏰ Event Countdown
+</div>
 
-Panel Event Countdown menampilkan countdown real-time (update setiap detik) ke lima event paling kritikal untuk trader ICT:
+<br/>
 
-### NFP — Non-Farm Payrolls
-Event terpenting di kalender ekonomi. Setiap Jumat pertama bulan ini, rilis pukul 08:30 NY. Volatilitas extreme — spread bisa melebar 10–50× normal. ICT Forge memperingatkan 15 menit dan 5 menit sebelum rilis via browser notification.
+## 📋 Daftar Isi
 
-### CPI — Consumer Price Index
-Data inflasi AS yang menjadi penentu kebijakan The Fed. Dirilis sekitar pertengahan bulan pukul 08:30 NY. Reaksi pasar seringkali lebih besar dari NFP jika hasilnya jauh dari ekspektasi.
+- [Tentang Proyek](#-tentang-proyek)
+- [Fitur Unggulan](#-fitur-unggulan)
+- [Tech Stack](#-tech-stack)
+- [Arsitektur](#-arsitektur)
+- [Dokumentasi Fitur](#-dokumentasi-fitur)
+- [Instalasi & Deployment](#-instalasi--deployment)
+- [Struktur Direktori](#-struktur-direktori)
+- [Konfigurasi](#-konfigurasi)
+- [Roadmap](#-roadmap)
+- [Kontribusi](#-kontribusi)
+- [Lisensi](#-lisensi)
 
-### FOMC — Federal Reserve Rate Decision
-Delapan kali setahun, FOMC mengumumkan keputusan suku bunga pukul 14:00 NY. Ini adalah salah satu event dengan volatilitas tertinggi sepanjang tahun — terutama jika keputusan berbeda dari ekspektasi pasar.
-
-### Initial Jobless Claims
-Data mingguan (setiap Kamis 08:30 NY) yang mencerminkan kesehatan pasar tenaga kerja AS. Kurang volatile dari NFP tapi tetap menghasilkan pergerakan signifikan di USD pairs dan Nasdaq.
-
-### COT Report Release
-Setiap Jumat pukul 15:30 NY, CFTC merilis data positioning untuk posisi hari Selasa. Penting untuk update bias mingguan dan konfirmasi arah institusional.
-
----
-
-## ⚡ PineScript Tools
-
-Bagi trader yang juga menggunakan TradingView, ICT Forge menyediakan seperangkat alat untuk memodifikasi, merge, convert, dan memperbaiki script PineScript langsung dari browser.
-
-### 🔧 Modifikasi & Perbaiki (Offline)
-Engine berbasis rule untuk memperbaiki syntax umum, modernisasi kode, dan menerapkan instruksi modifikasi tanpa memerlukan koneksi internet atau AI. Ideal untuk perbaikan cepat dan perubahan yang sudah jelas.
-
-### 🔗 Merge Engine (Offline)
-Menggabungkan dua script PineScript menjadi satu — dengan unifikasi input parameters yang duplikat, penggabungan logika yang konflik, dan pembersihan variabel ganda. Sangat berguna ketika ingin mengkombinasikan indikator overlay dengan strategy.
-
-### 🔄 Convert v4/v5 → v6 (Offline)
-Upgrade otomatis syntax deprecated:
-- `study()` → `indicator()`
-- Penambahan prefix `ta.` (ta.ema, ta.rsi, ta.macd, dll)
-- Update `na` checks ke format modern
-- Perbaikan `security()` → `request.security()`
-- Dan banyak perubahan syntax lainnya
-
-### 🤖 AI Error Fixer (Claude API)
-Fitur premium yang menggunakan Claude Sonnet API untuk menganalisis error kompleks yang tidak bisa ditangani oleh engine offline. Cocok untuk:
-- Error yang melibatkan logic flow yang rumit
-- Konflik antara fungsi-fungsi dalam script panjang
-- Error yang tidak jelas pesan errornya
-- Optimasi performa script
-
-**Catatan**: Fitur AI Error Fixer memerlukan API key Claude Anthropic sendiri. Biaya sekitar $0.001–$0.003 per request tergantung panjang kode. API key disimpan di browser pengguna (localStorage) — tidak pernah dikirim ke server.
+<br/>
 
 ---
 
-## 📦 Indikator Siap Pakai
+## 🎯 Tentang Proyek
 
-ICT Forge menyediakan dua indikator TradingView yang sudah fully tested di PineScript v6, siap untuk langsung di-copy paste ke editor TradingView.
+**ICT Forge** lahir dari kebutuhan nyata trader Indonesia yang belajar metodologi **Inner Circle Trader (ICT)** — sebuah pendekatan trading berbasis Smart Money Concepts yang dikembangkan oleh Michael J. Huddleston. Platform ini menggabungkan seluruh kebutuhan analisis dan eksekusi trader ICT dalam satu aplikasi yang cepat, ringan, dan berjalan sepenuhnya tanpa koneksi internet setelah instalasi pertama.
 
-### Indikator #1 — Session Dashboard Pro v10
+### Mengapa ICT Forge?
 
-Indikator overlay komprehensif yang menggabungkan semua elemen analisis ICT dalam satu tampilan:
+| Masalah Trader | Solusi ICT Forge |
+|---|---|
+| Tools trading tersebar di banyak platform | Semua dalam satu aplikasi |
+| Harus online untuk mengakses materi | Offline-first PWA — berjalan tanpa internet |
+| Kalkulator lot size manual & rawan error | Kalkulator otomatis multi-instrumen |
+| Tidak ada reminder saat Kill Zone buka | Notifikasi real-time berbasis browser |
+| Sulit track performa trading sendiri | Trading Journal terintegrasi |
+| Bingung baca data COT CFTC | COT Analyzer dengan penjelasan bahasa awam |
 
-**Kill Zone Boxes** — Background highlight otomatis untuk setiap sesi (Asia, London, NY AM, NY PM) dengan warna yang berbeda dan dapat dikustomisasi.
-
-**TTrades Daily Bias** — Implementasi 6 kondisi prioritas TTrades TFO langsung di chart, dengan label alasan bias yang ditampilkan di atas/bawah candle.
-
-**PDH/PDL + Monte Carlo Probability** — Menghitung probabilitas harga mencapai PDH vs PDL berdasarkan 12 parameter pasar nyata, menggunakan simulasi Monte Carlo untuk menghasilkan estimasi probabilitas yang lebih akurat dari sekadar analisis historis sederhana.
-
-**NY 9:30 Open Analysis** — Klasifikasi otomatis karakter candle pembukaan 9:30 NY: Manipulasi, Impulse, atau Neutral, berdasarkan posisi relatif terhadap EMA 9 dan 21.
-
-**VWAP Weekly + Daily** — Bias mingguan dari slope VWAP Weekly ditambah jarak ATR untuk menentukan apakah harga berada di area premium atau discount relatif terhadap VWAP.
-
-**Opening Candle Lines** — Garis otomatis untuk harga pembukaan 08:30 London dan 09:30 NY, extend ke kanan sepanjang sesi.
-
-### Indikator #2 — Quantum Veil Trend Engine
-
-Indikator berbasis machine learning yang menghasilkan composite score dari 12 fitur teknikal:
-
-**EMA 9/21 Ribbon** — Ribbon warna bull/bear dengan deteksi crossover otomatis dan label yang informatif.
-
-**ML Dashboard Table** — Tabel di chart yang menampilkan 12 fitur: EMA separation, RSI momentum, MACD signal, Bollinger Band position, OBV divergence, VWAP distance, dan lainnya.
-
-**Continuation % Bar** — Visual bar yang menunjukkan probabilitas kelanjutan trend vs potensi reversal berdasarkan composite score.
-
-**Logistic Score** — Composite score melalui fungsi logistik yang menghasilkan klasifikasi HIGH / MEDIUM / LOW confidence.
-
-**Smart Alerts** — Alert otomatis untuk bull/bear cross dengan konfirmasi AI score, serta peringatan ketika ada potensi reversal yang signifikan.
+<br/>
 
 ---
 
-## 🔔 Notifikasi Browser
+## ✨ Fitur Unggulan
 
-ICT Forge menggunakan Web Notifications API untuk memberikan alert real-time yang tidak memerlukan aplikasi native.
+<table>
+<tr>
+<td width="50%">
 
-### Jenis Notifikasi
+### 📊 Live Market Dashboard
+- **Real-time clock** untuk 3 timezone (NY, London, WIB)
+- **Session detector** otomatis — Asia, London KZ, New York KZ, NY PM
+- **Kill Zone highlighter** live dengan badge `● LIVE`
+- **Market Status Card** — Liquid / Illiquid / News Risk / Market Closed
+- **Session Progress Bar** dengan countdown akurat berbasis UTC timestamp
+- **Weekend detection** dengan countdown buka pasar Minggu 18:00 NY
 
-**Session Alerts** — Notifikasi ketika Kill Zone baru dibuka: Asia Session, London KZ, New York KZ, NY PM. Berguna untuk trader yang tidak selalu memantau chart secara aktif.
+</td>
+<td width="50%">
 
-**News Alerts** — Peringatan 15 menit dan 5 menit sebelum rilis data high-impact (NFP, CPI, FOMC, Jobless Claims). Cukup waktu untuk menutup posisi yang terbuka atau menghindari entry baru.
+### 🔔 Sistem Notifikasi Sesi
+- Notifikasi browser saat **Kill Zone buka**
+- Alert **15 menit & 5 menit** sebelum High Impact News
+- **News proximity warning** — otomatis tampil saat mendekati NFP, CPI, FOMC
+- Service Worker push notification support
+- Deduplication via localStorage — tidak double notif saat reload
 
-### Cara Mengaktifkan
+</td>
+</tr>
+<tr>
+<td width="50%">
 
-1. Klik hamburger menu (☰) di pojok kiri atas
-2. Toggle **"Notifikasi Sesi"** ke posisi ON
-3. Browser akan meminta izin notifikasi — klik Allow
-4. Uji dengan tombol **"Test Notifikasi"**
+### 🧮 Position Size Calculator
+Mendukung **6 instrumen** dengan perhitungan akurat:
 
-### Deduplication System
+| Instrumen | Keterangan |
+|---|---|
+| **Forex Standard** | Non-JPY pairs, pip = 0.0001 |
+| **JPY Pairs** | USDJPY, GBPJPY, pip = 0.01 |
+| **NQ Futures** | E-mini Nasdaq, tick = $5 |
+| **ES Futures** | E-mini S&P 500, tick = $12.5 |
+| **YM Futures** | E-mini Dow Jones, tick = $5 |
+| **Custom** | Manual pip/tick value |
 
-Sistem notifikasi ICT Forge menggunakan kombinasi in-memory Set dan localStorage untuk mencegah notifikasi duplikat, bahkan jika halaman di-reload di tengah sesi yang sedang berjalan.
+Fitur: RR Ratio visual bar, verdict ICT (minimum 1:2), animasi loading step-by-step
+
+</td>
+<td width="50%">
+
+### 📅 Economic Calendar
+- **High Impact Events 2026** — NFP, CPI, FOMC, PPI, GDP, PCE, Retail Sales, ISM, Jobless Claims
+- **Central Bank calendar** — BOE, ECB, BOJ, RBA, BOC
+- **Live data via newsdata.io API** dengan 6 jam cache cerdas
+- Tampilan **dual timezone** (NY 🇺🇸 + WIB 🇮🇩)
+- **Countdown realtime** per event dengan badge urgency
+- Fallback ke static 2026 data saat API tidak tersedia
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 📈 COT Analyzer
+- Analisis **9 instrumen futures** — ES, NQ, EUR, GBP, JPY, AUD, CAD, CHF, NZD
+- Input data Commercial / Non-Commercial / Open Interest
+- **Penjelasan bahasa awam** — cocok untuk trader pemula
+- Simpan bias per instrumen ke localStorage
+- Integrasi dengan **Daily Bias Helper**
+- COT release countdown (setiap Jumat 15:30 NY)
+
+</td>
+<td width="50%">
+
+### 📝 Trading Journal
+- Catat trade: Symbol, Side, Entry, SL, TP, R:R, Result, Catatan
+- **Statistik otomatis** — Total trades, Win Rate, Profit Factor, Avg R:R
+- **Entry Trade Cepat** via sidebar modal
+- Export ke **CSV** untuk analisis di Excel/Google Sheets
+- 100% privat — tersimpan di `localStorage` perangkat kamu
+- Filter & sort by date, symbol, result
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### ✅ Trade Checklist ICT
+- Checklist **multi-tab** — Pre-Trade, Confirmation, Risk Management
+- Progress bar visual dengan verdict
+- Item **critical** ditandai khusus
+- Auto-save ke localStorage
+- Export ke **PDF** satu klik
+- Reset per sesi trading
+
+</td>
+<td width="50%">
+
+### ⚡ PineScript Tools
+- **Modifikasi & Perbaiki** — upgrade syntax, modernisasi v6 (offline)
+- **Merge Engine** — gabungkan 2 script, deduplikasi variabel otomatis
+- **Convert v4/v5 → v6** — migrasi `study()`, `ta.` prefix, `input.int()` dll
+- **AI Error Fixer** — powered by **Claude API** (Anthropic), perbaiki error kompleks
+- Static syntax checker bawaan
+- Copy output satu klik
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 🧠 Daily Bias Helper
+- Analisis bias harian COT-aware
+- Multi-instrument & session algorithm
+- Rekomendasi Long / Short / Neutral per Kill Zone
+- Integrasi dengan data COT yang sudah diinput
+
+</td>
+<td width="50%">
+
+### 📚 Materi ICT Lengkap
+- **Overview** — Pengenalan Smart Money Concepts
+- **Market Structure** — BOS, ChoCh, HH/LL
+- **Liquidity** — BSL, SSL, Equal Highs/Lows
+- **PD Arrays** — FVG, OB, Breaker, Mitigation Block
+- **AMD Model** — Accumulation, Manipulation, Distribution
+- **8AM Strategy** — Judas Swing, Kill Zone entry
+- **Foundational Concepts** — Premium/Discount, Equilibrium
+- **Glossary** — Kamus lengkap istilah ICT/SMC
+- **Indicators Guide** — Panduan indikator TradingView
+
+</td>
+</tr>
+</table>
+
+<br/>
 
 ---
 
-## 📲 PWA — Install ke Homescreen
+## 🛠 Tech Stack
 
-ICT Forge adalah Progressive Web App (PWA) yang bisa diinstall seperti aplikasi native di semua perangkat, tanpa perlu App Store atau Play Store.
-
-### iOS (Safari) — Recommended
-
-1. Buka `sumantokeras56.github.io/ictmasterclass` di **Safari** (wajib Safari, bukan Chrome)
-2. Tap ikon **Share** (kotak dengan panah ke atas) di bagian bawah browser
-3. Scroll ke bawah dan pilih **"Add to Home Screen"**
-4. Beri nama "ICT Forge" → tap **Add**
-5. Aplikasi akan muncul di homescreen dengan ikon khusus
-
-Setelah diinstall di iOS, aplikasi berjalan dalam **Standalone Mode** — tanpa address bar, tanpa tab bar browser, layaknya aplikasi native.
-
-### Android (Chrome/Edge)
-
-1. Buka website di Chrome atau Edge
-2. Banner instalasi akan muncul otomatis di bagian bawah
-3. Jika tidak muncul: tap menu titik tiga → **"Install App"** atau **"Add to Home Screen"**
-4. Konfirmasi instalasi → aplikasi muncul di drawer dan homescreen
-
-### Desktop (Chrome/Edge)
-
-1. Buka website di Chrome atau Edge
-2. Klik ikon install di address bar (ikon komputer dengan tanda +)
-3. Atau: menu tiga titik → **"Install ICT Forge"**
-4. Aplikasi akan berjalan di window terpisah tanpa browser chrome
-
-### Keunggulan PWA Mode
-
-- **Offline Support**: Aset statis di-cache oleh Service Worker, aplikasi tetap bisa dibuka tanpa internet
-- **Fullscreen**: Tidak ada address bar yang mengurangi ruang layar
-- **Fast Launch**: Waktu loading jauh lebih cepat dari membuka browser
-- **Notifikasi**: Support browser notification yang terintegrasi
-
----
-
-## 🏗️ Arsitektur & Teknologi
-
-ICT Forge dibangun dengan prinsip **zero dependency** — tidak ada framework JavaScript, tidak ada npm packages, tidak ada build step yang kompleks. Semua ditulis dalam Vanilla HTML5, CSS3, dan JavaScript modern.
-
-### Keputusan Arsitektur
-
-**Mengapa Vanilla JS?**
-Framework seperti React atau Vue menambahkan overhead yang tidak diperlukan untuk aplikasi seperti ini. Dengan Vanilla JS, First Contentful Paint (FCP) bisa dijaga di bawah 1 detik bahkan pada koneksi 3G. Aplikasi juga lebih mudah di-maintain dan di-debug tanpa abstraksi framework yang kompleks.
-
-**Mengapa Single-Page Application?**
-Semua konten ada di satu file `index.html` yang sudah di-cache oleh Service Worker. Navigasi antar section tidak memerlukan network request sama sekali — instant dan smooth.
-
-**Mengapa GitHub Pages?**
-Hosting gratis, reliable, CDN global, HTTPS otomatis, dan deployment semudah git push. Untuk aplikasi educational yang tidak memerlukan backend, ini adalah pilihan paling efisien.
-
-### Stack Teknologi
+```
+ICT Forge — Zero-dependency, Vanilla Web Stack
+```
 
 | Layer | Teknologi |
-|-------|-----------|
-| Markup | HTML5 Semantic |
-| Styling | CSS3 Custom Properties, Flexbox, Grid |
-| Logic | Vanilla JavaScript ES2020+ |
-| Fonts | DM Sans, DM Mono (Google Fonts) |
-| Icons | Emoji native (zero dependency) |
-| PWA | Service Worker + Web App Manifest |
-| Time | Intl.DateTimeFormat API (DST-safe) |
-| Notification | Web Notifications API |
-| Storage | localStorage (journal, settings, cache) |
-| News API | newsdata.io REST API |
-| AI | Anthropic Claude Sonnet API |
-| Hosting | GitHub Pages |
+|---|---|
+| **Frontend** | HTML5, CSS3, Vanilla JavaScript (ES2022+) |
+| **PWA Engine** | Service Worker API, Web App Manifest |
+| **Storage** | localStorage (journal, checklist, COT, settings) |
+| **Notifications** | Web Notifications API + Service Worker Push |
+| **Timezone** | `Intl.DateTimeFormat` — akurat DST otomatis |
+| **Live News** | [newsdata.io](https://newsdata.io) REST API |
+| **AI Integration** | [Anthropic Claude API](https://www.anthropic.com) (claude-sonnet) |
+| **Fonts** | Google Fonts — Bebas Neue, DM Mono, Inter |
+| **Hosting** | GitHub Pages |
+| **CI/CD** | GitHub Actions (auto-deploy on push) |
 
-### Penanganan Timezone
+> 💡 **Zero framework, zero bundler, zero node_modules** — ICT Forge berjalan murni sebagai static files. Tidak ada React, Vue, Angular, Webpack, atau Vite. Buka `index.html` → langsung jalan.
 
-Semua operasi waktu di ICT Forge menggunakan `Intl.DateTimeFormat` dengan explicit timezone, bukan hardcoded UTC offset. Ini memastikan akurasi penuh saat transisi Daylight Saving Time (DST) di Amerika dan Eropa, tanpa perlu library seperti moment.js atau date-fns.
+<br/>
 
 ---
 
-## 📁 Struktur File
+## 🏗 Arsitektur
 
 ```
-ictmasterclass/
-├── index.html          # Entry point utama — seluruh UI ada di sini
-├── style.css           # Semua styling: dark theme, komponen, responsif
-├── main.js             # Logic utama: clock, journal, COT, kalkulator, dll
-├── realtime-news.js    # Live economic calendar via newsdata.io API
-└── README.md           # Dokumentasi ini
+┌─────────────────────────────────────────────────────────────┐
+│                        BROWSER                               │
+│                                                             │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐  │
+│  │  index.html  │───▶│   main.js    │───▶│   style.css  │  │
+│  │  (App Shell) │    │ (Core Logic) │    │  (Theming)   │  │
+│  └──────────────┘    └──────┬───────┘    └──────────────┘  │
+│                             │                               │
+│                    ┌────────▼────────┐                      │
+│                    │ realtime-news.js│                      │
+│                    │ (News Engine)   │                      │
+│                    └────────┬────────┘                      │
+│                             │                               │
+│         ┌───────────────────┼───────────────────┐          │
+│         ▼                   ▼                   ▼          │
+│  ┌─────────────┐   ┌─────────────┐   ┌─────────────────┐  │
+│  │ localStorage│   │  newsdata   │   │  Claude API     │  │
+│  │  (Journal,  │   │  .io API    │   │  (PineScript    │  │
+│  │  Checklist, │   │  (6h cache) │   │   AI Fixer)     │  │
+│  │  COT, Keys) │   └─────────────┘   └─────────────────┘  │
+│  └─────────────┘                                           │
+│                                                             │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │                  SERVICE WORKER (sw.js)               │  │
+│  │  Cache Strategy: Network-first → Cache fallback       │  │
+│  │  Offline: Serve cached app shell + offline.html       │  │
+│  │  Push: Session & News notifications                   │  │
+│  └──────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### Penjelasan Per File
+### Cache Strategy
 
-**`index.html`** (±6200 baris)
-Struktur lengkap aplikasi. Mencakup semua section/tab, modal, panel, konten edukasi, dan markup untuk semua fitur. Sudah termasuk inline PWA manifest generation dan Service Worker registration.
+| Resource Type | Strategy | Cache Name |
+|---|---|---|
+| App HTML | Network-first → Cache fallback | `ictforge-v3` |
+| JS / CSS | Network-first → Cache fallback | `ictforge-v3` |
+| Google Fonts | Cache-first (stabil) | `ictforge-fonts-v1` |
+| API calls | Bypass (tidak di-cache) | — |
+| Offline fallback | Serve `offline.html` | `ictforge-v3` |
 
-**`style.css`** (±1100 baris)
-Semua styling aplikasi. Menggunakan CSS Custom Properties (variables) untuk theming yang konsisten. Dark mode menggunakan palette gold (#C9A84C) sebagai warna aksen utama — dipilih untuk mengurangi eye strain saat sesi trading panjang.
-
-**`main.js`** (±4800 baris)
-Otak aplikasi. Berisi:
-- Live clock engine dengan DST-safe timezone handling
-- Session detection dan market hours logic
-- Trading journal CRUD dengan localStorage
-- COT parser untuk format CFTC Legacy Report
-- Kalkulator RR untuk semua instrumen
-- PineScript offline tools (modifier, merger, converter)
-- Claude API integration untuk AI Error Fixer
-- Browser notification system
-- Daily Bias Helper logic
-- Economic calendar event definitions
-
-**`realtime-news.js`** (±380 baris)
-Engine news real-time yang di-load setelah `main.js`. Mengambil data dari newsdata.io, mendeteksi event high-impact via keyword matching, merge dengan data static, dan render kalender dengan tampilan dual-timezone (NY + WIB).
+<br/>
 
 ---
 
-## 🚀 Cara Deploy
+## 📖 Dokumentasi Fitur
 
-### Fork dan Deploy Sendiri
+### 🕐 Session Timing (NY Timezone)
 
-1. **Fork** repository ini ke akun GitHub kamu
-2. Pergi ke **Settings** → **Pages**
-3. Pilih source: **Deploy from a branch** → branch **main** → folder **/ (root)**
-4. Klik **Save**
-5. Website akan live di `yourusername.github.io/ictmasterclass`
+| Session | Buka NY | Tutup NY | Buka WIB | Tutup WIB |
+|---|---|---|---|---|
+| Asia Session | 20:00 | 03:00 | 07:00 | 10:00 |
+| London Kill Zone | 03:00 | 08:30 | 10:00 | 15:30 |
+| New York Kill Zone | 08:30 | 16:00 | 15:30 | 23:00 |
+| NY PM Session | 13:00 | 16:00 | 20:00 | 23:00 |
 
-### Update Konten
+> ⚠️ Semua waktu WIB di atas adalah **perkiraan** saat EDT (UTC-4). Saat EST (UTC-5, Nov–Mar), geser +1 jam. Aplikasi menghitung timezone secara otomatis via `Intl.DateTimeFormat`.
 
-Untuk mengupdate file:
-1. Buka file di GitHub (klik nama file)
-2. Klik ikon pensil (Edit)
-3. Lakukan perubahan
-4. Scroll bawah → **Commit changes**
-5. GitHub Pages otomatis deploy dalam 1–3 menit
+### 📊 High Impact Events 2026
 
-Atau upload file baru/replace file lama via **Add file → Upload files**.
+| Event | Frekuensi | Waktu NY | Dampak |
+|---|---|---|---|
+| NFP (Non-Farm Payrolls) | Jumat pertama tiap bulan | 08:30 | 🔴 HIGH |
+| CPI (Consumer Price Index) | ~Tengah bulan | 08:30 | 🔴 HIGH |
+| FOMC Rate Decision | 8× setahun | 14:00 | 🔴 HIGH |
+| Initial Jobless Claims | Setiap Kamis | 08:30 | 🔴 HIGH |
+| PPI | ~Tengah bulan | 08:30 | 🔴 HIGH |
+| GDP | Kuartalan | 08:30 | 🔴 HIGH |
+| PCE | Bulanan | 08:30 | 🔴 HIGH |
+| BOE / ECB / BOJ / RBA / BOC | Sesuai jadwal | Varies | 🔴 HIGH |
 
-### Custom Domain (Opsional)
+### 🧮 Formula Kalkulator
 
-1. Beli domain (contoh: ictforge.id)
-2. Di GitHub: Settings → Pages → Custom domain → masukkan domain
-3. Di provider domain: tambahkan CNAME record yang mengarah ke `yourusername.github.io`
-4. Tunggu propagasi DNS (bisa sampai 48 jam)
+```
+Risk Amount  = Account Balance × (Risk % / 100)
+Position Size = Risk Amount / (SL Distance × Pip/Tick Value)
+Potential Profit = Position Size × TP Distance × Pip/Tick Value
+R:R Ratio    = TP Distance / SL Distance
+```
+
+**Minimum R:R ICT:** ≥ 1:2 (Valid), ≥ 1:3 (Excellent)
+
+### ⚡ PineScript AI Error Fixer
+
+```
+User Input (kode error)
+        │
+        ▼
+┌───────────────────┐
+│  Validasi Input   │ ← Cek API key, cek kode tidak kosong
+└────────┬──────────┘
+         │
+         ▼
+┌───────────────────┐
+│  Claude Sonnet API│ ← POST ke api.anthropic.com/v1/messages
+│  ~$0.001–$0.003   │   Model: claude-sonnet-4-20250514
+└────────┬──────────┘
+         │
+         ▼
+┌───────────────────┐
+│  Render Output    │ ← Format kode + penjelasan perubahan
+└───────────────────┘
+```
+
+> **Catatan:** API key Claude tidak dikirim ke server ICT Forge. Request dilakukan langsung dari browser pengguna ke `api.anthropic.com`.
+
+<br/>
 
 ---
 
-## 🗺️ Roadmap Pengembangan
+## 🚀 Instalasi & Deployment
 
-### v1.1 — Real-Time Integration (✅ Done)
-- ✅ Live economic calendar via newsdata.io API
-- ✅ Dual timezone display (NY + WIB) di kalender
-- ✅ Countdown realtime per event dengan badge status
-- ✅ Auto-refresh cache setiap 6 jam
+### Akses Langsung (Tanpa Instalasi)
 
-### v1.2 — Enhanced Journal (Planned)
-- 📋 Filter journal by setup type (FVG, OB, Silver Bullet, dll)
-- 📋 Screenshot attachment per trade
-- 📋 Monthly/weekly performance report
-- 📋 Psychology rating per trade (1-5 bintang)
+Buka browser dan kunjungi:
+```
+https://sumantokeras56.github.io/ictforge/
+```
 
-### v1.3 — Interactive Charts (Planned)
-- 📋 Integrasi TradingView Lightweight Charts untuk visualisasi setup
-- 📋 Markup PD Array langsung di chart mini
-- 📋 Historical session overlay visualization
+### Install sebagai PWA (Direkomendasikan)
 
-### v2.0 — Community Features (Future)
-- 📋 Trade sharing (anonymized) antar pengguna ICT Forge
-- 📋 Leaderboard prop firm challenge tracker
-- 📋 Live study session via embedded video
-- 📋 Custom alert builder berdasarkan kondisi ICT
+**Android (Chrome):**
+1. Buka URL di atas di Chrome
+2. Tap menu ⋮ → **"Tambahkan ke layar utama"**
+3. Tap **Install**
+4. ICT Forge siap dipakai seperti app native
+
+**iOS (Safari):**
+1. Buka URL di Safari
+2. Tap ikon **Share** (□↑)
+3. Scroll → **"Tambahkan ke Layar Utama"**
+4. Tap **Tambahkan**
+
+**Desktop (Chrome/Edge):**
+1. Klik ikon install (📲) di address bar
+2. Klik **Install**
+
+### Self-Hosting / Fork
+
+```bash
+# 1. Clone repositori
+git clone https://github.com/sumantokeras56/ictforge.git
+cd ictforge
+
+# 2. Tidak ada dependencies — langsung buka
+open index.html
+# atau gunakan server lokal
+npx serve .
+# atau
+python3 -m http.server 8000
+```
+
+**Deploy ke GitHub Pages:**
+1. Fork repo ini
+2. Settings → Pages → Source: `main` branch, folder `/` (root)
+3. Akses di `https://[username].github.io/ictforge/`
+
+> ⚠️ **Service Worker membutuhkan HTTPS atau localhost.** Buka via `http://` tidak akan mengaktifkan offline mode dan notifikasi.
+
+<br/>
 
 ---
 
-## 👥 Kredit & Atribusi
+## 📁 Struktur Direktori
 
-### Michael J. Huddleston — Inner Circle Trader (ICT)
-Seluruh metodologi, konsep, dan framework yang menjadi fondasi ICT Forge berasal dari ajaran **Michael J. Huddleston** (`@InnerCircleTrader`). ICT telah berbagi pengetahuan ini secara gratis melalui YouTube sejak 2016, dan ICT Forge hadir sebagai tribute dan alat bantu untuk komunitas yang mempelajari ajarannya.
+```
+ictforge/
+│
+├── index.html              # App Shell utama — semua tab & UI
+├── main.js                 # Core logic — clock, calculator, journal, COT, PineScript
+├── style.css               # Global styling, dark theme, komponen UI
+├── realtime-news.js        # Live news engine via newsdata.io API
+├── sw.js                   # Service Worker — cache, offline, push notifications
+├── manifest.json           # PWA manifest — icon, shortcuts, display mode
+├── offline.html            # Halaman fallback saat offline
+│
+├── 📚 Materi ICT (HTML Fragments)
+│   ├── overview.html       # Pengenalan SMC & ICT methodology
+│   ├── structure.html      # Market Structure — BOS, ChoCh
+│   ├── liquidity.html      # Liquidity — BSL, SSL, EQH/EQL
+│   ├── pd-arrays.html      # PD Arrays — FVG, OB, Breaker
+│   ├── amd.html            # AMD Model — Accumulation, Manipulation, Distribution
+│   ├── 8am-strategy.html   # 8AM NY Strategy — Judas Swing
+│   ├── foundational.html   # Foundational Concepts — Premium/Discount
+│   ├── models.html         # Trading Models ICT
+│   ├── indicators.html     # Panduan Indikator TradingView
+│   └── glossary.html       # Kamus istilah ICT/SMC
+│
+├── 🛠 Tools (HTML Fragments)
+│   ├── calculator.html     # Position size & RR calculator UI
+│   ├── calendar.html       # Economic calendar UI
+│   ├── checklist.html      # Trade checklist UI
+│   ├── cot.html            # COT analyzer UI
+│   ├── journal.html        # Trading journal UI
+│   └── pinescript.html     # PineScript tools UI
+│
+└── README.md               # Dokumentasi ini
+```
 
-🎥 Channel resmi ICT: [youtube.com/@InnerCircleTrader](https://youtube.com/@InnerCircleTrader)
+<br/>
 
-### Rizky Saputra — Developer
-Developer, researcher, dan trader yang membangun ICT Forge dari nol. Aktif trading NQ/Nasdaq Futures dan Forex menggunakan metodologi ICT, telah melewati evaluasi prop firm, dan terus mengembangkan pemahaman tentang Smart Money Concepts.
+---
 
-### Tools & Services
-- **newsdata.io** — Real-time news API
-- **Anthropic Claude** — AI-powered PineScript error fixing
-- **CFTC** — Data COT gratis untuk publik
-- **TradingView** — Platform charting referensi
-- **GitHub Pages** — Hosting gratis dan reliable
+## ⚙️ Konfigurasi
+
+### Mengganti API Key Newsdata.io
+
+Edit `realtime-news.js` baris 14:
+```javascript
+// Daftarkan API key gratis di https://newsdata.io
+const NEWSDATA_API_KEY = window._NEWSDATA_KEY || 'YOUR_API_KEY_HERE';
+```
+
+Atau inject via HTML sebelum script dimuat:
+```html
+<script>window._NEWSDATA_KEY = 'YOUR_API_KEY_HERE';</script>
+<script src="realtime-news.js"></script>
+```
+
+### Mengatur Cache Version (setelah update)
+
+Edit `sw.js` baris 4:
+```javascript
+const CACHE_VERSION = 'ictforge-v4'; // increment untuk force refresh
+```
+
+### Menambahkan Event Kalender Custom
+
+Edit `main.js` — tambahkan ke array `HIGH_IMPACT_NEWS`:
+```javascript
+{ name: 'CUSTOM', date: '2026-05-15', time: '08:30', currency: 'USD', impact: 'high' }
+```
+
+<br/>
+
+---
+
+## 🗺 Roadmap
+
+### v1.1.0 — Q2 2026
+- [ ] Grafik equity curve di Trading Journal
+- [ ] Filter journal berdasarkan instrumen & tanggal range
+- [ ] Dark/Light mode toggle yang persistent
+- [ ] Export Journal ke PDF (lengkap dengan statistik)
+
+### v1.2.0 — Q3 2026
+- [ ] Multi-account Journal support
+- [ ] Backtesting simple (win rate per setup)
+- [ ] Integrasi TradingView webhook alerts
+- [ ] PWA installable shortcut per fitur
+
+### v2.0.0 — Q4 2026
+- [ ] Backend ringan (Cloudflare Workers) untuk API key security
+- [ ] Sync data antar perangkat (optional)
+- [ ] AI Daily Bias — analisis otomatis berbasis COT + Price Action
+- [ ] Support multi-bahasa (EN/ID)
+
+<br/>
+
+---
+
+## 🤝 Kontribusi
+
+Kontribusi sangat disambut! Berikut panduan singkatnya:
+
+```bash
+# 1. Fork repo
+# 2. Buat branch fitur
+git checkout -b feature/nama-fitur
+
+# 3. Commit dengan pesan yang jelas
+git commit -m "feat: tambahkan fitur X untuk Y"
+
+# 4. Push & buat Pull Request
+git push origin feature/nama-fitur
+```
+
+### Konvensi Commit
+
+| Prefix | Keterangan |
+|---|---|
+| `feat:` | Fitur baru |
+| `fix:` | Bug fix |
+| `docs:` | Update dokumentasi |
+| `style:` | Perubahan CSS/UI |
+| `refactor:` | Refactor kode |
+| `perf:` | Optimasi performa |
+
+### Melaporkan Bug
+
+Buka [Issues](https://github.com/sumantokeras56/ictforge/issues) dan sertakan:
+- Browser & versi OS
+- Langkah reproduksi bug
+- Screenshot / console error (jika ada)
+- Expected vs actual behavior
+
+<br/>
 
 ---
 
 ## ⚠️ Disclaimer
 
-**ICT Forge adalah platform edukasi semata.**
+> ICT Forge adalah **alat bantu edukasi dan analisis** — bukan rekomendasi investasi. Semua keputusan trading adalah tanggung jawab pengguna sepenuhnya. Trading forex, futures, dan instrumen keuangan lainnya mengandung **risiko kerugian yang signifikan**. Pastikan kamu memahami risiko sebelum bertransaksi.
+>
+> Metodologi ICT / Smart Money Concepts yang digunakan sebagai referensi dalam aplikasi ini dikembangkan oleh **Michael J. Huddleston**. ICT Forge tidak berafiliasi dengan atau disponsori olehnya.
 
-Seluruh konten, alat, indikator, dan analisis yang tersedia di ICT Forge ditujukan **hanya untuk tujuan pendidikan**. Tidak ada yang ada di platform ini yang merupakan saran keuangan, rekomendasi investasi, atau sinyal trading.
-
-Trading instrumen keuangan — termasuk Forex, Futures, CFD, dan instrumen derivatif lainnya — mengandung **risiko kerugian yang signifikan**, termasuk kemungkinan kehilangan seluruh modal yang diinvestasikan. Performa masa lalu tidak menjamin hasil di masa depan.
-
-Sebelum trading dengan uang nyata, pastikan kamu:
-1. Memahami sepenuhnya instrumen yang akan diperdagangkan
-2. Telah berlatih di akun demo minimal 3-6 bulan
-3. Memiliki rencana trading yang jelas dan tertulis
-4. Mengerti dan menerima risiko kerugian total
-5. Berkonsultasi dengan penasihat keuangan berlisensi jika diperlukan
-
-**Metodologi ICT bukan sistem trading yang menjamin profit.** Seperti sistem trading apapun, hasilnya bergantung pada konsistensi, disiplin, manajemen risiko, dan kondisi pasar yang terus berubah.
+<br/>
 
 ---
 
-*ICT Forge v1.0 — Built with ❤️ by Rizky Saputra · ICT SMC Researcher · Indonesia*
+## 📄 Lisensi
 
-*Based on teachings of Michael J. Huddleston (@InnerCircleTrader)*
+```
+MIT License
 
-*"The best trade is the one you don't take." — ICT*
+Copyright (c) 2026 Rizky Saputra — ICT Forge
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+```
+
+<br/>
+
+---
+
+<div align="center">
+
+**Dibangun dengan ❤️ untuk komunitas trader Indonesia**
+
+[![GitHub](https://img.shields.io/badge/GitHub-sumantokeras56-181717?style=flat-square&logo=github)](https://github.com/sumantokeras56)
+[![Platform](https://img.shields.io/badge/Platform-ICT%20Forge-C9A84C?style=flat-square)](https://sumantokeras56.github.io/ictforge/)
+
+<br/>
+
+```
+"Trade what you see, not what you think." — ICT
+```
+
+<br/>
+
+© 2026 Rizky Saputra · ICT Forge v1.0 · MIT License
+
+</div>
