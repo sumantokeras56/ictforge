@@ -1,10 +1,15 @@
-// ICT Forge — Service Worker v2.1
-// Fixes: notifikasi, cache versioning aman (user data tidak reset), offline page
+// ICT Forge — Service Worker v3.0
+// ✅ Fix: notifikasi HP (showNotification via SW, bukan new Notification)
+// ✅ Fix: data user (journal, checklist, COT) TIDAK terhapus saat update
+// ✅ Fix: path /ictforge/, tambah JS/CSS ke precache
 
-const CACHE_VERSION = 'ictforge-v3';
-const FONT_CACHE = 'ictforge-fonts-v1';
+const CACHE_VERSION  = 'ictforge-v3';
+const FONT_CACHE     = 'ictforge-fonts-v1';
 
-// File yang di-precache (app shell saja)
+// ─── PENTING: localStorage user TIDAK terdampak oleh cache apapun.
+// Yang kita manage hanya Cache Storage (app shell files).
+// Journal, checklist, COT, settings = localStorage → SELALU AMAN.
+
 const PRECACHE_URLS = [
   '/ictforge/',
   '/ictforge/index.html',
@@ -27,8 +32,7 @@ self.addEventListener('install', e => {
 });
 
 // ─── ACTIVATE ────────────────────────────────────────────────────────────────
-// PENTING: Hanya hapus cache VERSI LAMA.
-// localStorage / IndexedDB / journal user TIDAK ikut terhapus — aman.
+// Hanya hapus cache VERSI LAMA — localStorage user TIDAK tersentuh sama sekali.
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys => {
@@ -45,16 +49,15 @@ self.addEventListener('activate', e => {
 
 // ─── FETCH ───────────────────────────────────────────────────────────────────
 self.addEventListener('fetch', e => {
-  const url = e.request.url;
+  const url    = e.request.url;
   const method = e.request.method;
 
-  // Bypass: non-GET, Anthropic API, external APIs
   if (method !== 'GET') return;
   if (url.includes('api.anthropic.com')) return;
   if (url.includes('newsdata.io')) return;
   if (url.includes('chrome-extension://')) return;
 
-  // Google Fonts: cache-first (stabil, jarang berubah)
+  // Google Fonts: cache-first
   if (url.includes('fonts.googleapis.com') || url.includes('fonts.gstatic.com')) {
     e.respondWith(
       caches.open(FONT_CACHE).then(c =>
@@ -70,7 +73,7 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // App HTML (navigasi): network-first, fallback offline.html
+  // App HTML: network-first, fallback offline.html
   if (e.request.mode === 'navigate') {
     e.respondWith(
       fetch(e.request)
@@ -90,7 +93,7 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // Asset lain (JS, CSS, gambar): network-first, fallback cache
+  // JS / CSS / assets: network-first, fallback cache
   e.respondWith(
     fetch(e.request)
       .then(res => {
@@ -113,18 +116,16 @@ self.addEventListener('push', e => {
     if (e.data) data.body = e.data.text();
   }
 
-  const options = {
-    body: data.body || 'Notifikasi dari ICT Forge',
-    icon: '/ictforge/icon-192.png',
-    badge: '/ictforge/icon-192.png',
-    vibrate: [200, 100, 200],
-    tag: data.tag || 'ictforge-notif',
-    renotify: true,
-    data: { url: data.url || '/ictforge/' }
-  };
-
   e.waitUntil(
-    self.registration.showNotification(data.title || 'ICT Forge', options)
+    self.registration.showNotification(data.title || 'ICT Forge', {
+      body:    data.body    || 'Notifikasi dari ICT Forge',
+      icon:    '/ictforge/icon-192.png',
+      badge:   '/ictforge/icon-192.png',
+      vibrate: [200, 100, 200],
+      tag:     data.tag     || 'ictforge-notif',
+      renotify: true,
+      data:    { url: data.url || '/ictforge/' }
+    })
   );
 });
 
@@ -147,24 +148,29 @@ self.addEventListener('notificationclick', e => {
   );
 });
 
-// ─── MESSAGE: TEST NOTIFIKASI dari halaman ───────────────────────────────────
-// Dipanggil dari index.html via: navigator.serviceWorker.controller.postMessage(...)
+// ─── MESSAGE HANDLER ─────────────────────────────────────────────────────────
+// ✅ FIX NOTIFIKASI HP: Semua notifikasi dikirim via SW showNotification
+// (new Notification() tidak berfungsi di background/HP — harus via SW)
 self.addEventListener('message', e => {
   if (!e.data) return;
 
+  // Notifikasi sesi / news — dipanggil dari main.js
   if (e.data.type === 'SHOW_NOTIFICATION') {
-    const { title, body, tag } = e.data;
-    self.registration.showNotification(title || 'ICT Forge', {
-      body: body || 'Test notifikasi berhasil! 🔔',
-      icon: '/ictforge/icon-192.png',
-      badge: '/ictforge/icon-192.png',
-      vibrate: [200, 100, 200],
-      tag: tag || 'ictforge-test',
-      renotify: true
-    });
+    const { title, body, tag, icon } = e.data;
+    e.waitUntil(
+      self.registration.showNotification(title || 'ICT Forge', {
+        body:    body    || 'Notifikasi dari ICT Forge 🔔',
+        icon:    icon    || '/ictforge/icon-192.png',
+        badge:   '/ictforge/icon-192.png',
+        vibrate: [200, 100, 200],
+        tag:     tag     || 'ictforge-notif',
+        renotify: true,
+        data:    { url: '/ictforge/' }
+      })
+    );
   }
 
-  // Skip waiting (force update)
+  // Force update SW
   if (e.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
