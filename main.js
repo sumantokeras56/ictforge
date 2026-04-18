@@ -118,25 +118,21 @@ function setInstrument(key, btn) {
   document.querySelectorAll('.inst-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
   const inst = instruments[key];
-  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-  const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
-  
-  set('instrName', inst.name);
-  set('instrDesc', inst.desc);
-  setVal('pipValue', inst.pipValueDefault);
-  set('pipValLabel', inst.pipLabel);
-  set('slLabel', inst.slLabel);
-  set('tpLabel', inst.tpLabel);
-  set('sizeLabel', inst.sizeLabel);
+  document.getElementById('instrName').textContent = inst.name;
+  document.getElementById('instrDesc').textContent = inst.desc;
+  document.getElementById('pipValue').value = inst.pipValueDefault;
+  document.getElementById('pipValLabel').textContent = inst.pipLabel;
+  document.getElementById('slLabel').textContent = inst.slLabel;
+  document.getElementById('tpLabel').textContent = inst.tpLabel;
+  document.getElementById('sizeLabel').textContent = inst.sizeLabel;
   // Update placeholder hints
-  const setPlaceholder = (id, val) => { const el = document.getElementById(id); if (el) el.placeholder = val; };
+  if (key === 'nq') { document.getElementById('entryPrice').placeholder = '17000.00'; document.getElementById('slPrice').placeholder = '16980.00'; document.getElementById('tpPrice').placeholder = '17040.00'; }
+  else if (key === 'es') { document.getElementById('entryPrice').placeholder = '5300.00'; document.getElementById('slPrice').placeholder = '5290.00'; document.getElementById('tpPrice').placeholder = '5320.00'; }
+  else if (key === 'ym') { document.getElementById('entryPrice').placeholder = '39500'; document.getElementById('slPrice').placeholder = '39400'; document.getElementById('tpPrice').placeholder = '39700'; }
+  else { document.getElementById('entryPrice').placeholder = '1.08500'; document.getElementById('slPrice').placeholder = '1.08300'; document.getElementById('tpPrice').placeholder = '1.08900'; }
 
-  if (key === 'nq') { setPlaceholder('entryPrice','17000.00'); setPlaceholder('slPrice','16980.00'); setPlaceholder('tpPrice','17040.00'); }
-  else if (key === 'es') { setPlaceholder('entryPrice','5300.00'); setPlaceholder('slPrice','5290.00'); setPlaceholder('tpPrice','5320.00'); }
-  else if (key === 'ym') { setPlaceholder('entryPrice','39500'); setPlaceholder('slPrice','39400'); setPlaceholder('tpPrice','39700'); }
-  else { setPlaceholder('entryPrice','1.08500'); setPlaceholder('slPrice','1.08300'); setPlaceholder('tpPrice','1.08900'); }
-  
-if (chips) chips.innerHTML = inst.chips.map(c => `<span class="pill pill-gold">${escapeHtml(c)}</span>`).join('');(c => `<span class="pill pill-gold">${escapeHtml(c)}</span>`).join('');
+  const chips = document.getElementById('instrChips');
+  chips.innerHTML = inst.chips.map(c => `<span class="pill pill-gold">${escapeHtml(c)}</span>`).join('');
   document.getElementById('instrInfo').classList.add('show');
   clearCalculator(); // V13: langsung di sini, tidak perlu override window.setInstrument
 }
@@ -1563,23 +1559,20 @@ function updateCOTStatusPanel(ny) {
 
 
 function clearCalculator() {
-  const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
-  const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-  setVal('entryPrice', '');
-  setVal('slPrice', '');
-  setVal('tpPrice', '');
-  const calcResult = document.getElementById('calcResult');
-  if (calcResult) calcResult.classList.remove('show');
-  setText('riskAmount', '—');
-  setText('slPips', '—');
-  setText('tpPips', '—');
-  setText('lotSize', '—');
-  setText('potProfit', '—');
-  setText('rrRatio', '—');
-  const rrBar = document.getElementById('rrBar');
-  if (rrBar) rrBar.style.width = '0%';
+  document.getElementById('entryPrice').value = '';
+  document.getElementById('slPrice').value = '';
+  document.getElementById('tpPrice').value = '';
+  document.getElementById('calcResult').classList.remove('show');
+  document.getElementById('riskAmount').textContent = '—';
+  document.getElementById('slPips').textContent = '—';
+  document.getElementById('tpPips').textContent = '—';
+  document.getElementById('lotSize').textContent = '—';
+  document.getElementById('potProfit').textContent = '—';
+  document.getElementById('rrRatio').textContent = '—';
+  document.getElementById('rrBar').style.width = '0%';
   const verdict = document.getElementById('rrVerdict');
-  if (verdict) { verdict.className = 'rr-verdict'; verdict.textContent = ''; }
+  verdict.className = 'rr-verdict';
+  verdict.textContent = '';
 }
 
 // V13: setInstrument sudah include clearCalculator langsung (tidak perlu override)
@@ -2592,22 +2585,18 @@ function toggleFAQ(idx) {
   if (!item) return;
   item.classList.toggle('open');
 }
-async function goToTab(tabName) {
-  // Lazy load tab jika belum di-load
-  const el = document.getElementById('tab-' + tabName);
-  if (el && !el.dataset.loaded) {
-    const res = await fetch(`${tabName}.html`);
-    el.innerHTML = await res.text();
-    el.dataset.loaded = true;
-  }
 
-  // Kode asli kamu di bawah ini (tidak diubah)
+// ── NAVIGATION HELPERS ────────────────────────────────────────────
+function goToTab(tabName) {
+  // Find the tab button and click it
   const tabEl = document.querySelector(`.nav-tab[onclick*="showTab('${tabName}'"]`);
   if (tabEl) {
     showTab(tabName, tabEl);
     tabEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
   }
+  // Close sidebar on mobile after navigation
   if (!_isDesktop() && _sidebarOpen) toggleSidebar();
+  // Scroll to top of content
   setTimeout(() => {
     const section = document.getElementById('tab-' + tabName);
     if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -3686,7 +3675,7 @@ function outputCodeBlock(panelOutId, code, title, notes) {
 // ── OFFLINE MODIFY ────────────────────────────────────────────────
 function runPSModify() {
   const code  = document.getElementById('ps-modify-code')?.value.trim();
-  const instr = document.getElementById('ps-modify-instr')?.value.trim();
+  const instr = document.getElementById('ps-modify-instruction')?.value.trim();
   if (!code) { showToast('⚠️ Paste kode PineScript terlebih dahulu'); return; }
 
   let result = code;
@@ -3779,7 +3768,7 @@ function runPSModify() {
     </div>
     ${checkerHtml ? `<div style="margin-top:16px;"><div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:10px;">🔍 STATIC CHECKER</div>${checkerHtml}</div>` : ''}
   `;
-  showPSPanelOutput('ps-modify-out', outHtml);
+  showPSPanelOutput('ps-out-modify-wrap', outHtml);
   const pre = document.getElementById('ps-out-modify');
   if (pre) pre.textContent = result;
   showToast('✅ Modifikasi offline selesai!');
@@ -3787,8 +3776,8 @@ function runPSModify() {
 
 // ── OFFLINE MERGE ─────────────────────────────────────────────────
 function runPSMerge() {
-  const codeA = document.getElementById('ps-merge-a')?.value.trim();
-  const codeB = document.getElementById('ps-merge-b')?.value.trim();
+  const codeA = document.getElementById('ps-merge-code1')?.value.trim();
+  const codeB = document.getElementById('ps-merge-code2')?.value.trim();
   if (!codeA || !codeB) { showToast('⚠️ Isi kedua textarea terlebih dahulu'); return; }
 
   const linesA = codeA.split('\n');
@@ -3848,7 +3837,7 @@ ${nonInputB.join('\n')}`;
     </div>
     ${checkerHtml ? `<div style="margin-top:16px;"><div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:10px;">🔍 STATIC CHECKER</div>${checkerHtml}</div>` : ''}
   `;
-  showPSPanelOutput('ps-merge-out', outHtml);
+  showPSPanelOutput('ps-out-merge-wrap', outHtml);
   const pre = document.getElementById('ps-out-merge');
   if (pre) pre.textContent = merged;
   showToast('✅ Merge selesai!');
@@ -3914,7 +3903,7 @@ function runPSConvert() {
     </div>
     ${checkerHtml ? `<div style="margin-top:16px;"><div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:10px;">🔍 STATIC CHECKER</div>${checkerHtml}</div>` : ''}
   `;
-  showPSPanelOutput('ps-convert-out', outHtml);
+  showPSPanelOutput('ps-out-convert-wrap', outHtml);
   const pre = document.getElementById('ps-out-convert');
   if (pre) pre.textContent = result;
   showToast('✅ Convert ke v6 selesai!');
@@ -4075,7 +4064,7 @@ function clearPSOutput(silent) {
   const progBar = document.getElementById('ps-progress-bar');
   if (progBar) progBar.style.width = '0%';
   // Clear new panel outputs
-  ['ps-modify-out','ps-merge-out','ps-convert-out'].forEach(id => {
+  ['ps-out-modify-wrap','ps-out-merge-wrap','ps-out-convert-wrap'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.innerHTML = ''; el.style.display = 'none'; }
   });
@@ -4732,5 +4721,3 @@ alertcondition(xDown and pRev  >= 65, "Bear Cross + Reversal Risk", "EMA Bear Cr
 
 })();
 
-// Load tab default saat halaman pertama buka
-goToTab('foundational');
