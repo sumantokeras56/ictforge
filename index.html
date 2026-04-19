@@ -5538,6 +5538,21 @@
       ⚠ Hindari trading 15 menit sebelum &amp; sesudah event High Impact. Gunakan Event Countdown di atas untuk persiapan.
      </div>
     </div>
+    <!-- ECONOMIC NEWS SECTION -->
+    <div id="econNewsSection" style="background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:20px;margin-top:20px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
+        <div class="v14-subheader" style="margin-bottom:0;">
+          📡 ECONOMIC NEWS — HARI INI
+          <span style="font-size:9px;color:var(--text-muted);text-transform:none;letter-spacing:0;font-weight:400;margin-left:6px;">🇺🇸 US &amp; 🇮🇩 Indonesia · newsdata.io</span>
+        </div>
+        <button onclick="refreshEconNews()" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;padding:4px 10px;border-radius:3px;cursor:pointer;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);color:var(--gold);">↺ REFRESH</button>
+      </div>
+      <div id="econNewsStatus" style="font-size:9px;font-family:'DM Mono',monospace;letter-spacing:0.5px;padding:4px 8px;border-radius:3px;margin-bottom:10px;color:var(--text-muted);background:var(--dark4);text-align:center;">⏳ Memuat berita ekonomi...</div>
+      <div id="econNewsList"></div>
+      <div style="font-size:10px;color:var(--text-muted);margin-top:14px;border-top:1px solid var(--border);padding-top:10px;line-height:1.6;">
+        ⚠️ <strong style="color:var(--text-dim);">Disclaimer:</strong> Analisis bersifat algoritmik (sentimen teks + keyword scoring). Bukan saran finansial. Konfirmasi dengan price action sebelum trading.
+      </div>
+    </div>
    </div>
    <!-- ════════════════════════════════════════════
        COT ANALYZER
