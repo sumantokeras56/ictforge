@@ -5313,6 +5313,156 @@
         </div>
       </div>
 
+
+      <!-- ══════════════════════════════════════════════════════════
+           PAPAN PAYOUT — MOTIVATOR BOARD
+      ══════════════════════════════════════════════════════════ -->
+      <div id="payoutBoard" style="margin-top:32px;border-top:1px solid var(--border);padding-top:24px;">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;">
+          <span>🏆 PAPAN PAYOUT — TARGET MOTIVATOR</span>
+          <button onclick="togglePayoutEdit()" id="payoutEditBtn"
+            style="font-family:'DM Mono',monospace;font-size:10px;background:transparent;border:1px solid var(--border);color:var(--text-muted);border-radius:4px;padding:4px 10px;cursor:pointer;">
+            ✏️ Edit Target
+          </button>
+        </div>
+
+        <!-- Edit Panel -->
+        <div id="payoutEditPanel" style="display:none;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+            <div>
+              <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);display:block;margin-bottom:4px;">NAMA TARGET</label>
+              <input id="payoutTargetName" type="text" placeholder="Contoh: PC ASUS ROG / Payout #1"
+                style="width:100%;background:var(--dark4);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;outline:none;"/>
+            </div>
+            <div>
+              <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);display:block;margin-bottom:4px;">NILAI TARGET ($)</label>
+              <input id="payoutTargetValue" type="number" placeholder="Contoh: 2000" min="1" step="any"
+                style="width:100%;background:var(--dark4);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;outline:none;"/>
+            </div>
+            <div>
+              <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);display:block;margin-bottom:4px;">MODAL AKUN ($)</label>
+              <input id="payoutAccountSize" type="number" placeholder="Contoh: 50000" min="1" step="any"
+                style="width:100%;background:var(--dark4);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;outline:none;"/>
+            </div>
+            <div>
+              <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);display:block;margin-bottom:4px;">PROFIT SPLIT (%)</label>
+              <select id="payoutSplit"
+                style="width:100%;background:var(--dark4);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;outline:none;">
+                <option value="80">80%</option>
+                <option value="85">85%</option>
+                <option value="90" selected>90%</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-bottom:12px;">
+            <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);display:block;margin-bottom:4px;">EMOJI / FOTO TARGET 🎯</label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;" id="payoutEmojiPicker">
+              <span class="payout-emoji-opt" data-emoji="🖥️">🖥️ PC</span>
+              <span class="payout-emoji-opt" data-emoji="🏎️">🏎️ Mobil</span>
+              <span class="payout-emoji-opt" data-emoji="🏠">🏠 Rumah</span>
+              <span class="payout-emoji-opt" data-emoji="✈️">✈️ Liburan</span>
+              <span class="payout-emoji-opt" data-emoji="💰">💰 Payout</span>
+              <span class="payout-emoji-opt" data-emoji="📱">📱 Gadget</span>
+              <span class="payout-emoji-opt" data-emoji="🎯">🎯 Target</span>
+              <span class="payout-emoji-opt" data-emoji="⌚">⌚ Jam</span>
+            </div>
+          </div>
+          <button class="calc-btn" onclick="savePayoutTarget()" style="width:100%;padding:10px;">💾 Simpan Target</button>
+        </div>
+
+        <!-- Payout Cards -->
+        <div id="payoutCards" style="display:flex;flex-direction:column;gap:14px;">
+          <div style="color:var(--text-muted);font-family:'DM Mono',monospace;font-size:12px;text-align:center;padding:24px;background:var(--dark3);border:1px dashed var(--border);border-radius:8px;">
+            Belum ada target. Klik <strong style="color:var(--gold);">✏️ Edit Target</strong> untuk mulai.
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           RELAKSASI & FOKUS
+      ══════════════════════════════════════════════════════════ -->
+      <div style="margin-top:32px;border-top:1px solid var(--border);padding-top:24px;">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:16px;">
+          🧘 RELAKSASI &amp; FOKUS
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+
+          <!-- FOCUS MUSIC -->
+          <div style="background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:16px;">
+            <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--gold-dim);margin-bottom:12px;">🎵 FOCUS MUSIC</div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
+              <button class="music-track-btn active-track" data-track="lofi" onclick="selectTrack(this,'lofi')"
+                style="font-family:'DM Mono',monospace;font-size:11px;padding:8px;border-radius:6px;border:1px solid var(--gold-dim);background:rgba(201,168,76,0.1);color:var(--gold);cursor:pointer;text-align:left;">
+                🌙 Lo-Fi Hip Hop
+              </button>
+              <button class="music-track-btn" data-track="binaural" onclick="selectTrack(this,'binaural')"
+                style="font-family:'DM Mono',monospace;font-size:11px;padding:8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;text-align:left;">
+                🧠 Binaural Beats (Alpha)
+              </button>
+              <button class="music-track-btn" data-track="rain" onclick="selectTrack(this,'rain')"
+                style="font-family:'DM Mono',monospace;font-size:11px;padding:8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;text-align:left;">
+                🌧️ Rain &amp; Thunder
+              </button>
+              <button class="music-track-btn" data-track="white" onclick="selectTrack(this,'white')"
+                style="font-family:'DM Mono',monospace;font-size:11px;padding:8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;text-align:left;">
+                📻 White Noise
+              </button>
+            </div>
+            <!-- Volume -->
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+              <span style="font-size:14px;">🔉</span>
+              <input type="range" id="musicVolume" min="0" max="100" value="40"
+                oninput="setMusicVolume(this.value)"
+                style="flex:1;accent-color:var(--gold);cursor:pointer;"/>
+              <span id="musicVolLabel" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);min-width:30px;">40%</span>
+            </div>
+            <button id="musicPlayBtn" onclick="toggleMusic()"
+              style="width:100%;padding:10px;font-family:'DM Mono',monospace;font-size:12px;font-weight:700;
+              background:rgba(46,204,113,0.12);border:1px solid rgba(46,204,113,0.4);color:var(--green);
+              border-radius:6px;cursor:pointer;letter-spacing:1px;">
+              ▶ PLAY
+            </button>
+          </div>
+
+          <!-- WAKE LOCK + BREATHING -->
+          <div style="display:flex;flex-direction:column;gap:12px;">
+
+            <!-- Wake Lock -->
+            <div style="background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:14px;">
+              <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--gold-dim);margin-bottom:10px;">📺 SCREEN AWAKE</div>
+              <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);margin-bottom:10px;line-height:1.5;">
+                Cegah layar mati saat monitoring chart
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <span id="wakeLockStatus" style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);">OFF</span>
+                <button id="wakeLockBtn" onclick="toggleWakeLock()"
+                  style="font-family:'DM Mono',monospace;font-size:11px;padding:6px 14px;
+                  background:var(--dark4);border:1px solid var(--border);color:var(--text-muted);
+                  border-radius:6px;cursor:pointer;">
+                  Aktifkan
+                </button>
+              </div>
+            </div>
+
+            <!-- Box Breathing -->
+            <div style="background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:14px;">
+              <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--gold-dim);margin-bottom:8px;">🌬️ BOX BREATHING</div>
+              <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);margin-bottom:10px;line-height:1.5;">
+                Tarik–Tahan–Hembuskan–Tahan · 4×4 detik
+              </div>
+              <button onclick="openBreathingModal()"
+                style="width:100%;padding:8px;font-family:'DM Mono',monospace;font-size:11px;
+                background:rgba(91,155,213,0.1);border:1px solid rgba(91,155,213,0.4);color:var(--blue);
+                border-radius:6px;cursor:pointer;letter-spacing:1px;">
+                🧘 MULAI BREATHING
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
     </div><!-- /.journal-wrapper -->
   </div>
 
@@ -6390,7 +6540,82 @@ study('My Old Script')
   -->
   <script src="realtime-news.js">
   </script>
-  <script src="journal-enhanced.js">
-  </script>
+ 
+  <!-- BREATHING MODAL -->
+  <div id="breathingModal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,5,0.95);backdrop-filter:blur(8px);align-items:center;justify-content:center;flex-direction:column;">
+    <div style="text-align:center;padding:32px;max-width:320px;width:100%;">
+      <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--gold-dim);margin-bottom:24px;text-transform:uppercase;">Box Breathing · Netralkan Emosi</div>
+      <!-- Circle -->
+      <div style="position:relative;width:200px;height:200px;margin:0 auto 24px;">
+        <svg width="200" height="200" style="position:absolute;top:0;left:0;transform:rotate(-90deg);">
+          <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/>
+          <circle id="breathCircle" cx="100" cy="100" r="88" fill="none" stroke="#5B9BD5" stroke-width="8"
+            stroke-dasharray="553" stroke-dashoffset="553" stroke-linecap="round"
+            style="transition:stroke-dashoffset 0.1s linear,stroke 0.5s ease;"/>
+        </svg>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <div id="breathPhaseLabel" style="font-family:'DM Mono',monospace;font-size:13px;letter-spacing:2px;color:#fff;text-transform:uppercase;margin-bottom:6px;">SIAP</div>
+          <div id="breathCountdown" style="font-family:'DM Mono',monospace;font-size:48px;font-weight:700;color:var(--gold);line-height:1;">4</div>
+          <div id="breathCycleLabel" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);margin-top:4px;">Siklus 1 / 4</div>
+        </div>
+      </div>
+      <!-- Instruction -->
+      <div id="breathInstruction" style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text-muted);margin-bottom:24px;line-height:1.6;min-height:40px;">
+        Temukan posisi nyaman.<br>Kita akan bernapas bersama.
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center;">
+        <button id="breathStartBtn" onclick="startBreathing()"
+          style="font-family:'DM Mono',monospace;font-size:12px;padding:10px 24px;
+          background:rgba(91,155,213,0.15);border:1px solid rgba(91,155,213,0.5);color:var(--blue);
+          border-radius:6px;cursor:pointer;letter-spacing:1px;">
+          ▶ MULAI
+        </button>
+        <button onclick="closeBreathingModal()"
+          style="font-family:'DM Mono',monospace;font-size:12px;padding:10px 24px;
+          background:transparent;border:1px solid var(--border);color:var(--text-muted);
+          border-radius:6px;cursor:pointer;">
+          TUTUP
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAYOUT + RELAX STYLES -->
+  <style>
+    .payout-emoji-opt {
+      display:inline-flex;align-items:center;gap:4px;padding:6px 12px;
+      border-radius:20px;cursor:pointer;border:1px solid var(--border);
+      font-family:'DM Mono',monospace;font-size:12px;color:var(--text-muted);
+      background:var(--dark4);transition:all 0.15s;user-select:none;
+    }
+    .payout-emoji-opt.selected {
+      background:rgba(201,168,76,0.15);border-color:var(--gold-dim);color:var(--gold);
+    }
+    .payout-progress-bar {
+      height:20px;border-radius:10px;background:var(--dark4);border:1px solid var(--border);
+      overflow:hidden;position:relative;margin:8px 0;
+    }
+    .payout-progress-fill {
+      height:100%;border-radius:10px;
+      background:linear-gradient(90deg,#C9A84C,#F0D07A,#C9A84C);
+      background-size:200% 100%;
+      animation:shimmer 2s linear infinite;
+      transition:width 1s cubic-bezier(0.4,0,0.2,1);
+      position:relative;
+    }
+    @keyframes shimmer {
+      0%{background-position:200% 0}
+      100%{background-position:-200% 0}
+    }
+    .music-track-btn { transition:all 0.15s; }
+    .active-track {
+      background:rgba(201,168,76,0.1) !important;
+      border-color:var(--gold-dim) !important;
+      color:var(--gold) !important;
+    }
+  </style>
+
+  <script src="journal-enhanced.js"></script>
+  <script src="payout-relax.js"></script>
  </body>
 </html>
