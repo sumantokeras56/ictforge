@@ -203,9 +203,10 @@
       const baseUS = `https://newsdata.io/api/1/news?apikey=${NEWSDATA_API_KEY}&q=${encodeURIComponent(qUS)}&country=us&language=en&category=business&size=5`;
       const baseID = `https://newsdata.io/api/1/news?apikey=${NEWSDATA_API_KEY}&q=${encodeURIComponent(qID)}&country=id&language=id,en&category=business&size=5`;
 
+      const WORKER = 'https://black-hat-ebc4.waxewi.workers.dev';
       const [rUS, rID] = await Promise.allSettled([
-        fetchJSONP(baseUS),
-        fetchJSONP(baseID)
+        fetch(WORKER+'/?u='+encodeURIComponent(baseUS)).then(r=>r.json()),
+        fetch(WORKER+'/?u='+encodeURIComponent(baseID)).then(r=>r.json())
       ]);
 
       let articles = [];
