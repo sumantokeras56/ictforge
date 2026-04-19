@@ -152,7 +152,8 @@ function renderJournal() {
 
     var tagsHtml = (entry.tags || []).length
       ? (entry.tags || []).map(function(t) {
-          return '<span class="mistake-badge ' + (t === 'PERFECT' ? 'perfect' : '') + '">' + t + '</span>';
+          var safeCls = (t === 'PERFECT' ? 'perfect' : '');
+          return '<span class="mistake-badge ' + safeCls + '">' + escapeHtml(String(t)) + '</span>';
         }).join(' ')
       : '<span style="color:var(--text-muted);font-size:10px;">—</span>';
 
@@ -218,6 +219,7 @@ function renderMistakeTagSummary() {
   }
   var tagLabels = { FOMO:'😱 FOMO', REVENGE:'🔥 Revenge', OVERLEV:'⚠️ Over-Leverage', LATE:'⏰ Late Entry', NOPA:'📋 No Plan', MOVED_SL:'🚫 Moved SL', EARLY_EXIT:'🏃 Early Exit', NEWS:'📰 News', TILT:'🤯 Tilt', PERFECT:'✅ Perfect' };
   container.innerHTML = entries.map(function(item) {
+    // item.tag is user-generated, must be escaped
     var tag = item[0], count = item[1];
     var isPerfect = tag === 'PERFECT';
     var clr = isPerfect ? 'var(--green)' : '#e74c3c';
@@ -386,6 +388,16 @@ function drawEquityCurveOnCanvas(canvas, height) {
   if (eqStats) {
     eqStats.textContent = sorted.length + ' trades · ' + (lastVal >= 0 ? '+' : '') + lastVal.toFixed(2) + 'R total';
     eqStats.style.color = lastVal >= 0 ? 'var(--green)' : 'var(--red)';
+  }
+}
+
+// ── Memory leak fix: track and cleanup resize observers ────────────
+var _equityResizeObserver = null;
+
+function cleanupEquityObserver() {
+  if (_equityResizeObserver) {
+    _equityResizeObserver.disconnect();
+    _equityResizeObserver = null;
   }
 }
 

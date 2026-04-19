@@ -12,6 +12,15 @@
 // ══════════════════════════════════════════════════════════════════
 
 var _payoutTargets = [];
+
+// ── Defensive escapeHtml in case load order varies ──────────────────
+if (typeof escapeHtml === 'undefined') {
+  window.escapeHtml = function(str) {
+    return String(str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+  };
+}
 var _payoutSelectedEmoji = '🎯';
 var _payoutEditOpen = false;
 
@@ -118,7 +127,7 @@ function renderPayoutCards() {
     return '<div style="background:var(--dark3);border:1px solid var(--border);border-radius:10px;padding:18px;position:relative;">' +
       '<button onclick="deletePayoutTarget(' + target.id + ')" style="position:absolute;top:12px;right:12px;background:transparent;border:none;color:var(--text-muted);cursor:pointer;font-size:14px;" title="Hapus target">✕</button>' +
       '<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">' +
-        '<div style="font-size:36px;line-height:1;">' + target.emoji + '</div>' +
+        '<div style="font-size:36px;line-height:1;">' + escapeHtml(String(target.emoji || '🎯')) + '</div>' +
         '<div>' +
           '<div style="font-family:\'DM Mono\',monospace;font-size:14px;font-weight:700;color:var(--text);">' + escapeHtml(target.name) + '</div>' +
           '<div style="font-family:\'DM Mono\',monospace;font-size:11px;color:var(--text-muted);margin-top:2px;">Target: <span style="color:var(--gold);">' + fmtUSD(target.value) + '</span> · Akun: ' + fmtUSD(target.account) + ' · Split: ' + target.split + '%</div>' +

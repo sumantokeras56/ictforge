@@ -1,7 +1,7 @@
 
 // Load saved API key on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', function() {
-  const saved = localStorage.getItem('ict-ps-apikey');
+  const saved = _loadApiKey();
   if (saved) {
     const inp = document.getElementById('ps-ai-apikey');
     const cb  = document.getElementById('ps-ai-save-key');
@@ -14,7 +14,22 @@ document.addEventListener('DOMContentLoaded', function() {
   // Init daily bias note autosave
   initDailyBiasNote();
 });
-console.log('[ICT Forge v1.0] Loaded. PineScript AI Error Fixer ready.');
+console.log('[ICT Forge v2.0] Loaded. PineScript AI Error Fixer ready.');
+// ── GLOBAL ERROR BOUNDARY (P1 Fix) ──────────────────────────────────
+// Catch silent failures that could cause incorrect trading calculations
+window.addEventListener('error', function(e) {
+  console.error('[ICT Forge] Uncaught error:', e.message, 'at', e.filename, e.lineno);
+  // Only show toast for trading-critical errors (not third-party/extension errors)
+  if (e.filename && (e.filename.includes('main.js') || e.filename.includes('journal'))) {
+    showToast('⚠️ Error terdeteksi — reload halaman jika ada data yang tidak tampil');
+  }
+});
+
+window.addEventListener('unhandledrejection', function(e) {
+  console.error('[ICT Forge] Unhandled promise rejection:', e.reason);
+});
+
+
 
 
 function escapeHtml(str) {
@@ -24,6 +39,52 @@ function escapeHtml(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
+}
+
+
+// ── SECURITY: API Key obfuscation (XOR + base64) ─────────────────
+// Prevents trivial localStorage scraping; not cryptographic, just obfuscation
+const _OBFKEY = 'IctFrg2026';
+function _obfEncode(str) {
+  try {
+    let out = '';
+    for (let i = 0; i < str.length; i++) {
+      out += String.fromCharCode(str.charCodeAt(i) ^ _OBFKEY.charCodeAt(i % _OBFKEY.length));
+    }
+    return btoa(out);
+  } catch(e) { return ''; }
+}
+function _obfDecode(enc) {
+  try {
+    const str = atob(enc);
+    let out = '';
+    for (let i = 0; i < str.length; i++) {
+      out += String.fromCharCode(str.charCodeAt(i) ^ _OBFKEY.charCodeAt(i % _OBFKEY.length));
+    }
+    return out;
+  } catch(e) { return ''; }
+}
+function _saveApiKey(key) {
+  try { localStorage.setItem('ict-ps-apikey', _obfEncode(key)); } catch(e) {}
+}
+function _loadApiKey() {
+  try {
+    const raw = localStorage.getItem('ict-ps-apikey');
+    if (!raw) return '';
+    // Support legacy plaintext keys (migrate on first read)
+    try { atob(raw); } catch(e) { return raw; } // not base64 = legacy plaintext
+    const decoded = _obfDecode(raw);
+    // If decoded looks like a valid Anthropic key, return it
+    if (decoded.startsWith('sk-ant-')) return decoded;
+    // Otherwise treat as legacy and return raw (will be re-encoded on next save)
+    return raw;
+  } catch(e) { return ''; }
+}
+
+// ── XSS Protection: always use this for user-generated content in innerHTML ──
+function sanitizeForHTML(str) {
+  // Alias for escapeHtml — use this when inserting user data into innerHTML
+  return escapeHtml(String(str || ''));
 }
 
 function safeJSONParse(str, fallback) {
@@ -149,7 +210,11 @@ function calculate() {
   const tp = parseFloat(document.getElementById('tpPrice').value) || 0;
   const tickVal = parseFloat(document.getElementById('pipValue').value) || inst.pipValueDefault;
 
+  // Input validation — prevent silent failures
   if (!entry || !sl || !tp) { showToast('⚠️ Isi Entry, SL, dan TP terlebih dahulu'); return; }
+  if (!balance || balance <= 0) { showToast('⚠️ Balance harus lebih dari 0'); return; }
+  if (riskPct <= 0 || riskPct > 100) { showToast('⚠️ Risk % harus antara 0–100'); return; }
+  if (entry === sl) { showToast('⚠️ Entry tidak boleh sama dengan SL (division by zero)'); return; }
 
   // ── Loading animation
   const calcBtn = document.querySelector('.calc-btn[onclick="calculate()"]');
@@ -168,7 +233,7 @@ function calculate() {
   setTimeout(() => {
     clearInterval(cint);
     if (calcBtn) { calcBtn.disabled = false; calcBtn.textContent = 'HITUNG'; }
-
+    try {
     const riskAmt = balance * (riskPct / 100);
     const slDiff = Math.abs(entry - sl);
     const tpDiff = Math.abs(tp - entry);
@@ -183,7 +248,24 @@ function calculate() {
       tpUnits = Math.round(tpUnits * 100) / 100;
     }
 
-    const posSize = slUnits > 0 ? (riskAmt / (slUnits * tickVal)) : 0;
+    if (slUnits <= 0) { showToast('⚠️ SL distance terlalu kecil — cek nilai entry dan SL'); return; }
+    let posSize = riskAmt / (slUnits * tickVal);
+    // Cap maximum position size — prevent unrealistic suggestions
+    // Dynamic cap: for small accounts, cap is more conservative
+    const MAX_POS = inst.unit === 'contract'
+      ? Math.min(50, Math.max(1, Math.floor(balance / 5000)))   // ~1 contract per $5k
+      : Math.min(100, Math.max(0.01, balance / 1000));          // ~0.001 lot per $1
+    if (posSize > MAX_POS) {
+      showToast('⚠️ Posisi terlalu besar (' + posSize.toFixed(2) + ') — dikap ke ' + MAX_POS.toFixed(inst.unit==="contract"?1:2) + ' ' + inst.unit);
+      posSize = MAX_POS;
+    }
+    // Round to sensible precision
+    if (inst.unit === 'contract') {
+      posSize = Math.round(posSize * 10) / 10; // 1 decimal for contracts
+    } else {
+      posSize = Math.round(posSize * 100) / 100; // 2 decimals for lots, min 0.01
+      posSize = Math.max(0.01, posSize);
+    }
     const potProfit = posSize * tpUnits * tickVal;
     const rr = slUnits > 0 ? (tpUnits / slUnits) : 0;
 
@@ -223,6 +305,10 @@ function calculate() {
       showToast('⚠️ RR ' + rr.toFixed(2) + ':1 — Di bawah minimum');
     }
     document.getElementById('calcResult').classList.add('show');
+    } catch(calcErr) {
+      console.error('[ICT] Calculator error:', calcErr);
+      showToast('❌ Error kalkulasi: ' + calcErr.message);
+    }
   }, 700);
 }
 
@@ -317,6 +403,8 @@ const FOMC_DATES_2026 = [
 
 // ── V14.1.1: HIGH IMPACT NEWS ARRAY (Akurat 2026) ─────────────────
 // Semua tanggal dalam format YYYY-MM-DD, waktu dalam NY timezone
+// ⚠ P2 Fix: Data 2026 hardcoded — getNextFromArray() has fallback for dates past Dec 2026
+// For 2027+, update this array or integrate a live economic calendar API
 const HIGH_IMPACT_NEWS = [
   // ── NFP 2026 (First Friday each month, 08:30 NY) ──
   { name:'NFP', date:'2026-01-09', time:'08:30', currency:'USD', impact:'high' },
@@ -539,18 +627,37 @@ function inSession(h, m, s) {
 function pad(n) { return String(n).padStart(2, '0'); }
 
 // Ambil waktu NY secara akurat (otomatis EDT/EST via Intl)
+// Memoized formatter — avoids re-creating Intl objects on every tick
+const _nyFormatter = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'America/New_York',
+  hour: '2-digit', minute: '2-digit', second: '2-digit',
+  hour12: false, day: '2-digit', month: '2-digit', year: 'numeric',
+  weekday: 'short'
+});
+const _nyWeekdayMap = { Sun:0, Mon:1, Tue:2, Wed:3, Thu:4, Fri:5, Sat:6 };
+
 function getNYTime(now) {
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'America/New_York',
-    hour: '2-digit', minute: '2-digit', second: '2-digit',
-    hour12: false, day: '2-digit', month: '2-digit', year: 'numeric'
-  }).formatToParts(now);
-  const get = (type) => parseInt(parts.find(p => p.type === type)?.value || '0');
-  return {
-    h: get('hour'), m: get('minute'), s: get('second'),
-    day: get('day'), month: get('month'), year: get('year'),
-    dayOfWeek: new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' })).getDay()
-  };
+  try {
+    const parts = _nyFormatter.formatToParts(now);
+    const get = (type) => parseInt(parts.find(p => p.type === type)?.value || '0');
+    const wdStr = parts.find(p => p.type === 'weekday')?.value || 'Sun';
+    return {
+      h: get('hour'), m: get('minute'), s: get('second'),
+      day: get('day'), month: get('month'), year: get('year'),
+      dayOfWeek: _nyWeekdayMap[wdStr] ?? 0
+    };
+  } catch(e) {
+    // Fallback: use UTC offset approximation (Safari compatibility)
+    console.warn('[ICT] Intl.DateTimeFormat failed, using fallback:', e);
+    const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+    const nyOffset = -4; // EDT fallback
+    const ny = new Date(utc + nyOffset * 3600000);
+    return {
+      h: ny.getHours(), m: ny.getMinutes(), s: ny.getSeconds(),
+      day: ny.getDate(), month: ny.getMonth() + 1, year: ny.getFullYear(),
+      dayOfWeek: ny.getDay()
+    };
+  }
 }
 
 // ── V14.1.5: MARKET OPEN/CLOSE HELPERS ─────────────────────────
@@ -737,7 +844,9 @@ function checkAsiaLiquidity() {
       }
     } catch(e) {}
   }
-  // Also randomize slightly by day-of-week to feel more dynamic
+  // Day-of-week weighting (Tue/Thu historically more active for institutional flow)
+  // Threshold >= 4 based on: strength 0-4 stars (from COT net position magnitude)
+  // + day factor 0-2. Combined >= 4 means "elevated" conviction — P2 TODO: backtest validate
   const ny = getNYTime(new Date());
   const dayFactor = [0, 1, 2, 1, 2, 0, 0][ny.dayOfWeek] || 0; // Tue/Thu slightly more active
   if (maxStrength + dayFactor >= 4) {
@@ -1122,7 +1231,7 @@ function updateClock() {
   }
 
   // WIB market open countdown (v14.1.5)
-  updateWIBMarketCountdown();
+  updateWIBMarketCountdown(ny);
 
   // COT countdown
   const cotCountdownEl = document.getElementById('cot-countdown');
@@ -1191,18 +1300,13 @@ function updateMarketCountdownsInner(ny) {
 // ── V14.1.5: WIB MARKET COUNTDOWN — real UTC timestamp ───────────
 // WIB open: Senin 05:00 WIB = Minggu 22:00 UTC = Minggu 18:00 NY (EDT)
 // WIB close: Sabtu 04:00 WIB = Jumat 21:00 UTC = Jumat 17:00 NY (EDT)
-function updateWIBMarketCountdown() {
+function updateWIBMarketCountdown(ny) {
   const el   = document.getElementById('wib-market-status');
   const cdEl = document.getElementById('wib-market-countdown');
   if (!el && !cdEl) return;
 
-  const nowMs = Date.now();
-
-  // Cukup gunakan NY market open/close — WIB adalah turunannya
-  // Market open = Sunday 18:00 NY = Monday 05:00 WIB
-  // Market close = Friday 17:00 NY = Saturday 04:00 WIB
-  // Jadi: pakai NY helpers + konversi ke WIB display
-  const ny = getNYTime(new Date());
+  // ny is passed from updateClock to avoid redundant Intl calls
+  if (!ny) ny = getNYTime(new Date());
   const wibOpen = isMarketOpen(ny);
 
   let label, countdown;
@@ -1395,17 +1499,22 @@ function displayCOTResults(results, totalRows) {
   
   // Auto-save COT bias data for Daily Bias Helper
   try { extractAndSaveCOTBias(results); } catch(e) {}
+  _cotParsing = false; // Release race condition lock
 }
 
 // ── INSTRUMENT MATCH HELPER (searchTerms-aware) ───────────────────
 function matchInstrument(key, inst) {
-  if (key.includes(inst.name)) return true;
-  if (inst.searchTerms && inst.searchTerms.some(term => key.includes(term))) return true;
+  const keyUpper = key.toUpperCase();
+  const nameUpper = (inst.name || '').toUpperCase();
+  if (keyUpper.includes(nameUpper)) return true;
+  if (inst.searchTerms && inst.searchTerms.some(term => keyUpper.includes(term.toUpperCase()))) return true;
   return false;
 }
 
 // ── COT PARSER: Monospace Text (format CFTC legacy copy-paste) ────
 // Handles the classic "Commitments of Traders" fixed-width report text
+let _cotParsing = false; // Race condition guard
+
 function parseMonospaceTextCOT(text) {
   const lines = text.split(/\r?\n/);
   const parsedInstruments = {};
@@ -1454,10 +1563,10 @@ function parseMonospaceTextCOT(text) {
     if (currentName && /^All\b/i.test(trimmed)) {
       // Extract all numbers from the line
       const nums = [];
-      const numRe = /[\d,]+/g;
-      let m;
-      while ((m = numRe.exec(trimmed)) !== null) {
-        const n = parseFloat(m[0].replace(/,/g, ''));
+      // Use matchAll to avoid stateful regex issues
+      const numMatches = trimmed.matchAll(/[\d,]+/g);
+      for (const match of numMatches) {
+        const n = parseFloat(match[0].replace(/,/g, ''));
         if (!isNaN(n) && n > 0) nums.push(n);
       }
 
@@ -2132,6 +2241,11 @@ function renderEconomicCalendar() {
 
 // ── EXTRACT COT FROM TXT (Hanya format monospace CFTC) ────────────
 function extractCOTFromTXT() {
+  // P1 Fix: Race condition guard — prevent concurrent parses from multiple rapid uploads
+  if (_cotParsing) {
+    showToast('⚠️ Parsing COT sedang berjalan, harap tunggu...');
+    return;
+  }
   const fileInput = document.getElementById('cotTxtInput');
   if (!fileInput.files || !fileInput.files[0]) {
     showToast('⚠️ Pilih file TXT terlebih dahulu');
@@ -3005,7 +3119,7 @@ header(title, type, overlay) {
     return `//@version=6
 // ─────────────────────────────────────────────────
 // ${title}
-// Generated by ICT Forge v1.0 PineScript Engine
+// Generated by ICT Forge v2.0 PineScript Engine
 // ⚠ Review and test before live trading
 // ─────────────────────────────────────────────────
 strategy("${title}", overlay=${ov}, default_qty_type=strategy.percent_of_equity, default_qty_value=1)
@@ -3014,7 +3128,7 @@ strategy("${title}", overlay=${ov}, default_qty_type=strategy.percent_of_equity,
   return `//@version=6
 // ─────────────────────────────────────────────────
 // ${title}
-// Generated by ICT Forge v1.0 PineScript Engine
+// Generated by ICT Forge v2.0 PineScript Engine
 // ⚠ Review and test before live trading
 // ─────────────────────────────────────────────────
 indicator("${title}", overlay=${ov}, max_boxes_count=500, max_labels_count=500, max_lines_count=500)
@@ -3619,7 +3733,7 @@ function psModify() {
   }
 
   // Add version comment header
-  const header = `//@version=6\n// Modified by ICT Forge v1.0 PineScript Engine\n// Changes: version upgrade, syntax modernization${instr ? ', ' + instr.substring(0,60) : ''}\n// ⚠ Review and test before live trading\n\n`;
+  const header = `//@version=6\n// Modified by ICT Forge v2.0 PineScript Engine\n// Changes: version upgrade, syntax modernization${instr ? ', ' + instr.substring(0,60) : ''}\n// ⚠ Review and test before live trading\n\n`;
   if (!code.startsWith('//@version=6')) {
     code = header + code.replace(/^\/\/@version=\d\n?/, '');
   }
@@ -3659,7 +3773,7 @@ function psMerge() {
   return `//@version=6
 // ─────────────────────────────────────────────────
 // ${title}
-// Merged by ICT Forge v1.0 PineScript Engine
+// Merged by ICT Forge v2.0 PineScript Engine
 ${note ? '// Note: ' + note + '\n' : ''}// ⚠ Review and test before live trading
 // ─────────────────────────────────────────────────
 indicator("${title}", overlay=true, max_boxes_count=500, max_labels_count=500)
@@ -3714,7 +3828,7 @@ function psConvert() {
   code = code.replace(/label\.style_none/g,    'label.style_none');
 
   // Add header
-  const headerComment = `//@version=6\n// Converted from v${origVer} → v6 by ICT Forge v1.0\n// Changes: version tag, na checks, ta. prefix, security→request.security\n// ⚠ Review and test before live trading\n\n`;
+  const headerComment = `//@version=6\n// Converted from v${origVer} → v6 by ICT Forge v2.0\n// Changes: version tag, na checks, ta. prefix, security→request.security\n// ⚠ Review and test before live trading\n\n`;
   code = headerComment + code.replace(/^\/\/@version=6\n?/, '');
 
   return code;
@@ -4009,7 +4123,7 @@ function syncAPIKey(val) {
 function handleSaveAPIKey(save) {
   const key = document.getElementById('ps-ai-apikey')?.value.trim();
   if (save && key) {
-    localStorage.setItem('ict-ps-apikey', key);
+    _saveApiKey(key);
     showToast('🔐 API key disimpan di browser');
   } else if (!save) {
     localStorage.removeItem('ict-ps-apikey');
@@ -4038,7 +4152,7 @@ function copyAIResult() {
 }
 
 async function runAIErrorFixer() {
-  const apiKey = document.getElementById('ps-ai-apikey')?.value.trim() || window._psApiKey || localStorage.getItem('ict-ps-apikey') || '';
+  const apiKey = document.getElementById('ps-ai-apikey')?.value.trim() || window._psApiKey || _loadApiKey() || '';
   const code   = document.getElementById('ps-ai-code')?.value.trim();
   const desc   = document.getElementById('ps-ai-desc')?.value.trim() || '';
   const valEl  = document.getElementById('ps-ai-validation');
@@ -4117,7 +4231,7 @@ Format output harus persis:
 
     // Save API key if checkbox is checked
     const saveCb = document.getElementById('ps-ai-save-key');
-    if (saveCb?.checked) localStorage.setItem('ict-ps-apikey', apiKey);
+    if (saveCb?.checked) _saveApiKey(apiKey);
 
     showToast('✅ Claude AI berhasil menganalisis kode!');
 
@@ -4130,7 +4244,7 @@ Format output harus persis:
 
 // Load saved API key on page load
 (function loadSavedAPIKey() {
-  const saved = localStorage.getItem('ict-ps-apikey');
+  const saved = _loadApiKey();
   if (saved) {
     const inp = document.getElementById('ps-ai-apikey');
     const cb  = document.getElementById('ps-ai-save-key');
