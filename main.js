@@ -11,8 +11,9 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   // Also update Asia KZ card
   if (typeof updateAsiaKZCard === 'function') updateAsiaKZCard();
-  // Init daily bias note autosave
-  initDailyBiasNote();
+  // Init daily bias note autosave (journal-enhanced.js di-load setelah main.js,
+  // guard dengan typeof agar tidak throw jika urutan berubah)
+  if (typeof initDailyBiasNote === 'function') initDailyBiasNote();
 });
 console.log('[ICT Forge v2.0] Loaded. PineScript AI Error Fixer ready.');
 // ── GLOBAL ERROR BOUNDARY (P1 Fix) ──────────────────────────────────
