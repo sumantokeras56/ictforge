@@ -4263,7 +4263,7 @@ Format output harus persis:
           'Authorization': 'Bearer ' + apiKey
         },
         body: JSON.stringify({
-          model: 'llama3-70b-8192',
+          model: 'llama-3.3-70b-versatile',
           max_tokens: 4096,
           temperature: 0.2,
           messages: [{ role: 'user', content: prompt }]
