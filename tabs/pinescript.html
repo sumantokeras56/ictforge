@@ -152,17 +152,29 @@ study('My Old Script')
        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--purple);">
         🤖 AI Error Fixer
        </div>
-       <span style="font-family:'DM Mono',monospace;font-size:10px;padding:3px 8px;border-radius:3px;background:rgba(155,89,182,0.15);color:var(--purple);border:1px solid rgba(155,89,182,0.4);">
+       <span id="ps-ai-provider-badge" style="font-family:'DM Mono',monospace;font-size:10px;padding:3px 8px;border-radius:3px;background:rgba(155,89,182,0.15);color:var(--purple);border:1px solid rgba(155,89,182,0.4);">
         CLAUDE API
        </span>
       </div>
-      <div style="font-size:13px;color:var(--text-muted);margin-bottom:20px;">
-       Tempelkan kode PineScript yang error. Claude AI akan menganalisis dan memberikan kode yang sudah diperbaiki dengan penjelasan.
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">
+       Tempelkan kode PineScript yang error. AI akan menganalisis dan memberikan kode yang sudah diperbaiki dengan penjelasan.
+      </div>
+      <!-- Provider Toggle -->
+      <div style="margin-bottom:16px;background:var(--dark4);border:1px solid var(--border);border-radius:6px;padding:10px 12px;">
+       <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;">Pilih AI Provider</div>
+       <div style="display:flex;gap:8px;">
+        <button id="ps-ai-btn-claude" onclick="setAIProvider('claude')" style="flex:1;padding:8px;border-radius:4px;cursor:pointer;font-family:'DM Mono',monospace;font-size:11px;font-weight:700;letter-spacing:1px;background:rgba(155,89,182,0.2);border:1px solid var(--purple);color:var(--purple);transition:all 0.15s;">
+         🤖 Claude (Anthropic)
+        </button>
+        <button id="ps-ai-btn-groq" onclick="setAIProvider('groq')" style="flex:1;padding:8px;border-radius:4px;cursor:pointer;font-family:'DM Mono',monospace;font-size:11px;font-weight:700;letter-spacing:1px;background:var(--dark4);border:1px solid var(--border);color:var(--text-muted);transition:all 0.15s;">
+         ⚡ Groq (Free)
+        </button>
+       </div>
       </div>
       <!-- API Key input -->
       <div style="margin-bottom:14px;">
        <label style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;">
-        Claude API Key
+        <span id="ps-ai-key-label">Claude API Key</span>
         <span style="color:var(--red);">
          *WAJIB
         </span>
@@ -178,7 +190,7 @@ study('My Old Script')
          <input id="ps-ai-save-key" onchange="handleSaveAPIKey(this.checked)" style="accent-color:var(--gold);" type="checkbox"/>
          Ingat API Key (disimpan lokal)
         </label>
-        <a href="https://console.anthropic.com/account/keys" style="font-size:11px;color:var(--gold);font-family:'DM Mono',monospace;text-decoration:none;" target="_blank">
+        <a id="ps-ai-key-link" href="https://console.anthropic.com/account/keys" style="font-size:11px;color:var(--gold);font-family:'DM Mono',monospace;text-decoration:none;" target="_blank">
          🔗 Dapatkan API Key
         </a>
        </div>
@@ -203,18 +215,25 @@ study('My Old Script')
        <textarea id="ps-ai-desc" placeholder="Contoh: Error CE10156 di baris 45, atau: indikator tidak muncul di chart..." rows="2" style="width:100%;background:var(--dark4);border:1px solid var(--border);border-radius:4px;padding:10px 12px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;resize:vertical;outline:none;"></textarea>
       </div>
       <!-- Warning -->
-      <div style="background:rgba(155,89,182,0.08);border:1px solid rgba(155,89,182,0.25);border-radius:6px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--text-muted);">
+      <div id="ps-ai-note-claude" style="background:rgba(155,89,182,0.08);border:1px solid rgba(155,89,182,0.25);border-radius:6px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--text-muted);">
        ⚠️
        <strong style="color:var(--purple);">
-        Catatan:
+        Claude API:
        </strong>
-       Fitur ini menggunakan Claude Sonnet API (berbayar). Biaya ~$0.001–$0.003 per request tergantung panjang kode. API key disimpan di browser Anda — tidak dikirim ke server kami.
+       Berbayar (~$0.001–$0.003/request). Daftar di <a href="https://console.anthropic.com" target="_blank" style="color:var(--gold);">console.anthropic.com</a>. API key hanya disimpan di browser.
+      </div>
+      <div id="ps-ai-note-groq" style="display:none;background:rgba(46,204,113,0.07);border:1px solid rgba(46,204,113,0.25);border-radius:6px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--text-muted);">
+       ✅
+       <strong style="color:var(--green);">
+        Groq API (Gratis):
+       </strong>
+       Daftar di <a href="https://console.groq.com" target="_blank" style="color:var(--gold);">console.groq.com</a> → Create API Key. Gunakan model Llama 3 70B. API key hanya disimpan di browser.
       </div>
       <!-- Error validation display -->
       <div id="ps-ai-validation" style="display:none;background:rgba(231,76,60,0.1);border:1px solid rgba(231,76,60,0.3);border-radius:6px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:var(--red);">
       </div>
       <button class="calc-btn" id="ps-ai-run-btn" onclick="runAIErrorFixer()" style="background:var(--purple);border:none;">
-       🤖 Perbaiki dengan Claude AI
+       🤖 Perbaiki dengan AI
       </button>
       <!-- AI Loading -->
       <div id="ps-ai-loading" style="display:none;margin-top:20px;text-align:center;padding:20px;">

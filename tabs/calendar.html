@@ -194,7 +194,24 @@
      </div>
     </div>
 
-    <!-- ── ECONOMIC NEWS FEED (diisi oleh economic-news.js) ── -->
-    <!-- Section ini di-inject otomatis oleh economic-news.js setelah .econ-calendar -->
+    <!-- ── ECONOMIC NEWS FEED ── -->
+    <div id="econNewsSection" style="margin-top:20px;">
+      <div style="background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:20px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+          <div class="v14-subheader" style="margin-bottom:0;">
+            📡 ECONOMIC NEWS FEED — LIVE
+          </div>
+          <button onclick="refreshEconNews()" style="background:var(--dark4);border:1px solid var(--border);color:var(--text-muted);padding:5px 12px;border-radius:4px;cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;">
+            🔄 Refresh
+          </button>
+        </div>
+        <div id="econNewsStatus"></div>
+        <div id="econNewsList">
+          <div style="text-align:center;padding:20px;color:var(--text-muted);font-size:12px;">
+            ⏳ Memuat berita ekonomi...
+          </div>
+        </div>
+      </div>
+    </div>
 
    </div>
