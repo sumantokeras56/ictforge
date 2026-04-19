@@ -320,8 +320,8 @@
       const qUS=encodeURIComponent('economy OR inflation OR "Federal Reserve" OR "interest rate" OR GDP OR jobs OR "stock market" OR dollar OR tariff OR "trade war"');
       const qID=encodeURIComponent('ekonomi OR inflasi OR "Bank Indonesia" OR rupiah OR IHSG OR investasi OR ekspor OR impor OR "suku bunga" OR BBM');
       const [rUS,rID]=await Promise.allSettled([
-        fetch(`https://newsdata.io/api/1/latest?apikey=${NEWSDATA_API_KEY}&q=${qUS}&country=us&language=en&category=business&size=5`),
-        fetch(`https://newsdata.io/api/1/latest?apikey=${NEWSDATA_API_KEY}&q=${qID}&country=id&language=id,en&category=business&size=5`)
+        fetch(`https://newsdata.io/api/1/news?apikey=${NEWSDATA_API_KEY}&q=${qUS}&country=us&language=en&category=business&size=5`),
+        fetch(`https://newsdata.io/api/1/news?apikey=${NEWSDATA_API_KEY}&q=${qID}&country=id&language=id,en&category=business&size=5`)
       ]);
       let articles=[];
       if(rUS.status==='fulfilled'&&rUS.value.ok){const d=await rUS.value.json();if(d.status==='success'&&Array.isArray(d.results))d.results.forEach(a=>{a._country='us';articles.push(a);});}
