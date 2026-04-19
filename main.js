@@ -4161,6 +4161,47 @@ function copyAIResult() {
   }
 }
 
+// ── AI PROVIDER TOGGLE ──────────────────────────────────────────
+window._psAIProvider = localStorage.getItem('ict-ai-provider') || 'claude';
+
+window.setAIProvider = function(provider) {
+  window._psAIProvider = provider;
+  localStorage.setItem('ict-ai-provider', provider);
+  const isClaude = provider === 'claude';
+  // Badge
+  const badge = document.getElementById('ps-ai-provider-badge');
+  if (badge) badge.textContent = isClaude ? 'CLAUDE API' : 'GROQ API';
+  // Buttons
+  const btnC = document.getElementById('ps-ai-btn-claude');
+  const btnG = document.getElementById('ps-ai-btn-groq');
+  if (btnC) {
+    btnC.style.background = isClaude ? 'rgba(155,89,182,0.2)' : 'var(--dark4)';
+    btnC.style.borderColor = isClaude ? 'var(--purple)' : 'var(--border)';
+    btnC.style.color = isClaude ? 'var(--purple)' : 'var(--text-muted)';
+  }
+  if (btnG) {
+    btnG.style.background = !isClaude ? 'rgba(46,204,113,0.15)' : 'var(--dark4)';
+    btnG.style.borderColor = !isClaude ? 'var(--green)' : 'var(--border)';
+    btnG.style.color = !isClaude ? 'var(--green)' : 'var(--text-muted)';
+  }
+  // Label & link
+  const lbl = document.getElementById('ps-ai-key-label');
+  const lnk = document.getElementById('ps-ai-key-link');
+  const inp = document.getElementById('ps-ai-apikey');
+  if (lbl) lbl.textContent = isClaude ? 'Claude API Key' : 'Groq API Key';
+  if (lnk) { lnk.href = isClaude ? 'https://console.anthropic.com/account/keys' : 'https://console.groq.com'; }
+  if (inp) inp.placeholder = isClaude ? 'sk-ant-api03-...' : 'gsk_...';
+  // Notes
+  const nC = document.getElementById('ps-ai-note-claude');
+  const nG = document.getElementById('ps-ai-note-groq');
+  if (nC) nC.style.display = isClaude ? 'block' : 'none';
+  if (nG) nG.style.display = !isClaude ? 'block' : 'none';
+  // Load saved key for this provider
+  const savedKey = localStorage.getItem(isClaude ? 'ict-ps-claude-key' : 'ict-ps-groq-key') || '';
+  if (inp && savedKey) { inp.value = savedKey; window._psApiKey = savedKey; }
+  else if (inp) { inp.value = ''; }
+};
+
 async function runAIErrorFixer() {
   const apiKey = document.getElementById('ps-ai-apikey')?.value.trim() || window._psApiKey || _loadApiKey() || '';
   const code   = document.getElementById('ps-ai-code')?.value.trim();
@@ -4207,54 +4248,96 @@ Format output harus persis:
 ## Penjelasan Perbaikan
 [penjelasan dalam Bahasa Indonesia]`;
 
+  const provider = window._psAIProvider || localStorage.getItem('ict-ai-provider') || 'claude';
+  const isGroq = provider === 'groq';
+
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 4096,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
+    let responseText;
 
-    if (loadEl) loadEl.style.display = 'none';
+    if (isGroq) {
+      // ── GROQ API (Free) ──────────────────────────────────────
+      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + apiKey
+        },
+        body: JSON.stringify({
+          model: 'llama3-70b-8192',
+          max_tokens: 4096,
+          temperature: 0.2,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+      if (loadEl) loadEl.style.display = 'none';
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => ({}));
+        const errMsg = errJson?.error?.message || `HTTP ${res.status}`;
+        if (resultEl) resultEl.style.display = 'block';
+        if (textEl) textEl.textContent = '❌ Groq API Error: ' + errMsg +
+          (res.status === 401 ? '\n\n→ Periksa API key Groq kamu (harus mulai dengan gsk_).' :
+           res.status === 429 ? '\n\n→ Rate limit — tunggu beberapa detik lalu coba lagi.' : '');
+        return;
+      }
+      const dataG = await res.json();
+      responseText = dataG.choices?.[0]?.message?.content || '(Tidak ada respons)';
 
-    if (!res.ok) {
-      const errJson = await res.json().catch(() => ({}));
-      const errMsg = errJson?.error?.message || `HTTP ${res.status}`;
-      if (resultEl) resultEl.style.display = 'block';
-      if (textEl) textEl.textContent = '❌ API Error: ' + errMsg + (res.status === 401 ? '\n\n→ Periksa API key Anda — mungkin salah atau sudah kadaluarsa.' : res.status === 429 ? '\n\n→ Rate limit — coba lagi dalam beberapa detik.' : '');
-      return;
+    } else {
+      // ── CLAUDE API ───────────────────────────────────────────
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 4096,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+      if (loadEl) loadEl.style.display = 'none';
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => ({}));
+        const errMsg = errJson?.error?.message || `HTTP ${res.status}`;
+        if (resultEl) resultEl.style.display = 'block';
+        if (textEl) textEl.textContent = '❌ Claude API Error: ' + errMsg +
+          (res.status === 401 ? '\n\n→ Periksa API key — mungkin salah atau sudah kadaluarsa.' :
+           res.status === 429 ? '\n\n→ Rate limit — coba lagi dalam beberapa detik.' : '');
+        return;
+      }
+      const dataC = await res.json();
+      responseText = dataC.content?.map(c => c.type === 'text' ? c.text : '').join('') || '(Tidak ada respons)';
     }
-
-    const data = await res.json();
-    const responseText = data.content?.map(c => c.type === 'text' ? c.text : '').join('') || '(Tidak ada respons)';
 
     if (resultEl) resultEl.style.display = 'block';
     if (textEl) textEl.textContent = responseText;
 
-    // Save API key if checkbox is checked
+    // Save API key per-provider
     const saveCb = document.getElementById('ps-ai-save-key');
-    if (saveCb?.checked) _saveApiKey(apiKey);
-
-    showToast('✅ Claude AI berhasil menganalisis kode!');
+    if (saveCb?.checked) {
+      const keyName = isGroq ? 'ict-ps-groq-key' : 'ict-ps-claude-key';
+      localStorage.setItem(keyName, apiKey);
+      _saveApiKey(apiKey);
+    }
+    showToast('✅ AI berhasil menganalisis kode!');
 
   } catch(e) {
     if (loadEl) loadEl.style.display = 'none';
     if (resultEl) resultEl.style.display = 'block';
-    if (textEl) textEl.textContent = '❌ Gagal koneksi ke Claude API: ' + e.message + '\n\nKemungkinan: CORS error di browser lokal, atau koneksi internet terputus.\n\nCoba buka halaman ini dari web server (GitHub Pages, dll) bukan file lokal.';
+    if (textEl) textEl.textContent = '❌ Gagal koneksi ke ' + (isGroq ? 'Groq' : 'Claude') + ' API: ' + e.message +
+      '\n\nKemungkinan: CORS error di browser lokal, atau koneksi internet terputus.\n\nCoba buka halaman ini dari GitHub Pages, bukan file lokal.';
   }
 }
 
-// Load saved API key on page load
-(function loadSavedAPIKey() {
-  const saved = _loadApiKey();
+// Load saved API key on page load — respects provider selection
+function loadSavedAPIKey() {
+  const provider = localStorage.getItem('ict-ai-provider') || 'claude';
+  window._psAIProvider = provider;
+  const keyName = provider === 'groq' ? 'ict-ps-groq-key' : 'ict-ps-claude-key';
+  const saved = localStorage.getItem(keyName) || _loadApiKey();
   if (saved) {
     const inp = document.getElementById('ps-ai-apikey');
     const cb  = document.getElementById('ps-ai-save-key');
@@ -4262,7 +4345,17 @@ Format output harus persis:
     if (cb)  cb.checked = true;
     window._psApiKey = saved;
   }
-})();
+  // Apply provider UI state
+  if (typeof window.setAIProvider === 'function') {
+    window.setAIProvider(provider);
+    // Restore key after setAIProvider (it may clear input)
+    if (saved) {
+      const inp = document.getElementById('ps-ai-apikey');
+      if (inp) inp.value = saved;
+      window._psApiKey = saved;
+    }
+  }
+}
 
 // ── OUTPUT HELPERS ─────────────────────────────────────────────────────
 function clearPSOutput(silent) {
@@ -4879,12 +4972,14 @@ alertcondition(xUp   and pRev  >= 65, "Bull Cross + Reversal Risk", "EMA Bull Cr
 alertcondition(xDown and pRev  >= 65, "Bear Cross + Reversal Risk", "EMA Bear Cross — risiko reversal tinggi!")`;
 
 // ── INJECT CODE INTO PRE ELEMENTS ──────────────────────────────
-(function injectIndicatorCodes() {
+window.injectIndicatorCodes = function() {
   const sessEl = document.getElementById('ind-session-code');
   const qvteEl = document.getElementById('ind-qvte-code');
   if (sessEl) sessEl.textContent = _IND_SESSION;
   if (qvteEl) qvteEl.textContent = _IND_QVTE;
-})();
+};
+// Run immediately if elements exist, also called again by tab lazy loader
+window.injectIndicatorCodes();
 
 
 

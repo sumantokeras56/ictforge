@@ -1120,3 +1120,477 @@
   50%       { box-shadow: 0 4px 32px rgba(201,168,76,0.45); }
 }
 
+
+/* ═══════════════════════════════════════════════════════════════
+   ICT FORGE AI MODULE — CSS
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Layout ── */
+#tab-ictforge-ai .container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+}
+
+/* ── Header ── */
+#tab-ictforge-ai header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+#tab-ictforge-ai header h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 40px;
+  letter-spacing: 3px;
+  color: #fff;
+  margin: 8px 0 4px;
+  line-height: 1.1;
+}
+#tab-ictforge-ai header h1 span { color: var(--gold); }
+#tab-ictforge-ai header p {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+.logo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--green);
+  text-transform: uppercase;
+  background: rgba(46,204,113,0.08);
+  border: 1px solid rgba(46,204,113,0.25);
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+}
+.logo-badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+/* ── API Setup ── */
+.api-setup {
+  background: var(--dark3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.api-setup-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.setup-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+.api-setup-header h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 2px;
+}
+.api-setup-header p {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: 'DM Mono', monospace;
+  margin: 0;
+}
+.api-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.api-input {
+  flex: 1;
+  background: var(--dark4);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 10px 12px;
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.api-input:focus { border-color: var(--gold-dim); }
+.api-note {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+.api-note a { color: var(--gold); text-decoration: none; }
+.api-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+.api-status.connected {
+  background: rgba(46,204,113,0.1);
+  color: var(--green);
+  border: 1px solid rgba(46,204,113,0.3);
+}
+.api-status.error {
+  background: rgba(231,76,60,0.1);
+  color: var(--red);
+  border: 1px solid rgba(231,76,60,0.3);
+}
+
+/* ── Tabs ── */
+#tab-ictforge-ai .tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+  background: var(--dark3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px;
+}
+#tab-ictforge-ai .tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 8px;
+  border-radius: 5px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+#tab-ictforge-ai .tab:hover {
+  background: var(--dark4);
+  color: var(--text-dim);
+}
+#tab-ictforge-ai .tab.active {
+  background: rgba(201,168,76,0.15);
+  color: var(--gold);
+  border: 1px solid rgba(201,168,76,0.3);
+}
+.tab-icon { font-size: 14px; }
+
+/* ── Panels ── */
+#tab-ictforge-ai .panel { display: none; }
+#tab-ictforge-ai .panel.active { display: block; }
+
+/* ── Card ── */
+#tab-ictforge-ai .card {
+  background: var(--dark3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.card-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+/* ── Bias Grid ── */
+.bias-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.trade-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.bias-field { display: flex; flex-direction: column; gap: 5px; }
+.bias-field.full-width { grid-column: 1 / -1; }
+.bias-field label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+.bias-field input,
+.bias-field select,
+.bias-field textarea {
+  background: var(--dark4);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 8px 10px;
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.15s;
+  resize: vertical;
+}
+.bias-field input:focus,
+.bias-field select:focus,
+.bias-field textarea:focus { border-color: var(--gold-dim); }
+.bias-field select option { background: var(--dark2); }
+
+/* ── Bias Meter ── */
+.bias-meter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.bias-meter-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  width: 60px;
+  letter-spacing: 1px;
+}
+.bias-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--dark4);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.bias-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  width: 0%;
+  transition: width 0.8s ease;
+}
+.bias-bar-fill.bullish { background: var(--green); }
+.bias-bar-fill.bearish { background: var(--red); }
+.bias-value {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  width: 70px;
+  text-align: right;
+}
+.bias-value.win { color: var(--green); }
+.bias-value.loss { color: var(--red); }
+
+/* ── AI Response ── */
+.ai-response {
+  display: none;
+  margin-top: 16px;
+  background: var(--dark4);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.ai-response.visible { display: block; }
+.ai-response-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--dark3);
+  border-bottom: 1px solid var(--border);
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.ai-response-header small {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+.ai-avatar {
+  font-size: 16px;
+  line-height: 1;
+}
+.ai-content {
+  padding: 14px;
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ── Chat ── */
+.chat-window {
+  background: var(--dark4);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  height: 380px;
+  overflow-y: auto;
+  padding: 14px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.chat-msg {
+  display: flex;
+  flex-direction: column;
+  max-width: 88%;
+}
+.chat-msg.user { align-self: flex-end; align-items: flex-end; }
+.chat-msg.ai { align-self: flex-start; align-items: flex-start; }
+.chat-msg-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.chat-msg-avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  background: var(--dark3);
+  border: 1px solid var(--border);
+}
+.chat-msg-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+}
+.chat-msg-name.ai { color: var(--gold); }
+.chat-msg-name.user { color: var(--blue); }
+.chat-msg-bubble {
+  background: var(--dark3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-dim);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.chat-msg.user .chat-msg-bubble {
+  background: rgba(91,155,213,0.1);
+  border-color: rgba(91,155,213,0.25);
+  color: var(--text);
+}
+.chat-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+.chat-input {
+  flex: 1;
+  background: var(--dark4);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  outline: none;
+  resize: none;
+  min-height: 42px;
+  max-height: 120px;
+  transition: border-color 0.15s;
+}
+.chat-input:focus { border-color: var(--gold-dim); }
+
+/* ── Quick Questions ── */
+.quick-questions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.quick-q {
+  background: var(--dark4);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.quick-q:hover {
+  border-color: var(--gold-dim);
+  color: var(--gold);
+  background: rgba(201,168,76,0.08);
+}
+
+/* ── Buttons ── */
+#tab-ictforge-ai .btn {
+  border: none;
+  border-radius: 5px;
+  padding: 10px 18px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+#tab-ictforge-ai .btn-primary {
+  background: var(--gold);
+  color: var(--dark);
+}
+#tab-ictforge-ai .btn-primary:hover {
+  background: var(--gold-dim);
+  transform: translateY(-1px);
+}
+#tab-ictforge-ai .btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Spinner & Loading ── */
+.spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(201,168,76,0.3);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+.loading-text {
+  color: var(--text-muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .bias-grid { grid-template-columns: 1fr; }
+  .trade-grid { grid-template-columns: 1fr; }
+  #tab-ictforge-ai .tabs { flex-wrap: wrap; }
+  #tab-ictforge-ai .tab { flex: 1 1 auto; font-size: 10px; padding: 8px 4px; }
+  .chat-window { height: 300px; }
+}

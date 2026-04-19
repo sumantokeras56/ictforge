@@ -116,9 +116,11 @@
         }
       }
 
-      // Fetch dari newsdata.io — pakai endpoint /latest (sesuai free plan)
+      // Fetch via Cloudflare Worker proxy (bypass CORS)
+      const WORKER = 'https://black-hat-ebc4.waxewi.workers.dev';
       const query = encodeURIComponent('CPI OR FOMC OR NFP OR inflation OR payrolls');
-      const url = `https://newsdata.io/api/1/latest?apikey=${NEWSDATA_API_KEY}&q=${query}&language=en&category=business&size=10`;
+      const rawUrl = `https://newsdata.io/api/1/latest?apikey=${NEWSDATA_API_KEY}&q=${query}&language=en&category=business&size=10`;
+      const url = WORKER + '/?u=' + encodeURIComponent(rawUrl);
 
       showNewsStatus('⏳ Memuat berita ekonomi live...', 'loading');
 
