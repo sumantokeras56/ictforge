@@ -1,9 +1,10 @@
   <!-- ════════════════════════════════════════════
-       TRADING JOURNAL — v2.0 (Enhanced)
+       TRADING JOURNAL — v2.1
        + Screenshot Integration
        + Equity Curve Visualizer (upgraded)
        + Mistake Tagging
        + Compounding Calculator
+       + Visual Divider: Journal ↔ Tools Section
   ════════════════════════════════════════════ -->
   <div class="section" id="tab-journal">
     <div class="section-header">
@@ -208,10 +209,21 @@
       <!-- ══════════════════════════════════════════════════════════
            COMPOUNDING CALCULATOR
       ══════════════════════════════════════════════════════════ -->
-      <div style="margin-top:32px;">
+
+      <!-- DIVIDER PEMISAH JOURNAL & TOOLS -->
+      <div style="margin-top:48px;margin-bottom:40px;position:relative;text-align:center;">
+        <div style="border-top:2px solid var(--gold-dim);opacity:0.35;position:absolute;top:50%;left:0;right:0;"></div>
+        <span style="position:relative;display:inline-block;padding:8px 20px;
+          background:var(--dark2);border:1px solid rgba(201,168,76,0.35);
+          border-radius:20px;font-family:'DM Mono',monospace;font-size:10px;
+          letter-spacing:3px;text-transform:uppercase;color:var(--gold-dim);">
+          ⚙️ TOOLS &amp; KALKULATOR
+        </span>
+      </div>
+
+      <div style="margin-top:0;">
         <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
-          text-transform:uppercase;color:var(--gold-dim);margin-bottom:16px;
-          border-top:1px solid var(--border);padding-top:20px;">
+          text-transform:uppercase;color:var(--gold-dim);margin-bottom:16px;">
           🧮 COMPOUNDING CALCULATOR — FUNDED ACCOUNT PLANNER
         </div>
 
