@@ -5076,130 +5076,289 @@
     </div>
    </div>
    <!-- ════════════════════════════════════════════
-       TRADING JOURNAL
+       TRADING JOURNAL v2.0
   ════════════════════════════════════════════ -->
-   <div class="section" id="tab-journal">
+  <div class="section" id="tab-journal">
     <div class="section-header">
-     <div class="section-number">
-      13
-     </div>
+     <div class="section-number">13</div>
      <div class="section-title-wrap">
-      <h2>
-       Trading Journal
-      </h2>
-      <p>
-       Catat &amp; Analisis Semua Trade Kamu — 100% Privat (localStorage)
-      </p>
+      <h2>Trading Journal</h2>
+      <p>Catat &amp; Analisis Semua Trade Kamu — 100% Privat (localStorage)</p>
      </div>
     </div>
+
     <div class="journal-wrapper">
-     <div class="journal-stats" id="journalStats">
-      <div class="journal-stat">
-       📊 Total Trades:
-       <span id="statTotal">
-        0
-       </span>
+
+      <!-- STATS ROW -->
+      <div class="journal-stats" id="journalStats">
+        <div class="journal-stat">📊 Total Trades: <span id="statTotal">0</span></div>
+        <div class="journal-stat">✅ Win Rate: <span id="statWinRate">0%</span></div>
+        <div class="journal-stat">💰 Profit Factor: <span id="statProfitFactor">0</span></div>
+        <div class="journal-stat">📈 Avg R:R: <span id="statAvgRR">0</span></div>
       </div>
-      <div class="journal-stat">
-       ✅ Win Rate:
-       <span id="statWinRate">
-        0%
-       </span>
+
+      <!-- EQUITY CURVE -->
+      <div style="margin-bottom:20px;">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+          <span>📈 EQUITY CURVE (R-Multiple)</span>
+          <span id="equityStats" style="font-size:10px;color:var(--text-muted);"></span>
+        </div>
+        <div style="background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:12px;">
+          <canvas id="equityCanvas" style="width:100%;height:160px;display:block;border-radius:4px;cursor:pointer;" onclick="openEquityModal()"></canvas>
+          <div style="font-size:9px;color:var(--text-muted);font-family:'DM Mono',monospace;margin-top:6px;display:flex;justify-content:space-between;">
+            <span>Setiap WIN = +RR · Setiap LOSS = −1R</span>
+            <span style="color:var(--gold-dim);cursor:pointer;" onclick="openEquityModal()">🔍 Klik untuk detail</span>
+          </div>
+        </div>
       </div>
-      <div class="journal-stat">
-       💰 Profit Factor:
-       <span id="statProfitFactor">
-        0
-       </span>
+
+      <!-- MISTAKE TAG SUMMARY -->
+      <div style="margin-bottom:20px;">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:8px;">🏷️ ANALISIS KESALAHAN (BULAN INI)</div>
+        <div id="mistakeTagSummary" style="display:flex;flex-wrap:wrap;gap:8px;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:12px;min-height:44px;align-items:center;">
+          <span style="color:var(--text-muted);font-size:11px;font-family:'DM Mono',monospace;">Belum ada data mistake tag bulan ini</span>
+        </div>
       </div>
-      <div class="journal-stat">
-       📈 Avg R:R:
-       <span id="statAvgRR">
-        0
-       </span>
+
+      <!-- DAILY BIAS NOTE -->
+      <div style="margin-bottom:20px;">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+          <span>📝 CATATAN BIAS HARIAN</span>
+          <span id="dailyNoteSaved" style="font-size:9px;color:var(--green);opacity:0;transition:opacity 0.4s;">✓ Tersimpan</span>
+        </div>
+        <textarea id="dailyBiasNote" placeholder="Contoh: Bias BULLISH NQ minggu ini. COT Commercial long. Cari buy saat NY Open di FVG 17,480–17,500..." style="width:100%;min-height:80px;background:var(--dark3);border:1px solid var(--border);border-radius:6px;padding:12px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;line-height:1.6;resize:vertical;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='var(--gold-dim)'" onblur="this.style.borderColor='var(--border)'"></textarea>
       </div>
-     </div>
-     <div class="journal-form">
-      <input id="journalSymbol" placeholder="Symbol (NQ, ES, EUR, dll)" type="text"/>
-      <select id="journalSide">
-       <option value="long">
-        📈 LONG (Buy)
-       </option>
-       <option value="short">
-        📉 SHORT (Sell)
-       </option>
-      </select>
-      <input id="journalEntry" placeholder="Entry Price" step="any" type="number"/>
-      <input id="journalSL" placeholder="Stop Loss" step="any" type="number"/>
-      <input id="journalTP" placeholder="Take Profit" step="any" type="number"/>
-      <input id="journalRr" placeholder="R:R (contoh: 2)" step="0.1" type="number"/>
-      <select id="journalResult">
-       <option value="win">
-        ✅ WIN
-       </option>
-       <option value="loss">
-        ❌ LOSS
-       </option>
-       <option value="pending">
-        ⏳ Pending
-       </option>
-      </select>
-      <input id="journalNote" placeholder="Catatan (opsional)" type="text"/>
-      <button class="calc-btn" onclick="addJournalEntry()" style="padding:8px 16px;">
-       ➕ Tambah Trade
-      </button>
-     </div>
-     <button class="action-btn" onclick="exportJournalCSV()" style="margin-bottom:12px;">
-      ⬇ Export CSV
-     </button>
-     <button class="action-btn" onclick="exportJournalPDF()" style="margin-bottom:12px;">
-      ⬡ Export PDF Journal
-     </button>
-     <button class="action-btn" onclick="clearJournal()" style="margin-bottom:12px;background:rgba(231,76,60,0.1);border-color:var(--red);color:var(--red);">
-      🗑 Hapus Semua
-     </button>
-     <div style="overflow-x:auto;">
-      <table class="journal-table" id="journalTable">
-       <thead>
-        <tr>
-         <th>
-          Tanggal
-         </th>
-         <th>
-          Symbol
-         </th>
-         <th>
-          Side
-         </th>
-         <th>
-          Entry
-         </th>
-         <th>
-          SL
-         </th>
-         <th>
-          TP
-         </th>
-         <th>
-          R:R
-         </th>
-         <th>
-          Result
-         </th>
-         <th>
-          Catatan
-         </th>
-         <th>
-          Aksi
-         </th>
-        </tr>
-       </thead>
-       <tbody id="journalBody">
-       </tbody>
-      </table>
-     </div>
+
+      <!-- FORM TAMBAH TRADE -->
+      <div class="journal-form">
+        <input id="journalSymbol" placeholder="Symbol (NQ, ES, EUR, dll)" type="text"/>
+        <select id="journalSide">
+          <option value="long">📈 LONG (Buy)</option>
+          <option value="short">📉 SHORT (Sell)</option>
+        </select>
+        <input id="journalEntry" placeholder="Entry Price" step="any" type="number"/>
+        <input id="journalSL" placeholder="Stop Loss" step="any" type="number"/>
+        <input id="journalTP" placeholder="Take Profit" step="any" type="number"/>
+        <input id="journalRr" placeholder="R:R (contoh: 2)" step="0.1" type="number"/>
+        <select id="journalResult">
+          <option value="pending">⏳ Pending</option>
+          <option value="win">✅ WIN</option>
+          <option value="loss">❌ LOSS</option>
+        </select>
+        <input id="journalNote" placeholder="Catatan (opsional)" type="text"/>
+
+        <!-- MISTAKE TAGS -->
+        <div style="grid-column:1/-1;">
+          <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--gold-dim);margin-bottom:8px;">🏷️ MISTAKE TAGS (pilih semua yang relevan)</div>
+          <div id="mistakeTagsSelector" style="display:flex;flex-wrap:wrap;gap:6px;">
+            <label class="mistake-tag-opt" data-tag="FOMO"><input type="checkbox" value="FOMO" style="display:none;"> 😱 FOMO</label>
+            <label class="mistake-tag-opt" data-tag="REVENGE"><input type="checkbox" value="REVENGE" style="display:none;"> 🔥 Revenge Trade</label>
+            <label class="mistake-tag-opt" data-tag="OVERLEV"><input type="checkbox" value="OVERLEV" style="display:none;"> ⚠️ Over-Leverage</label>
+            <label class="mistake-tag-opt" data-tag="LATE"><input type="checkbox" value="LATE" style="display:none;"> ⏰ Late Entry</label>
+            <label class="mistake-tag-opt" data-tag="NOPA"><input type="checkbox" value="NOPA" style="display:none;"> 📋 No Plan</label>
+            <label class="mistake-tag-opt" data-tag="MOVED_SL"><input type="checkbox" value="MOVED_SL" style="display:none;"> 🚫 Moved SL</label>
+            <label class="mistake-tag-opt" data-tag="EARLY_EXIT"><input type="checkbox" value="EARLY_EXIT" style="display:none;"> 🏃 Early Exit</label>
+            <label class="mistake-tag-opt" data-tag="NEWS"><input type="checkbox" value="NEWS" style="display:none;"> 📰 Traded News</label>
+            <label class="mistake-tag-opt" data-tag="TILT"><input type="checkbox" value="TILT" style="display:none;"> 🤯 Tilt/Emotions</label>
+            <label class="mistake-tag-opt" data-tag="PERFECT" style="border-color:rgba(46,204,113,0.4);color:var(--green);"><input type="checkbox" value="PERFECT" style="display:none;"> ✅ Perfect Execution</label>
+          </div>
+        </div>
+
+        <!-- SCREENSHOT UPLOAD -->
+        <div style="grid-column:1/-1;">
+          <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--gold-dim);margin-bottom:8px;">📸 CHART SCREENSHOT (opsional)</div>
+          <div id="screenshotDropZone" style="border:2px dashed var(--border);border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--dark3);color:var(--text-muted);font-family:'DM Mono',monospace;font-size:12px;"
+            onclick="document.getElementById('screenshotInput').click()"
+            ondragover="event.preventDefault();this.style.borderColor='var(--gold-dim)'"
+            ondragleave="this.style.borderColor='var(--border)'"
+            ondrop="handleScreenshotDrop(event)">
+            📁 Klik atau drag &amp; drop screenshot chart di sini<br>
+            <span style="font-size:10px;color:var(--text-muted);">JPG · PNG · WEBP · maks 2MB per gambar</span>
+          </div>
+          <input type="file" id="screenshotInput" accept="image/*" multiple style="display:none;" onchange="handleScreenshotSelect(this)"/>
+          <div id="screenshotPreviewRow" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;"></div>
+        </div>
+
+        <button class="calc-btn" onclick="addJournalEntry()" style="padding:8px 16px;grid-column:1/-1;">➕ Tambah Trade</button>
+      </div>
+
+      <!-- ACTION BUTTONS -->
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+        <button class="action-btn" onclick="exportJournalCSV()" style="flex:1;min-width:130px;">⬇ Export CSV</button>
+        <button class="action-btn" onclick="exportJournalPDF()" style="flex:1;min-width:130px;">⬡ Export PDF</button>
+        <button class="action-btn" onclick="backupJournal()" style="flex:1;min-width:130px;background:rgba(46,204,113,0.08);border-color:rgba(46,204,113,0.35);color:var(--green);">💾 Backup JSON</button>
+        <label class="action-btn" style="flex:1;min-width:130px;cursor:pointer;background:rgba(91,155,213,0.08);border-color:rgba(91,155,213,0.35);color:var(--blue);text-align:center;display:flex;align-items:center;justify-content:center;">
+          📂 Restore JSON
+          <input type="file" accept=".json" onchange="restoreJournal(this)" style="display:none;"/>
+        </label>
+        <button class="action-btn" onclick="clearJournal()" style="flex:1;min-width:130px;background:rgba(231,76,60,0.08);border-color:var(--red);color:var(--red);">🗑 Hapus Semua</button>
+      </div>
+
+      <!-- TABEL JOURNAL -->
+      <div style="overflow-x:auto;">
+        <table class="journal-table" id="journalTable">
+          <thead>
+            <tr>
+              <th>Tanggal</th><th>Symbol</th><th>Side</th><th>Entry</th>
+              <th>SL</th><th>TP</th><th>R:R</th><th>Result</th>
+              <th>Tags</th><th>Catatan</th><th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="journalBody"></tbody>
+        </table>
+      </div>
+
+      <!-- COMPOUNDING CALCULATOR -->
+      <div style="margin-top:32px;">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:16px;border-top:1px solid var(--border);padding-top:20px;">
+          🧮 COMPOUNDING CALCULATOR — FUNDED ACCOUNT PLANNER
+        </div>
+
+        <div style="display:flex;gap:0;margin-bottom:16px;border:1px solid var(--border);border-radius:6px;overflow:hidden;">
+          <button id="compTabSimple" onclick="switchCompTab('simple')" style="flex:1;padding:8px;font-family:'DM Mono',monospace;font-size:11px;background:var(--gold);color:#000;border:none;cursor:pointer;font-weight:700;">📈 SIMPLE GROWTH</button>
+          <button id="compTabFunded" onclick="switchCompTab('funded')" style="flex:1;padding:8px;font-family:'DM Mono',monospace;font-size:11px;background:var(--dark3);color:var(--text-muted);border:none;cursor:pointer;">🏦 FUNDED ACCOUNT</button>
+        </div>
+
+        <!-- SIMPLE TAB -->
+        <div id="compPanelSimple">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+            <div>
+              <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);display:block;margin-bottom:4px;">MODAL AWAL ($)</label>
+              <input id="compInitial" type="number" value="10000" min="1" step="any" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;outline:none;"/>
+            </div>
+            <div>
+              <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);display:block;margin-bottom:4px;">GAIN PER PERIODE (%)</label>
+              <input id="compGainPct" type="number" value="5" min="0.1" step="0.1" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;outline:none;"/>
+            </div>
+            <div>
+              <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);display:block;margin-bottom:4px;">JUMLAH PERIODE</label>
+              <input id="compPeriods" type="number" value="12" min="1" max="120" step="1" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;outline:none;"/>
+            </div>
+            <div>
+              <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);display:block;margin-bottom:4px;">PERIODE</label>
+              <select id="compPeriodType" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;outline:none;">
+                <option value="weekly">Mingguan</option>
+                <option value="monthly" selected>Bulanan</option>
+              </select>
+            </div>
+          </div>
+          <button class="calc-btn" onclick="runCompounding()" style="width:100%;padding:10px;margin-bottom:14px;">🧮 HITUNG COMPOUNDING</button>
+          <div id="compSimpleResult" style="display:none;"></div>
+          <canvas id="compCanvas" style="width:100%;height:180px;display:none;margin-top:8px;border-radius:6px;"></canvas>
+        </div>
+
+        <!-- FUNDED TAB -->
+        <div id="compPanelFunded" style="display:none;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+            <div>
+              <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);display:block;margin-bottom:4px;">UKURAN AKUN ($)</label>
+              <select id="fundedAccountSize" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;outline:none;">
+                <option value="10000">$10,000</option>
+                <option value="25000">$25,000</option>
+                <option value="50000" selected>$50,000</option>
+                <option value="100000">$100,000</option>
+                <option value="200000">$200,000</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);display:block;margin-bottom:4px;">PROFIT SPLIT (%)</label>
+              <select id="fundedProfitSplit" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;outline:none;">
+                <option value="80">80% (FTMO, MFF)</option>
+                <option value="85">85% (E8)</option>
+                <option value="90" selected>90% (Topstep, dll)</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);display:block;margin-bottom:4px;">TARGET PROFIT (%)</label>
+              <input id="fundedProfitTarget" type="number" value="10" min="1" step="0.5" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;outline:none;"/>
+            </div>
+            <div>
+              <label style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);display:block;margin-bottom:4px;">GAIN BULANAN (%)</label>
+              <input id="fundedMonthlyGain" type="number" value="5" min="0.1" step="0.1" style="width:100%;background:var(--dark3);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;outline:none;"/>
+            </div>
+          </div>
+
+          <div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:8px;padding:14px;margin-bottom:12px;">
+            <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--gold-dim);margin-bottom:10px;">⚖️ CONSISTENCY RULES</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                <input type="checkbox" id="ruleMaxDD" checked style="accent-color:var(--gold);width:14px;height:14px;"/>
+                <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text);">Max Daily Loss Limit</span>
+              </label>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <input id="ruleMaxDDPct" type="number" value="5" min="1" max="20" step="0.5" style="width:60px;background:var(--dark4);border:1px solid var(--border);border-radius:4px;padding:4px 6px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;outline:none;text-align:center;"/>
+                <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);">% per hari</span>
+              </div>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                <input type="checkbox" id="ruleMaxOverall" checked style="accent-color:var(--gold);width:14px;height:14px;"/>
+                <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text);">Max Overall Drawdown</span>
+              </label>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <input id="ruleMaxOverallPct" type="number" value="10" min="1" max="30" step="0.5" style="width:60px;background:var(--dark4);border:1px solid var(--border);border-radius:4px;padding:4px 6px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;outline:none;text-align:center;"/>
+                <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);">% overall</span>
+              </div>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+                <input type="checkbox" id="ruleConsistency" checked style="accent-color:var(--gold);width:14px;height:14px;"/>
+                <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text);">Consistency Rule</span>
+              </label>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <input id="ruleConsistencyPct" type="number" value="30" min="10" max="50" step="5" style="width:60px;background:var(--dark4);border:1px solid var(--border);border-radius:4px;padding:4px 6px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;outline:none;text-align:center;"/>
+                <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);">% max/hari dari total</span>
+              </div>
+            </div>
+          </div>
+
+          <button class="calc-btn" onclick="runFundedCalculator()" style="width:100%;padding:10px;margin-bottom:14px;">🏦 HITUNG FUNDED PLAN</button>
+          <div id="compFundedResult" style="display:none;"></div>
+        </div>
+      </div>
+
+    </div><!-- /.journal-wrapper -->
+  </div>
+
+  <!-- EQUITY MODAL -->
+  <div id="equityModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px);overflow-y:auto;">
+    <div style="max-width:900px;margin:32px auto;padding:16px;">
+      <div style="background:var(--dark2);border:1px solid var(--border);border-radius:12px;padding:24px;position:relative;">
+        <button onclick="closeEquityModal()" style="position:absolute;top:16px;right:16px;background:transparent;border:1px solid var(--border);color:var(--text-muted);border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:16px;">✕</button>
+        <div style="font-family:'DM Mono',monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:16px;">📈 EQUITY CURVE — DETAIL VIEW</div>
+        <canvas id="equityModalCanvas" style="width:100%;height:300px;display:block;border-radius:6px;"></canvas>
+        <div id="equityModalStats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:16px;"></div>
+        <div style="margin-top:16px;">
+          <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--gold-dim);margin-bottom:8px;">RINCIAN PER TRADE</div>
+          <div id="equityTradeList" style="max-height:200px;overflow-y:auto;background:var(--dark3);border-radius:6px;padding:8px;"></div>
+        </div>
+      </div>
     </div>
-   </div>
+  </div>
+
+  <!-- SCREENSHOT MODAL -->
+  <div id="screenshotModal" onclick="closeScreenshotModal()" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.92);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+    <div style="position:relative;max-width:95vw;max-height:95vh;" onclick="event.stopPropagation()">
+      <button onclick="closeScreenshotModal()" style="position:absolute;top:-12px;right:-12px;background:var(--dark2);border:1px solid var(--border);color:var(--text);border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:16px;z-index:1;">✕</button>
+      <img id="screenshotModalImg" src="" alt="Chart Screenshot" style="max-width:95vw;max-height:95vh;border-radius:8px;object-fit:contain;"/>
+    </div>
+  </div>
+
+  <!-- JOURNAL STYLES -->
+  <style>
+    .mistake-tag-opt{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;cursor:pointer;border:1px solid rgba(201,168,76,0.25);font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);background:var(--dark3);transition:all 0.15s;user-select:none;}
+    .mistake-tag-opt.selected{background:rgba(201,168,76,0.18);border-color:var(--gold-dim);color:var(--gold);}
+    .mistake-tag-opt[data-tag="PERFECT"].selected{background:rgba(46,204,113,0.18);border-color:rgba(46,204,113,0.5);color:var(--green);}
+    .mistake-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:10px;font-size:9px;font-family:'DM Mono',monospace;font-weight:600;background:rgba(231,76,60,0.15);color:#e74c3c;border:1px solid rgba(231,76,60,0.3);}
+    .mistake-badge.perfect{background:rgba(46,204,113,0.15);color:var(--green);border-color:rgba(46,204,113,0.3);}
+    .screenshot-thumb{position:relative;width:64px;height:64px;border-radius:6px;overflow:hidden;border:1px solid var(--border);cursor:pointer;flex-shrink:0;transition:border-color 0.15s;}
+    .screenshot-thumb:hover{border-color:var(--gold-dim);}
+    .screenshot-thumb img{width:100%;height:100%;object-fit:cover;}
+    .del-thumb{position:absolute;top:2px;right:2px;background:rgba(0,0,0,0.7);border:none;color:#fff;border-radius:50%;width:16px;height:16px;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;padding:0;}
+    .comp-stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:10px;}
+    .comp-stat-item{background:var(--dark4);border-radius:6px;padding:10px 12px;}
+    .comp-stat-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;}
+    .comp-stat-value{font-family:'DM Mono',monospace;font-size:14px;font-weight:700;color:var(--gold);}
+    .rule-warning{background:rgba(231,76,60,0.1);border:1px solid rgba(231,76,60,0.3);border-radius:6px;padding:10px 12px;margin-top:8px;font-family:'DM Mono',monospace;font-size:11px;color:#e74c3c;}
+    .rule-ok{background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.25);border-radius:6px;padding:10px 12px;margin-top:8px;font-family:'DM Mono',monospace;font-size:11px;color:var(--green);}
+  </style>
+
    <!-- ════════════════════════════════════════════
        ECONOMIC CALENDAR & MARKET HOURS
   ════════════════════════════════════════════ -->
@@ -6224,14 +6383,14 @@ study('My Old Script')
    </svg>
    📲 Install ICT Forge ke Homescreen
   </div>
-  <script src="main.js">< 
+  <script src="main.js">
   </script>
-  <script src="journal-enhanced.js"></script>
-  <!-- ═══════════════════════════════════════════════════════════
-     REALTIME NEWS ENGINE — Live economic calendar via newsdata.io
+  <!--
      Harus di-load SETELAH main.js agar HIGH_IMPACT_NEWS tersedia
-     ═══════════════════════════════════════════════════════════ -->
+  -->
   <script src="realtime-news.js">
+  </script>
+  <script src="journal-enhanced.js">
   </script>
  </body>
 </html>
