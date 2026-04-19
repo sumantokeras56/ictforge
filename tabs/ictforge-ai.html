@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICT Forge AI — Smart Money AI Assistant</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap');
+
+  :root {
+    --bg: #0a0c0f;
+    --surface: #111418;
+    --surface2: #1a1f27;
+    --border: #232b36;
+    --accent: #00d4aa;
+    --accent2: #ff6b35;
+    --accent3: #7c5cbf;
+    --text: #e8edf3;
+    --text2: #8a9bb0;
+    --text3: #4a5568;
+    --win: #00d4aa;
+    --loss: #ff4757;
+    --mono: 'Space Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,170,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,170,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 16px 80px;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    padding: 40px 0 32px;
+    position: relative;
+  }
+
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 8px 20px;
+    margin-bottom: 20px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .logo-badge .dot {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  header h1 {
+    font-size: clamp(28px, 6vw, 48px);
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+
+  header h1 span { color: var(--accent); }
+
+  header p {
+    color: var(--text2);
+    font-size: 15px;
+    font-family: var(--mono);
+    font-weight: 400;
+  }
+
+  /* API Key Setup */
+  .api-setup {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .api-setup::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent3), var(--accent2));
+  }
+
+  .api-setup-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .setup-icon {
+    width: 36px; height: 36px;
+    background: rgba(0,212,170,0.1);
+    border: 1px solid rgba(0,212,170,0.3);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  .api-setup-header h3 {
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .api-setup-header p {
+    font-size: 12px;
+    color: var(--text2);
+    font-family: var(--mono);
+  }
+
+  .api-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .api-input {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .api-input:focus { border-color: var(--accent); }
+  .api-input::placeholder { color: var(--text3); }
+
+  .btn {
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 13px;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #0a0c0f;
+  }
+
+  .btn-primary:hover { background: #00f0c0; transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-secondary {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+  .api-note {
+    font-size: 12px;
+    color: var(--text3);
+    font-family: var(--mono);
+  }
+
+  .api-note a { color: var(--accent); text-decoration: none; }
+  .api-note a:hover { text-decoration: underline; }
+
+  .api-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-family: var(--mono);
+    margin-top: 8px;
+    padding: 6px 12px;
+    border-radius: 100px;
+    background: var(--surface2);
+  }
+
+  .api-status.connected { color: var(--win); }
+  .api-status.error { color: var(--loss); }
+
+  /* Tab Navigation */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 24px;
+  }
+
+  .tab {
+    flex: 1;
+    padding: 10px 8px;
+    border-radius: 9px;
+    border: none;
+    background: transparent;
+    color: var(--text2);
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .tab.active {
+    background: var(--surface2);
+    color: var(--accent);
+    border: 1px solid rgba(0,212,170,0.2);
+  }
+
+  .tab:hover:not(.active) { color: var(--text); }
+
+  .tab-icon { display: block; font-size: 18px; margin-bottom: 2px; }
+
+  /* Panels */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Feature Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Daily Bias */
+  .bias-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .bias-field label {
+    display: block;
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+
+  .bias-field select,
+  .bias-field input,
+  .bias-field textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .bias-field select:focus,
+  .bias-field input:focus,
+  .bias-field textarea:focus { border-color: var(--accent); }
+
+  .bias-field textarea { resize: vertical; min-height: 80px; }
+
+  .bias-field select option { background: var(--surface); }
+
+  .full-width { grid-column: 1 / -1; }
+
+  /* AI Response Box */
+  .ai-response {
+    background: var(--bg);
+    border: 1px solid rgba(0,212,170,0.2);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 16px;
+    display: none;
+    position: relative;
+  }
+
+  .ai-response.visible { display: block; }
+
+  .ai-response-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ai-avatar {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+
+  .ai-response-header span {
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .ai-response-header small {
+    margin-left: auto;
+    font-size: 10px;
+    color: var(--text3);
+    font-family: var(--mono);
+  }
+
+  .ai-content {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+    white-space: pre-wrap;
+  }
+
+  .ai-content strong { color: var(--accent); }
+
+  /* Bias meter */
+  .bias-meter {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: var(--surface2);
+    border-radius: 10px;
+    margin-bottom: 16px;
+  }
+
+  .bias-meter-label {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--text2);
+    min-width: 60px;
+  }
+
+  .bias-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .bias-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.8s ease;
+    width: 0%;
+  }
+
+  .bias-bar-fill.bullish { background: var(--win); }
+  .bias-bar-fill.bearish { background: var(--loss); }
+  .bias-bar-fill.neutral { background: var(--accent3); }
+
+  .bias-value {
+    font-size: 13px;
+    font-family: var(--mono);
+    font-weight: 700;
+    min-width: 80px;
+    text-align: right;
+  }
+
+  /* Trade Review */
+  .trade-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .trade-stat {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+  }
+
+  .trade-stat-label {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .trade-stat-value {
+    font-size: 18px;
+    font-family: var(--mono);
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .trade-stat-value.win { color: var(--win); }
+  .trade-stat-value.loss { color: var(--loss); }
+
+  /* Score Ring */
+  .score-ring-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .score-ring {
+    position: relative;
+    width: 100px; height: 100px;
+    margin-bottom: 12px;
+  }
+
+  .score-ring svg { transform: rotate(-90deg); }
+  .score-ring-value {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .score-ring-label {
+    font-size: 10px;
+    color: var(--text3);
+    font-family: var(--mono);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* Chatbot */
+  .chat-window {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    height: 380px;
+    overflow-y: auto;
+    padding: 16px;
+    margin-bottom: 12px;
+    scroll-behavior: smooth;
+  }
+
+  .chat-window::-webkit-scrollbar { width: 4px; }
+  .chat-window::-webkit-scrollbar-track { background: transparent; }
+  .chat-window::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .chat-msg {
+    margin-bottom: 16px;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .chat-msg-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .chat-msg-avatar {
+    width: 24px; height: 24px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+  }
+
+  .chat-msg-avatar.ai { background: linear-gradient(135deg, var(--accent), var(--accent3)); }
+  .chat-msg-avatar.user { background: var(--surface2); border: 1px solid var(--border); }
+
+  .chat-msg-name {
+    font-size: 11px;
+    font-family: var(--mono);
+    font-weight: 700;
+    color: var(--text2);
+  }
+
+  .chat-msg-name.ai { color: var(--accent); }
+
+  .chat-msg-bubble {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+    white-space: pre-wrap;
+  }
+
+  .chat-msg.user .chat-msg-bubble {
+    background: rgba(0,212,170,0.08);
+    border-color: rgba(0,212,170,0.2);
+  }
+
+  .chat-msg.ai .chat-msg-bubble strong { color: var(--accent); }
+
+  .chat-input-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  .chat-input {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: none;
+    height: 48px;
+  }
+
+  .chat-input:focus { border-color: var(--accent); }
+
+  /* Quick questions */
+  .quick-questions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .quick-q {
+    padding: 6px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .quick-q:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* Loading spinner */
+  .spinner {
+    display: inline-block;
+    width: 16px; height: 16px;
+    border: 2px solid rgba(0,212,170,0.3);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-text {
+    font-size: 13px;
+    color: var(--text2);
+    font-family: var(--mono);
+    padding: 16px;
+    text-align: center;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 12px 24px;
+    font-size: 13px;
+    font-family: var(--mono);
+    color: var(--text);
+    z-index: 1000;
+    transition: transform 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.success { border-color: var(--win); color: var(--win); }
+  .toast.error { border-color: var(--loss); color: var(--loss); }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .bias-grid { grid-template-columns: 1fr; }
+    .trade-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="logo-badge">
+      <span class="dot"></span>
+      ICT Forge AI Module v1.0
+    </div>
+    <h1>Smart Money <span>AI</span><br>Assistant</h1>
+    <p>Powered by Llama 3 · Groq API · ICT/SMC Framework</p>
+  </header>
+
+  <!-- API Setup -->
+  <div class="api-setup">
+    <div class="api-setup-header">
+      <div class="setup-icon">🔑</div>
+      <div>
+        <h3>Setup Groq API Key</h3>
+        <p>Gratis · Daftar di console.groq.com · Tidak disimpan di server</p>
+      </div>
+    </div>
+    <div class="api-row">
+      <input type="password" class="api-input" id="apiKeyInput" placeholder="gsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
+      <button class="btn btn-primary" onclick="saveApiKey()">Simpan</button>
+    </div>
+    <div class="api-note">
+      🔗 Dapatkan API key gratis di <a href="https://console.groq.com" target="_blank">console.groq.com</a> →
+      Login → Create API Key → Copy & paste di sini. Key hanya tersimpan di browser kamu (localStorage).
+    </div>
+    <div id="apiStatus" class="api-status" style="display:none"></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('bias', this)">
+      <span class="tab-icon">📊</span>Daily Bias
+    </button>
+    <button class="tab" onclick="switchTab('review', this)">
+      <span class="tab-icon">📝</span>Trade Review
+    </button>
+    <button class="tab" onclick="switchTab('chat', this)">
+      <span class="tab-icon">🧠</span>ICT Chatbot
+    </button>
+  </div>
+
+  <!-- PANEL 1: Daily Bias Analyzer -->
+  <div class="panel active" id="panel-bias">
+    <div class="card">
+      <div class="card-label">📊 Daily Bias Analyzer — AI-Powered</div>
+
+      <div class="bias-grid">
+        <div class="bias-field">
+          <label>Pair / Instrumen</label>
+          <select id="biasSymbol">
+            <option>XAUUSD (Gold)</option>
+            <option>EURUSD</option>
+            <option>GBPUSD</option>
+            <option>USDJPY</option>
+            <option>BTCUSD</option>
+            <option>NASDAQ (NQ)</option>
+            <option>SP500 (ES)</option>
+          </select>
+        </div>
+        <div class="bias-field">
+          <label>Sesi Trading</label>
+          <select id="biasSession">
+            <option>Asia Session</option>
+            <option>London Session</option>
+            <option>New York AM</option>
+            <option>New York PM</option>
+            <option>London/NY Overlap</option>
+          </select>
+        </div>
+        <div class="bias-field">
+          <label>HTF Trend (Weekly)</label>
+          <select id="biasTrend">
+            <option>Bullish (Higher Highs)</option>
+            <option>Bearish (Lower Lows)</option>
+            <option>Ranging / Consolidasi</option>
+            <option>Premium ke Discount</option>
+            <option>Discount ke Premium</option>
+          </select>
+        </div>
+        <div class="bias-field">
+          <label>Market Structure (Daily)</label>
+          <select id="biasStructure">
+            <option>BOS Bullish - CHoCH ke atas</option>
+            <option>BOS Bearish - CHoCH ke bawah</option>
+            <option>CISD Bullish</option>
+            <option>CISD Bearish</option>
+            <option>Ranging - No clear structure</option>
+          </select>
+        </div>
+        <div class="bias-field">
+          <label>Kondisi DXY (Dollar Index)</label>
+          <select id="biasDXY">
+            <option>DXY Bullish - pasar riskoff</option>
+            <option>DXY Bearish - pasar riskon</option>
+            <option>DXY ranging</option>
+            <option>DXY di Premium zone</option>
+            <option>DXY di Discount zone</option>
+          </select>
+        </div>
+        <div class="bias-field">
+          <label>Key Level Terdekat</label>
+          <input type="text" id="biasLevel" placeholder="cth: 2350 OB, 1.0850 FVG" />
+        </div>
+        <div class="bias-field full-width">
+          <label>Konteks Tambahan (opsional)</label>
+          <textarea id="biasContext" placeholder="cth: NFP besok, pasar sudah 3 hari turun, ada gap di H4..."></textarea>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" style="width:100%" onclick="analyzeBias()">
+        🤖 Generate AI Daily Bias
+      </button>
+
+      <!-- Bias Meters -->
+      <div id="biasMeterContainer" style="display:none; margin-top:16px;">
+        <div class="bias-meter">
+          <span class="bias-meter-label">BULLISH</span>
+          <div class="bias-bar"><div class="bias-bar-fill bullish" id="bullishBar"></div></div>
+          <span class="bias-value win" id="bullishVal">--</span>
+        </div>
+        <div class="bias-meter">
+          <span class="bias-meter-label">BEARISH</span>
+          <div class="bias-bar"><div class="bias-bar-fill bearish" id="bearishBar"></div></div>
+          <span class="bias-value loss" id="bearishVal">--</span>
+        </div>
+      </div>
+
+      <div class="ai-response" id="biasResponse">
+        <div class="ai-response-header">
+          <div class="ai-avatar">🤖</div>
+          <span>ICT Forge AI · Bias Analysis</span>
+          <small id="biasTime"></small>
+        </div>
+        <div class="ai-content" id="biasContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 2: Trade Journal AI Review -->
+  <div class="panel" id="panel-review">
+    <div class="card">
+      <div class="card-label">📝 Trade Journal AI Review</div>
+
+      <div class="trade-grid" style="margin-bottom:16px;">
+        <div class="bias-field">
+          <label>Pair</label>
+          <input type="text" id="rvPair" placeholder="XAUUSD" />
+        </div>
+        <div class="bias-field">
+          <label>Direction</label>
+          <select id="rvDirection">
+            <option>LONG / BUY</option>
+            <option>SHORT / SELL</option>
+          </select>
+        </div>
+        <div class="bias-field">
+          <label>Result</label>
+          <select id="rvResult">
+            <option>WIN ✅</option>
+            <option>LOSS ❌</option>
+            <option>BE / Breakeven</option>
+          </select>
+        </div>
+        <div class="bias-field">
+          <label>Entry Price</label>
+          <input type="number" id="rvEntry" placeholder="2350.50" />
+        </div>
+        <div class="bias-field">
+          <label>Stop Loss</label>
+          <input type="number" id="rvSL" placeholder="2340.00" />
+        </div>
+        <div class="bias-field">
+          <label>Take Profit</label>
+          <input type="number" id="rvTP" placeholder="2380.00" />
+        </div>
+      </div>
+
+      <div class="bias-field" style="margin-bottom:12px;">
+        <label>Alasan Entry (ICT Confluences)</label>
+        <textarea id="rvReason" placeholder="cth: Entry di OB H1, ada FVG di atas, liquidity sweep di bawah, aligned dengan HTF bullish bias..."></textarea>
+      </div>
+
+      <div class="bias-field" style="margin-bottom:16px;">
+        <label>Catatan / Apa yang terjadi</label>
+        <textarea id="rvNotes" placeholder="cth: SL kena sebelum naik, terlalu dini entry, harusnya tunggu retest..."></textarea>
+      </div>
+
+      <button class="btn btn-primary" style="width:100%" onclick="reviewTrade()">
+        🤖 AI Review Trade Ini
+      </button>
+
+      <div class="ai-response" id="reviewResponse">
+        <div class="ai-response-header">
+          <div class="ai-avatar">🤖</div>
+          <span>ICT Forge AI · Trade Review</span>
+          <small id="reviewTime"></small>
+        </div>
+        <div class="ai-content" id="reviewContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 3: ICT/SMC Chatbot -->
+  <div class="panel" id="panel-chat">
+    <div class="card">
+      <div class="card-label">🧠 ICT / SMC Chatbot — Tanya Apa Saja</div>
+
+      <div class="quick-questions">
+        <button class="quick-q" onclick="sendQuick(this)">Apa itu Order Block?</button>
+        <button class="quick-q" onclick="sendQuick(this)">Jelaskan Fair Value Gap</button>
+        <button class="quick-q" onclick="sendQuick(this)">Cara entry di liquidity sweep?</button>
+        <button class="quick-q" onclick="sendQuick(this)">Apa beda BOS dan CHoCH?</button>
+        <button class="quick-q" onclick="sendQuick(this)">Jelaskan konsep Premium & Discount</button>
+        <button class="quick-q" onclick="sendQuick(this)">Apa itu CISD?</button>
+        <button class="quick-q" onclick="sendQuick(this)">Cara baca COT data?</button>
+        <button class="quick-q" onclick="sendQuick(this)">SMT Divergence itu apa?</button>
+      </div>
+
+      <div class="chat-window" id="chatWindow">
+        <div class="chat-msg ai">
+          <div class="chat-msg-header">
+            <div class="chat-msg-avatar ai">🤖</div>
+            <span class="chat-msg-name ai">ICT Forge AI</span>
+          </div>
+          <div class="chat-msg-bubble">Halo Trader! 👋
+
+Saya adalah AI assistant yang khusus memahami konsep <strong>Inner Circle Trader (ICT)</strong> dan <strong>Smart Money Concepts (SMC)</strong>.
+
+Tanya saya apa saja tentang:
+• Order Blocks, FVG, Liquidity Sweeps
+• Market Structure (BOS, CHoCH, CISD)
+• Premium & Discount Zones
+• Trading Psychology & Risk Management
+• Cara baca DXY & Correlations
+• Dan konsep ICT lainnya!
+
+Klik pertanyaan cepat di atas atau ketik pertanyaanmu 👇</div>
+        </div>
+      </div>
+
+      <div class="chat-input-row">
+        <textarea class="chat-input" id="chatInput" placeholder="Tanya seputar ICT/SMC..." onkeydown="handleChatKey(event)"></textarea>
+        <button class="btn btn-primary" onclick="sendChat()" style="padding: 12px 16px;">
+          Send ↑
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ============ STATE ============
+let apiKey = localStorage.getItem('ictforge_groq_key') || '';
+let chatHistory = [];
+
+// ============ INIT ============
+window.onload = () => {
+  if (apiKey) {
+    document.getElementById('apiKeyInput').value = apiKey;
+    showApiStatus('connected', '✓ API Key tersimpan');
+  }
+};
+
+// ============ API KEY ============
+function saveApiKey() {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if (!key.startsWith('gsk_') || key.length < 20) {
+    showApiStatus('error', '✗ Format key tidak valid (harus dimulai dengan gsk_)');
+    showToast('API key tidak valid!', 'error');
+    return;
+  }
+  apiKey = key;
+  localStorage.setItem('ictforge_groq_key', key);
+  showApiStatus('connected', '✓ API Key tersimpan — Siap digunakan!');
+  showToast('API Key berhasil disimpan ✓', 'success');
+}
+
+function showApiStatus(type, msg) {
+  const el = document.getElementById('apiStatus');
+  el.style.display = 'inline-flex';
+  el.className = 'api-status ' + type;
+  el.innerHTML = (type === 'connected' ? '🟢' : '🔴') + ' ' + msg;
+}
+
+// ============ GROQ API CALL ============
+async function callGroq(messages, systemPrompt) {
+  if (!apiKey) {
+    showToast('Masukkan Groq API Key dulu!', 'error');
+    throw new Error('No API key');
+  }
+
+  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    },
+    body: JSON.stringify({
+      model: 'llama3-70b-8192',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        ...messages
+      ],
+      temperature: 0.7,
+      max_tokens: 1024
+    })
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.error?.message || 'API Error');
+  }
+
+  const data = await response.json();
+  return data.choices[0].message.content;
+}
+
+// ============ TAB SWITCHING ============
+function switchTab(tab, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ============ DAILY BIAS ANALYZER ============
+async function analyzeBias() {
+  const symbol   = document.getElementById('biasSymbol').value;
+  const session  = document.getElementById('biasSession').value;
+  const trend    = document.getElementById('biasTrend').value;
+  const structure = document.getElementById('biasStructure').value;
+  const dxy      = document.getElementById('biasDXY').value;
+  const level    = document.getElementById('biasLevel').value || 'tidak disebutkan';
+  const context  = document.getElementById('biasContext').value || 'tidak ada';
+
+  const btn = event.target;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Menganalisis...';
+
+  const biasResp = document.getElementById('biasResponse');
+  const biasContent = document.getElementById('biasContent');
+  biasResp.classList.add('visible');
+  biasContent.innerHTML = '<div class="loading-text"><span class="spinner"></span> AI sedang menganalisis kondisi pasar...</div>';
+  document.getElementById('biasTime').textContent = new Date().toLocaleTimeString('id-ID');
+
+  const systemPrompt = `Kamu adalah analis trading profesional yang ahli dalam metodologi ICT (Inner Circle Trader) dan Smart Money Concepts (SMC). Kamu berbicara dalam Bahasa Indonesia yang jelas dan terstruktur. 
+
+Ketika menganalisis bias harian:
+1. Selalu referensikan konsep ICT: OB (Order Block), FVG (Fair Value Gap), Liquidity, BOS/CHoCH, Premium/Discount, CISD
+2. Berikan analisis yang konkret dan actionable
+3. Sertakan level-level kunci yang perlu diperhatikan
+4. Berikan probabilitas bias (Bullish X% / Bearish Y%)
+5. Jelaskan setup ideal untuk sesi yang disebutkan
+Format respons: gunakan emoji untuk readability, pisahkan dengan baris kosong antar section.`;
+
+  const userMsg = `Tolong analisis daily bias untuk kondisi berikut:
+
+📊 INSTRUMEN: ${symbol}
+⏰ SESI: ${session}
+📈 HTF TREND (Weekly): ${trend}
+🏗️ MARKET STRUCTURE (Daily): ${structure}
+💵 KONDISI DXY: ${dxy}
+🎯 KEY LEVEL TERDEKAT: ${level}
+📝 KONTEKS TAMBAHAN: ${context}
+
+Berikan analisis daily bias yang komprehensif menggunakan framework ICT/SMC. Sertakan:
+1. Kesimpulan bias (Bullish/Bearish/Neutral) dengan persentase probabilitas
+2. Reasoning berdasarkan data di atas
+3. POI (Point of Interest) yang ideal untuk entry
+4. Skenario bullish dan bearish
+5. Rekomendasi untuk sesi ini`;
+
+  try {
+    const result = await callGroq([{ role: 'user', content: userMsg }], systemPrompt);
+    biasContent.textContent = result;
+
+    // Extract bias percentages from response
+    const bullishMatch = result.match(/bullish[:\s]+(\d+)%/i);
+    const bearishMatch = result.match(/bearish[:\s]+(\d+)%/i);
+    if (bullishMatch || bearishMatch) {
+      const bPct = bullishMatch ? parseInt(bullishMatch[1]) : (100 - parseInt(bearishMatch[1]));
+      const sPct = 100 - bPct;
+      document.getElementById('biasMeterContainer').style.display = 'block';
+      setTimeout(() => {
+        document.getElementById('bullishBar').style.width = bPct + '%';
+        document.getElementById('bearishBar').style.width = sPct + '%';
+        document.getElementById('bullishVal').textContent = bPct + '% Bull';
+        document.getElementById('bearishVal').textContent = sPct + '% Bear';
+      }, 100);
+    } else {
+      document.getElementById('biasMeterContainer').style.display = 'none';
+    }
+    showToast('Bias analysis selesai!', 'success');
+  } catch (err) {
+    biasContent.textContent = '❌ Error: ' + err.message + '\n\nPastikan API key Groq kamu valid dan coba lagi.';
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '🤖 Generate AI Daily Bias';
+}
+
+// ============ TRADE REVIEW ============
+async function reviewTrade() {
+  const pair      = document.getElementById('rvPair').value || 'N/A';
+  const direction = document.getElementById('rvDirection').value;
+  const result    = document.getElementById('rvResult').value;
+  const entry     = document.getElementById('rvEntry').value || 'N/A';
+  const sl        = document.getElementById('rvSL').value || 'N/A';
+  const tp        = document.getElementById('rvTP').value || 'N/A';
+  const reason    = document.getElementById('rvReason').value || 'tidak disebutkan';
+  const notes     = document.getElementById('rvNotes').value || 'tidak ada';
+
+  // Calculate RR
+  let rrText = 'N/A';
+  if (entry && sl && tp) {
+    const risk = Math.abs(parseFloat(entry) - parseFloat(sl));
+    const reward = Math.abs(parseFloat(tp) - parseFloat(entry));
+    if (risk > 0) rrText = '1:' + (reward / risk).toFixed(2);
+  }
+
+  const btn = event.target;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> AI sedang review...';
+
+  const reviewResp = document.getElementById('reviewResponse');
+  const reviewContent = document.getElementById('reviewContent');
+  reviewResp.classList.add('visible');
+  reviewContent.innerHTML = '<div class="loading-text"><span class="spinner"></span> AI menganalisis trade kamu...</div>';
+  document.getElementById('reviewTime').textContent = new Date().toLocaleTimeString('id-ID');
+
+  const systemPrompt = `Kamu adalah mentor trading ICT/SMC yang berpengalaman. Tugasmu adalah mereview trade journal dari seorang trader dan memberikan feedback yang konstruktif, jujur, dan edukatif dalam Bahasa Indonesia.
+
+Fokus pada:
+- Kualitas setup berdasarkan ICT framework
+- Risk management dan R:R ratio
+- Kesalahan yang perlu diperbaiki
+- Hal positif yang perlu dipertahankan
+- Saran konkret untuk perbaikan ke depan
+
+Bersikap seperti mentor yang jujur tapi supportif. Gunakan bahasa yang mudah dipahami. Format dengan poin-poin yang jelas.`;
+
+  const userMsg = `Tolong review trade berikut:
+
+🔖 PAIR: ${pair}
+📍 DIRECTION: ${direction}
+📊 RESULT: ${result}
+💰 ENTRY: ${entry}
+🛑 STOP LOSS: ${sl}
+🎯 TAKE PROFIT: ${tp}
+⚖️ R:R RATIO: ${rrText}
+
+📝 ALASAN ENTRY:
+${reason}
+
+💬 CATATAN/KEJADIAN:
+${notes}
+
+Berikan review yang komprehensif mencakup:
+1. Penilaian kualitas setup (score 1-10)
+2. Analisis R:R dan money management
+3. Kelebihan dari trade ini
+4. Kekurangan dan area perbaikan
+5. Lesson learned dan saran untuk ke depan`;
+
+  try {
+    const res = await callGroq([{ role: 'user', content: userMsg }], systemPrompt);
+    reviewContent.textContent = res;
+    showToast('Trade review selesai!', 'success');
+  } catch (err) {
+    reviewContent.textContent = '❌ Error: ' + err.message;
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '🤖 AI Review Trade Ini';
+}
+
+// ============ CHATBOT ============
+function sendQuick(btn) {
+  document.getElementById('chatInput').value = btn.textContent;
+  sendChat();
+}
+
+function handleChatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendChat();
+  }
+}
+
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+
+  appendChatMsg('user', '👤', msg);
+  chatHistory.push({ role: 'user', content: msg });
+
+  const thinkingId = 'thinking_' + Date.now();
+  appendChatMsg('ai', '🤖', '<div class="loading-text"><span class="spinner"></span> Sedang berpikir...</div>', thinkingId);
+
+  const systemPrompt = `Kamu adalah AI expert dalam metodologi ICT (Inner Circle Trader) oleh Michael J. Huddleston dan Smart Money Concepts (SMC). Kamu menjawab dalam Bahasa Indonesia yang jelas dan mudah dipahami.
+
+Pengetahuanmu mencakup:
+- Order Blocks (OB): Bullish OB, Bearish OB, Breaker Block, Mitigation Block
+- Fair Value Gaps (FVG/IFVG): cara identifikasi dan trading dengan FVG
+- Liquidity: Equal Highs/Lows, Buy/Sell Side Liquidity, Liquidity Sweep
+- Market Structure: BOS (Break of Structure), CHoCH (Change of Character), CISD
+- Premium & Discount: 50% level, Fibonacci, Optimal Trade Entry (OTE)
+- Sessions: Killzones, London/NY, Asia range
+- DXY correlation dan Intermarket Analysis
+- SMT Divergence (Smart Money Tool)
+- COT (Commitment of Traders) Data
+- Risk Management: R:R, position sizing, trade management
+- Trading Psychology
+
+Berikan jawaban yang terstruktur, gunakan contoh praktis, dan selalu hubungkan dengan framework ICT/SMC. Gunakan emoji untuk membantu readability.`;
+
+  try {
+    const histToSend = chatHistory.slice(-8); // last 4 exchanges
+    const res = await callGroq(histToSend, systemPrompt);
+    chatHistory.push({ role: 'assistant', content: res });
+
+    const thinkEl = document.getElementById(thinkingId);
+    if (thinkEl) {
+      thinkEl.querySelector('.chat-msg-bubble').textContent = res;
+    }
+  } catch (err) {
+    const thinkEl = document.getElementById(thinkingId);
+    if (thinkEl) {
+      thinkEl.querySelector('.chat-msg-bubble').textContent = '❌ Error: ' + err.message + '\n\nCek API key kamu.';
+    }
+  }
+
+  scrollChat();
+}
+
+function appendChatMsg(role, avatar, content, id) {
+  const win = document.getElementById('chatWindow');
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + role;
+  if (id) div.id = id;
+  div.innerHTML = `
+    <div class="chat-msg-header">
+      <div class="chat-msg-avatar ${role}">${avatar}</div>
+      <span class="chat-msg-name ${role}">${role === 'ai' ? 'ICT Forge AI' : 'Kamu'}</span>
+    </div>
+    <div class="chat-msg-bubble">${content}</div>
+  `;
+  win.appendChild(div);
+  scrollChat();
+}
+
+function scrollChat() {
+  const win = document.getElementById('chatWindow');
+  win.scrollTop = win.scrollHeight;
+}
+
+// ============ TOAST ============
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
