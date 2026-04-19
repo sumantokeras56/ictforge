@@ -256,21 +256,21 @@ Klik pertanyaan cepat di atas atau ketik pertanyaanmu 👇</div>
 
 </div>
 
-<!-- Toast -->
-<div class="toast" id="toast"></div>
-
 <script>
 // ============ STATE ============
 let apiKey = localStorage.getItem('ictforge_groq_key') || '';
 let chatHistory = [];
 
 // ============ INIT ============
-window.onload = () => {
+function initICTForgeAI() {
+  apiKey = localStorage.getItem('ictforge_groq_key') || '';
+  chatHistory = [];
   if (apiKey) {
-    document.getElementById('apiKeyInput').value = apiKey;
+    var input = document.getElementById('apiKeyInput');
+    if (input) input.value = apiKey;
     showApiStatus('connected', '✓ API Key tersimpan');
   }
-};
+}
 
 // ============ API KEY ============
 function saveApiKey() {
