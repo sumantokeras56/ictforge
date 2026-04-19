@@ -5194,9 +5194,25 @@
         <button class="action-btn" onclick="clearJournal()" style="flex:1;min-width:130px;background:rgba(231,76,60,0.08);border-color:var(--red);color:var(--red);">🗑 Hapus Semua</button>
       </div>
 
-      <!-- TABEL JOURNAL -->
-      <div style="overflow-x:auto;">
-        <table class="journal-table" id="journalTable">
+      <!-- ── TAB SWITCHER ──────────────────────────────────────── -->
+      <div style="display:flex;gap:0;margin-bottom:0;border:1px solid var(--border);border-radius:8px 8px 0 0;overflow:hidden;">
+        <button id="jTabTrades" onclick="switchJournalTab('trades')"
+          style="flex:1;padding:10px 8px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;
+          background:var(--gold);color:#000;border:none;cursor:pointer;font-weight:700;
+          border-right:1px solid var(--border);transition:all 0.2s;">
+          📒 TRADES
+        </button>
+        <button id="jTabTools" onclick="switchJournalTab('tools')"
+          style="flex:1;padding:10px 8px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;
+          background:var(--dark3);color:var(--text-muted);border:none;cursor:pointer;
+          transition:all 0.2s;">
+          ⚙️ TOOLS
+        </button>
+      </div>
+
+      <!-- ── TAB: TRADES ───────────────────────────────────────── -->
+      <div id="jPanelTrades" style="border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;overflow-x:auto;margin-bottom:24px;">
+        <table class="journal-table" id="journalTable" style="margin:0;border-radius:0;">
           <thead>
             <tr>
               <th>Tanggal</th><th>Symbol</th><th>Side</th><th>Entry</th>
@@ -5208,9 +5224,12 @@
         </table>
       </div>
 
+      <!-- ── TAB: TOOLS ────────────────────────────────────────── -->
+      <div id="jPanelTools" style="display:none;border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;padding:20px;margin-bottom:24px;">
+
       <!-- COMPOUNDING CALCULATOR -->
-      <div style="margin-top:32px;">
-        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:16px;border-top:1px solid var(--border);padding-top:20px;">
+      <div style="margin-bottom:28px;">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:16px;">
           🧮 COMPOUNDING CALCULATOR — FUNDED ACCOUNT PLANNER
         </div>
 
@@ -5317,7 +5336,7 @@
       <!-- ══════════════════════════════════════════════════════════
            PAPAN PAYOUT — MOTIVATOR BOARD
       ══════════════════════════════════════════════════════════ -->
-      <div id="payoutBoard" style="margin-top:32px;border-top:1px solid var(--border);padding-top:24px;">
+      <div id="payoutBoard" style="margin-top:28px;border-top:1px solid var(--border);padding-top:24px;">
         <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;">
           <span>🏆 PAPAN PAYOUT — TARGET MOTIVATOR</span>
           <button onclick="togglePayoutEdit()" id="payoutEditBtn"
@@ -5463,8 +5482,10 @@
         </div>
       </div>
 
+      </div><!-- /#jPanelTools -->
+
     </div><!-- /.journal-wrapper -->
-  </div>
+  </div><!-- /.section#tab-journal -->
 
   <!-- EQUITY MODAL -->
   <div id="equityModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px);overflow-y:auto;">

@@ -393,6 +393,34 @@ function drawEquityCurve() {
   drawEquityCurveOnCanvas(document.getElementById('equityCanvas'), 160);
 }
 
+// ── JOURNAL TAB SWITCHER (Trades / Tools) ─────────────────────────
+function switchJournalTab(tab) {
+  var isTradesTab = tab === 'trades';
+  var panelTrades = document.getElementById('jPanelTrades');
+  var panelTools  = document.getElementById('jPanelTools');
+  var btnTrades   = document.getElementById('jTabTrades');
+  var btnTools    = document.getElementById('jTabTools');
+
+  if (!panelTrades || !panelTools) return;
+
+  panelTrades.style.display = isTradesTab ? '' : 'none';
+  panelTools.style.display  = isTradesTab ? 'none' : '';
+
+  if (btnTrades) {
+    btnTrades.style.background  = isTradesTab ? 'var(--gold)' : 'var(--dark3)';
+    btnTrades.style.color       = isTradesTab ? '#000' : 'var(--text-muted)';
+    btnTrades.style.fontWeight  = isTradesTab ? '700' : '400';
+  }
+  if (btnTools) {
+    btnTools.style.background   = !isTradesTab ? 'var(--gold)' : 'var(--dark3)';
+    btnTools.style.color        = !isTradesTab ? '#000' : 'var(--text-muted)';
+    btnTools.style.fontWeight   = !isTradesTab ? '700' : '400';
+  }
+
+  // Save last active tab to localStorage
+  try { localStorage.setItem('ictforge_journal_tab', tab); } catch(e) {}
+}
+
 // ── COMPOUNDING ───────────────────────────────────────────────────
 function switchCompTab(tab) {
   var isSimple = tab === 'simple';
@@ -557,7 +585,16 @@ function runFundedCalculator() {
 // ── INIT ──────────────────────────────────────────────────────────
 function _initJournalEnhanced() {
   initMistakeTagSelector();
-  console.log('[Journal Enhanced v2.1] Loaded — mistake tags clickable');
+
+  // Restore last active journal tab
+  try {
+    var lastTab = localStorage.getItem('ictforge_journal_tab') || 'trades';
+    switchJournalTab(lastTab);
+  } catch(e) {
+    switchJournalTab('trades');
+  }
+
+  console.log('[Journal Enhanced v2.2] Loaded — tab switcher + mistake tags');
 }
 
 if (document.readyState === 'loading') {
