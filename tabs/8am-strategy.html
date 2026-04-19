@@ -3,347 +3,212 @@
   ════════════════════════════════════════════ -->
   <div class="section" id="tab-8am-strategy">
     <div class="section-header">
-     <div class="section-number">
-      07
-     </div>
+     <div class="section-number">07</div>
      <div class="section-title-wrap">
-      <h2>
-       8AM Strategy
-      </h2>
-      <p>
-       Reversal Setup: 1H Candle 08:00 NY + MSS M5 Confirmation
-      </p>
+      <h2>8AM Strategy</h2>
+      <p>Reversal Setup: 1H Candle 08:00 NY + Fractal MSS M4 Confirmation</p>
      </div>
     </div>
+
+    <!-- OVERVIEW -->
     <div style="background:rgba(201,168,76,0.06);border:1px solid var(--gold-dim);border-radius:8px;padding:24px;margin-top:20px;">
      <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:8px;">
       Setup Overview
      </div>
      <p style="font-size:14px;color:var(--text-dim);line-height:1.7;">
-      Strategy ini adalah
-      <strong style="color:var(--gold-glow)">
-       reversal strategy
-      </strong>
-      yang memanfaatkan candle 1H pukul
-      <strong style="color:var(--text)">
-       08:00 NY (UTC–4)
-      </strong>
-      sebagai level referensi kunci. Candle ini sering membentuk range yang nantinya di-sweep oleh manipulasi institusional sebelum true reversal dimulai. Konfirmasi entry menggunakan
-      <strong style="color:var(--gold-glow)">
-       MSS M5
-      </strong>
-      (Market Structure Shift di timeframe 5 menit). Target minimal RR adalah
-      <strong style="color:var(--gold-glow)">
-       1:2
-      </strong>
-      .
+      Strategy ini memanfaatkan candle 1H pukul
+      <strong style="color:var(--text)">08:00 NY (UTC–4)</strong>
+      sebagai level referensi kunci harian. Range candle ini sering menjadi zona manipulasi institusional sebelum
+      <strong style="color:var(--gold-glow)">true reversal</strong> dimulai.
+      Eksekusi dilakukan di timeframe
+      <strong style="color:var(--gold-glow)">4 menit (M4)</strong>
+      dengan konfirmasi
+      <strong style="color:var(--gold-glow)">indikator Fraktal</strong>
+      untuk menentukan High/Low yang valid, kemudian tunggu
+      <strong style="color:var(--gold-glow)">MSS (Market Structure Shift)</strong>
+      sebagai trigger entry.
      </p>
      <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;">
-      <span class="pill pill-gold">
-       08:00 NY = 12:00 UTC+0 = 19:00 WIB
-      </span>
-      <span class="pill pill-green">
-       Reversal Strategy
-      </span>
-      <span class="pill pill-blue">
-       MSS M5 Trigger
-      </span>
-      <span class="pill pill-orange">
-       Min RR 1:2
-      </span>
+      <span class="pill pill-gold">08:00 NY = 12:00 UTC = 19:00 WIB</span>
+      <span class="pill pill-green">Reversal Strategy</span>
+      <span class="pill pill-blue">Fractal + MSS M4</span>
+      <span class="pill pill-orange">Min RR 1:2</span>
      </div>
     </div>
+
+    <!-- 4-STEP FRAMEWORK -->
     <div class="strategy-banner">
-     <h3>
-      The 4-Step Framework
-     </h3>
+     <h3>The 4-Step Framework</h3>
      <div class="strategy-steps">
+
       <div class="strategy-step">
-       <div class="step-num">
-        1
-       </div>
+       <div class="step-num">1</div>
        <div class="step-text">
-        <strong>
-         Tandai High &amp; Low Candle 1H pukul 08:00 NY.
-        </strong>
-        Setiap hari, gambar garis horizontal di High dan Low dari candle 1 jam yang open pada pukul 08:00 NY (UTC–4). Setara dengan 12:00 UTC / 19:00 WIB. Ini menjadi level referensi utama hari tersebut — equivalen dengan AMD range yang akan di-manipulasi.
+        <strong>Tandai High &amp; Low Candle 1H pukul 08:00 NY.</strong>
+        Setiap hari, gambar garis horizontal di High dan Low dari satu candle 1H yang open pukul 08:00 NY. Ini adalah level referensi utama — range yang akan menjadi target manipulasi institusional. Simpan level ini di chart sampai hari itu selesai.
        </div>
       </div>
+
       <div class="strategy-step">
-       <div class="step-num">
-        2
-       </div>
+       <div class="step-num">2</div>
        <div class="step-text">
-        <strong>
-         Tunggu salah satu level ditembus (Sweep / False Break).
-        </strong>
-        Setelah candle 08:00 NY close, perhatikan apakah harga akan sweep High atau Low candle tersebut. Sweep valid = harga menembus level dengan impulsif tapi
-        <em>
-         tidak close
-        </em>
-        secara signifikan di luar level (atau berbalik cepat). Ini adalah fase Manipulasi AMD. Bullish bias → sweep Low lebih dulu. Bearish bias → sweep High lebih dulu.
+        <strong>Turun ke M4 — Gunakan Indikator Fraktal.</strong>
+        Aktifkan indikator Fraktal di timeframe M4. Fraktal menandai High dan Low yang terkonfirmasi secara struktural, sehingga kamu tidak perlu menebak-nebak swing mana yang valid.
+        Tunggu salah satu level 8AM (High atau Low) diambil duluan oleh harga.
+        <ul style="margin-top:8px;padding-left:16px;">
+         <li>Jika <strong style="color:var(--gold)">High</strong> diambil duluan → cari <strong>Low terdekat di bawah area High</strong> yang memiliki <strong style="color:var(--blue)">Fraktal Low</strong> terkonfirmasi</li>
+         <li>Jika <strong style="color:var(--gold)">Low</strong> diambil duluan → cari <strong>High terdekat di atas area Low</strong> yang memiliki <strong style="color:var(--blue)">Fraktal High</strong> terkonfirmasi</li>
+        </ul>
+        Level fraktal itu yang menjadi penjaga struktur. Tidak perlu mencari-cari swing mana yang "benar" — fraktal sudah memastikannya.
        </div>
       </div>
+
       <div class="strategy-step">
-       <div class="step-num">
-        3
-       </div>
+       <div class="step-num">3</div>
        <div class="step-text">
-        <strong>
-         Konfirmasi MSS di M5 setelah sweep.
-        </strong>
-        Setelah sweep terjadi, turun ke timeframe M5. Tunggu Market Structure Shift (MSS) — perubahan struktur yang dikonfirmasi oleh
-        <strong>
-         displacement candle impulsif
-        </strong>
-        berlawanan dari arah sweep. MSS M5 adalah trigger entry utama. Entry dilakukan di FVG atau OB yang terbentuk oleh displacement candle MSS.
+        <strong>Tunggu MSS — Level Fraktal Ditembus.</strong>
+        MSS terkonfirmasi ketika harga menembus level fraktal yang sudah ditandai di Step 2.
+        <ul style="margin-top:8px;padding-left:16px;">
+         <li><strong style="color:var(--red)">High diambil → Fraktal Low ditembus ke bawah</strong> → MSS Bearish ✓</li>
+         <li><strong style="color:var(--green)">Low diambil → Fraktal High ditembus ke atas</strong> → MSS Bullish ✓</li>
+        </ul>
+        Tembusan fraktal ini menandakan momentum berbalik — harga kemungkinan besar akan melanjutkan ke arah MSS.
        </div>
       </div>
+
       <div class="strategy-step">
-       <div class="step-num">
-        4
-       </div>
+       <div class="step-num">4</div>
        <div class="step-text">
-        <strong>
-         Eksekusi dengan minimal RR 1:2.
-        </strong>
-        SL ditempatkan di atas/bawah extreme sweep candle (di luar liquidity zone). TP minimal 2x jarak SL. Target ideal: PDH/PDL, FVG HTF, OB HTF, atau likuiditas harian berikutnya. Jika tidak ada ruang 1:2,
-        <strong>
-         jangan trade.
-        </strong>
+        <strong>Entry — Di Dalam Range MSS.</strong>
+        Setelah MSS terkonfirmasi, entry bisa dilakukan dengan dua cara:
+        <ul style="margin-top:8px;padding-left:16px;">
+         <li><strong>Aggressive:</strong> Entry langsung saat candle MSS close menembus fraktal</li>
+         <li><strong>Conservative:</strong> Tunggu retrace balik ke area level fraktal yang baru ditembus</li>
+        </ul>
+        Entry bisa menggunakan model apapun yang ada di dalam range MSS —
+        <strong style="color:var(--gold)">CISD, Breaker Block, FVG, OB, atau struktur M4 lainnya</strong>
+        — asal masih dalam range antara titik MSS dan level fraktal yang ditembus.
        </div>
       </div>
+
      </div>
     </div>
+
+    <!-- DETAIL CARDS -->
     <div class="cards-grid" style="margin-top:20px;">
+
      <div class="card">
-      <div class="card-label">
-       Step 1 Detail
-      </div>
-      <h3>
-       8AM 1H Candle Marking
-      </h3>
-      <p>
-       Candle yang dimaksud adalah candle 1H yang open pada pukul
-       <strong style="color:var(--gold)">
-        08:00 NY (UTC–4)
-       </strong>
-       . Gunakan garis solid untuk High dan Low-nya. Level ini berfungsi sebagai:
+      <div class="card-label">Step 1 Detail</div>
+      <h3>8AM 1H Candle Marking</h3>
+      <p>Candle yang dimaksud adalah candle 1H yang open pukul
+       <strong style="color:var(--gold)">08:00 NY (UTC–4)</strong>.
+       Cukup satu candle, satu timeframe. Gambar dua garis horizontal:
       </p>
       <ul>
-       <li>
-        Referensi range manipulasi harian
-       </li>
-       <li>
-        Level likuiditas yang akan di-sweep
-       </li>
-       <li>
-        Konfirmasi direction setelah sweep
-       </li>
-       <li>
-        Area tidak trade (inside candle)
-       </li>
+       <li>Garis atas = <strong>High</strong> candle 08:00</li>
+       <li>Garis bawah = <strong>Low</strong> candle 08:00</li>
+       <li>Range ini = zona likuiditas yang akan jadi target manipulasi</li>
+       <li>Di dalam range = zona tidak trade</li>
       </ul>
      </div>
+
      <div class="card highlight">
-      <div class="card-label">
-       Step 2 Detail — Kritis
-      </div>
-      <h3>
-       Membaca Sweep dengan Benar
-      </h3>
-      <p>
-       Bukan setiap break = sweep. Sweep yang valid:
-      </p>
+      <div class="card-label">Step 2 Detail — Kritis</div>
+      <h3>Membaca Fraktal dengan Benar</h3>
+      <p>Fraktal terkonfirmasi = 5 candle dengan pola tertentu (Williams Fractal). Tidak semua High/Low adalah fraktal — fraktal sudah menyaringnya secara otomatis.</p>
       <ul>
-       <li>
-        Harga melampaui level dengan impulsif
-       </li>
-       <li>
-        Candle close kembali di dalam range atau berbalik cepat
-       </li>
-       <li>
-        Wick panjang yang menembus level
-       </li>
-       <li>
-        Volume spike / displacement candle
-       </li>
-       <li>
-        Terjadi dalam window NY KZ (08:30–11:00 NY)
-       </li>
+       <li>Pasang indikator <strong style="color:var(--blue)">Williams Fractal</strong> di M4</li>
+       <li>Fraktal Up (▲) = High yang valid secara struktural</li>
+       <li>Fraktal Down (▼) = Low yang valid secara struktural</li>
+       <li>Cari fraktal yang <strong>terdekat</strong> dari level yang diambil</li>
+       <li>Fraktal yang belum terkonfirmasi (candle terakhir masih terbuka) = tidak valid</li>
       </ul>
       <div class="info-row" style="margin-top:10px;">
-       <span class="pill pill-red">
-        Fake Break = True Sweep
-       </span>
+       <span class="pill pill-blue">Williams Fractal M4</span>
+       <span class="pill pill-gold">Terdekat dari level yang diambil</span>
       </div>
      </div>
+
      <div class="card highlight">
-      <div class="card-label">
-       Step 3 Detail — Entry Trigger
-      </div>
-      <h3>
-       MSS M5 Konfirmasi
-      </h3>
-      <p>
-       Di M5, setelah sweep terjadi, cari:
-      </p>
+      <div class="card-label">Step 3 Detail — Entry Trigger</div>
+      <h3>MSS via Fractal Break</h3>
+      <p>Skenario lengkap:</p>
       <ul>
-       <li>
-        CHoCH pertama sebagai sinyal awal
-       </li>
-       <li>
-        Displacement candle yang kuat (body &gt; 60%)
-       </li>
-       <li>
-        BOS M5 sebagai konfirmasi MSS
-       </li>
-       <li>
-        FVG terbentuk oleh displacement → zona entry utama
-       </li>
-       <li>
-        OB sebelum displacement → alternatif entry
-       </li>
+       <li><strong style="color:var(--red)">Bearish:</strong> High 8AM diambil → temukan Fraktal Low terdekat → harga tembus Fraktal Low → MSS Bearish terkonfirmasi</li>
+       <li><strong style="color:var(--green)">Bullish:</strong> Low 8AM diambil → temukan Fraktal High terdekat → harga tembus Fraktal High → MSS Bullish terkonfirmasi</li>
+       <li>Tembusan fraktal = perubahan struktur, bukan sekadar wick</li>
+       <li>Candle close di luar fraktal = konfirmasi lebih kuat</li>
       </ul>
       <div class="info-row" style="margin-top:10px;">
-       <span class="pill pill-gold">
-        Entry di FVG atau OB M5
-       </span>
+       <span class="pill pill-red">Fraktal Low Tembus = Bearish MSS</span>
+       <span class="pill pill-green">Fraktal High Tembus = Bullish MSS</span>
       </div>
      </div>
+
      <div class="card">
-      <div class="card-label">
-       Step 4 Detail
-      </div>
-      <h3>
-       SL / TP Placement
-      </h3>
+      <div class="card-label">Step 4 Detail — Entry Model</div>
+      <h3>Entry dalam Range MSS</h3>
+      <p>Setelah MSS terkonfirmasi, gunakan model entry apapun yang valid <strong>di dalam range MSS</strong>:</p>
       <ul>
-       <li>
-        <strong style="color:var(--red)">
-         SL:
-        </strong>
-        2–5 pip di luar swing extreme sweep candle
-       </li>
-       <li>
-        <strong style="color:var(--green)">
-         TP1:
-        </strong>
-        1:1 RR (partial close 50%)
-       </li>
-       <li>
-        <strong style="color:var(--green)">
-         TP2:
-        </strong>
-        1:2 RR minimum (sisa posisi)
-       </li>
-       <li>
-        <strong style="color:var(--green)">
-         TP3:
-        </strong>
-        PDH/PDL/FVG HTF/OB HTF
-       </li>
-       <li>
-        Move SL ke breakeven setelah TP1 tercapai
-       </li>
+       <li><strong style="color:var(--gold)">CISD</strong> — Change in State of Delivery</li>
+       <li><strong style="color:var(--gold)">Breaker Block</strong> — eks OB yang di-break</li>
+       <li><strong style="color:var(--gold)">FVG</strong> — Fair Value Gap / Imbalance</li>
+       <li><strong style="color:var(--gold)">OB</strong> — Order Block terdekat</li>
+       <li><strong style="color:var(--gold)">Retrace ke level fraktal</strong> — re-test dari luar</li>
       </ul>
+      <p style="margin-top:8px;font-size:12px;color:var(--text-muted);">SL di luar extreme swing MSS. TP minimal 1:2 — target PDH/PDL, FVG HTF, OB HTF.</p>
       <div class="info-row" style="margin-top:10px;">
-       <span class="pill pill-green">
-        Min RR 1:2
-       </span>
-       <span class="pill pill-gold">
-        Partials Allowed
-       </span>
+       <span class="pill pill-green">Min RR 1:2</span>
+       <span class="pill pill-gold">Partials Allowed</span>
       </div>
      </div>
+
     </div>
+
+    <!-- RULES TABLE -->
     <div style="background:var(--dark3);border:1px solid var(--border);border-radius:6px;padding:24px;margin-top:20px;">
      <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--gold-dim);text-transform:uppercase;margin-bottom:16px;">
       Rules &amp; Invalidasi Setup
      </div>
      <table class="amd-table">
       <thead>
-       <tr>
-        <th>
-         Kondisi
-        </th>
-        <th>
-         Aksi
-        </th>
-       </tr>
+       <tr><th>Kondisi</th><th>Aksi</th></tr>
       </thead>
       <tbody>
        <tr>
-        <td>
-         Sweep terjadi tapi tidak ada MSS M5
-        </td>
-        <td>
-         <span class="pill pill-red">
-          Tidak Trade — Tunggu Konfirmasi
-         </span>
-        </td>
+        <td>Level 8AM diambil tapi tidak ada Fraktal terdekat yang terkonfirmasi</td>
+        <td><span class="pill pill-red">Tunggu — Fraktal belum valid</span></td>
        </tr>
        <tr>
-        <td>
-         MSS M5 terjadi tapi RR tidak mencapai 1:2
-        </td>
-        <td>
-         <span class="pill pill-red">
-          Skip Setup
-         </span>
-        </td>
+        <td>Fraktal ditembus tapi tidak ada model entry (CISD/FVG/OB) di dalam range</td>
+        <td><span class="pill pill-orange">Tunggu Retrace atau Skip</span></td>
        </tr>
        <tr>
-        <td>
-         Kedua sisi High DAN Low sudah di-sweep
-        </td>
-        <td>
-         <span class="pill pill-orange">
-          Hati-hati — Konfirmasi HTF Bias
-         </span>
-        </td>
+        <td>MSS terkonfirmasi + ada model entry dalam range + Kill Zone aktif</td>
+        <td><span class="pill pill-green">Full Conviction Entry</span></td>
        </tr>
        <tr>
-        <td>
-         Harga sudah bergerak jauh setelah MSS
-        </td>
-        <td>
-         <span class="pill pill-red">
-          Late Entry — Tidak Trade
-         </span>
-        </td>
+        <td>MSS terkonfirmasi tapi RR tidak mencapai 1:2</td>
+        <td><span class="pill pill-red">Skip Setup</span></td>
        </tr>
        <tr>
-        <td>
-         Tidak ada Kill Zone (trade jam random)
-        </td>
-        <td>
-         <span class="pill pill-red">
-          Tidak Valid
-         </span>
-        </td>
+        <td>Kedua sisi High DAN Low sudah diambil</td>
+        <td><span class="pill pill-orange">Hati-hati — Konfirmasi HTF Bias dulu</span></td>
        </tr>
        <tr>
-        <td>
-         HTF Bias berlawanan dengan arah sweep + MSS
-        </td>
-        <td>
-         <span class="pill pill-orange">
-          Caution — Lower Conviction
-         </span>
-        </td>
+        <td>Harga sudah jauh dari fraktal setelah MSS (late entry)</td>
+        <td><span class="pill pill-red">Tidak Trade — Tunggu Setup Berikutnya</span></td>
        </tr>
        <tr>
-        <td>
-         Sweep + MSS M5 + sesuai HTF Bias + Kill Zone
-        </td>
-        <td>
-         <span class="pill pill-green">
-          Full Conviction Entry
-         </span>
-        </td>
+        <td>HTF Bias berlawanan dengan arah MSS</td>
+        <td><span class="pill pill-orange">Caution — Lower Conviction</span></td>
+       </tr>
+       <tr>
+        <td>Di luar Kill Zone NY (08:30–11:00 NY)</td>
+        <td><span class="pill pill-red">Tidak Valid</span></td>
        </tr>
       </tbody>
      </table>
     </div>
-   </div>
+
+  </div>
