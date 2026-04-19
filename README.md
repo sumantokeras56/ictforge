@@ -13,7 +13,7 @@
 
 **Smart Money Concepts Trading Platform**
 
-[![Version](https://img.shields.io/badge/version-1.0.0-C9A84C?style=for-the-badge&logo=github)](https://github.com/sumantokeras56/ictforge)
+[![Version](https://img.shields.io/badge/version-2.0.0-C9A84C?style=for-the-badge&logo=github)](https://github.com/sumantokeras56/ictforge)
 [![License](https://img.shields.io/badge/license-MIT-2ECC71?style=for-the-badge)](LICENSE)
 [![PWA](https://img.shields.io/badge/PWA-ready-5B9BD5?style=for-the-badge&logo=googlechrome)](https://sumantokeras56.github.io/ictforge/)
 [![Deploy](https://img.shields.io/badge/deploy-GitHub%20Pages-181717?style=for-the-badge&logo=github)](https://sumantokeras56.github.io/ictforge/)
@@ -22,6 +22,16 @@
 <br/>
 
 > **ICT Forge** adalah platform trading all-in-one berbasis **Inner Circle Trader (ICT)** dan **Smart Money Concepts (SMC)** — dibangun sepenuhnya di atas teknologi web modern tanpa backend, 100% berjalan di browser, dan dapat diinstall sebagai aplikasi native di perangkat apapun.
+
+<br/>
+
+> ### 💻 TIPS TAMPILAN TERBAIK
+> **Untuk pengalaman terbaik saat mengakses via HP**, aktifkan **"Tampilan Desktop / Desktop Site"** di browser kamu sebelum membuka aplikasi. Caranya:
+> - **Chrome Android:** Menu ⋮ → centang **"Situs desktop"**
+> - **Brave Android:** Menu ⋮ → centang **"Desktop site"**
+> - **Safari iOS:** Tap ikon **AA** di address bar → **"Minta Situs Desktop"**
+>
+> Tampilan akan jauh lebih rapi, tabel terbaca sempurna, dan semua fitur berfungsi optimal.
 
 <br/>
 
@@ -65,8 +75,10 @@
 | Harus online untuk mengakses materi | Offline-first PWA — berjalan tanpa internet |
 | Kalkulator lot size manual & rawan error | Kalkulator otomatis multi-instrumen |
 | Tidak ada reminder saat Kill Zone buka | Notifikasi real-time berbasis browser |
-| Sulit track performa trading sendiri | Trading Journal terintegrasi |
+| Sulit track performa trading sendiri | Trading Journal v2.0 terintegrasi |
 | Bingung baca data COT CFTC | COT Analyzer dengan penjelasan bahasa awam |
+| Tidak bisa evaluasi psikologi trading | Mistake Tagging & analisis bulanan |
+| Susah proyeksi pertumbuhan akun | Compounding Calculator + Funded Planner |
 
 <br/>
 
@@ -142,13 +154,16 @@ Fitur: RR Ratio visual bar, verdict ICT (minimum 1:2), animasi loading step-by-s
 </td>
 <td width="50%">
 
-### 📝 Trading Journal
+### 📝 Trading Journal v2.0 ✨ NEW
 - Catat trade: Symbol, Side, Entry, SL, TP, R:R, Result, Catatan
 - **Statistik otomatis** — Total trades, Win Rate, Profit Factor, Avg R:R
-- **Entry Trade Cepat** via sidebar modal
-- Export ke **CSV** untuk analisis di Excel/Google Sheets
+- **Equity Curve visualizer** — grafik R-multiple interaktif + modal detail
+- **📸 Screenshot Integration** — upload/drag-drop chart screenshot ke setiap trade
+- **🏷️ Mistake Tagging** — label FOMO, Revenge, Late Entry, dll + analisis bulanan
+- **🧮 Compounding Calculator** — proyeksi pertumbuhan akun dengan grafik
+- **🏦 Funded Account Planner** — kalkulasi payout + consistency rules checker
+- Export ke **CSV & PDF**, Backup/Restore **JSON**
 - 100% privat — tersimpan di `localStorage` perangkat kamu
-- Filter & sort by date, symbol, result
 
 </td>
 </tr>
@@ -221,7 +236,7 @@ ICT Forge — Zero-dependency, Vanilla Web Stack
 | **Notifications** | Web Notifications API + Service Worker Push |
 | **Timezone** | `Intl.DateTimeFormat` — akurat DST otomatis |
 | **Live News** | [newsdata.io](https://newsdata.io) REST API |
-| **AI Integration** | [Anthropic Claude API](https://www.anthropic.com) (claude-sonnet) |
+| **AI Integration** | [Anthropic Claude API](https://www.anthropic.com) (claude-sonnet-4) |
 | **Fonts** | Google Fonts — Bebas Neue, DM Mono, Inter |
 | **Hosting** | GitHub Pages |
 | **CI/CD** | GitHub Actions (auto-deploy on push) |
@@ -246,6 +261,11 @@ ICT Forge — Zero-dependency, Vanilla Web Stack
 │                    ┌────────▼────────┐                      │
 │                    │ realtime-news.js│                      │
 │                    │ (News Engine)   │                      │
+│                    └────────┬────────┘                      │
+│                             │                               │
+│                    ┌────────▼────────┐                      │
+│                    │journal-enhanced │                      │
+│                    │.js (Journal v2) │                      │
 │                    └────────┬────────┘                      │
 │                             │                               │
 │         ┌───────────────────┼───────────────────┐          │
@@ -309,13 +329,49 @@ ICT Forge — Zero-dependency, Vanilla Web Stack
 ### 🧮 Formula Kalkulator
 
 ```
-Risk Amount  = Account Balance × (Risk % / 100)
+Risk Amount   = Account Balance × (Risk % / 100)
 Position Size = Risk Amount / (SL Distance × Pip/Tick Value)
-Potential Profit = Position Size × TP Distance × Pip/Tick Value
-R:R Ratio    = TP Distance / SL Distance
+Pot. Profit   = Position Size × TP Distance × Pip/Tick Value
+R:R Ratio     = TP Distance / SL Distance
 ```
 
 **Minimum R:R ICT:** ≥ 1:2 (Valid), ≥ 1:3 (Excellent)
+
+### 📝 Trading Journal v2.0 — Panduan Fitur Baru
+
+#### 📸 Screenshot Integration
+Upload tangkapan layar chart langsung ke setiap trade:
+1. Klik zona **drag & drop** di form atau pilih file
+2. Mendukung JPG, PNG, WEBP — maks **2MB per gambar**
+3. Thumbnail muncul di tabel journal, klik untuk fullscreen
+4. Screenshot tersimpan as base64 di localStorage
+
+#### 🏷️ Mistake Tagging
+Label kesalahan psikologi per trade:
+
+| Tag | Arti |
+|---|---|
+| 😱 FOMO | Entry karena takut ketinggalan |
+| 🔥 Revenge Trade | Trading setelah loss untuk balas dendam |
+| ⚠️ Over-Leverage | Ukuran lot melebihi risk plan |
+| ⏰ Late Entry | Entry setelah momentum habis |
+| 📋 No Plan | Tidak ada rencana trade sebelum entry |
+| 🚫 Moved SL | Memindahkan stop loss dari posisi awal |
+| 🏃 Early Exit | Keluar sebelum TP tercapai tanpa alasan valid |
+| 📰 Traded News | Entry saat high impact news |
+| 🤯 Tilt/Emotions | Trading dalam kondisi emosi tidak stabil |
+| ✅ Perfect Execution | Eksekusi sempurna sesuai rencana |
+
+Ringkasan tag bulan ini tampil otomatis di bagian atas journal.
+
+#### 🧮 Compounding Calculator
+**Simple Growth:** Proyeksikan pertumbuhan modal dengan grafik visual. Pilih periode mingguan/bulanan, lihat kapan modal 2×, 5×, 10×.
+
+**Funded Account Planner:** Kalkulasi khusus prop firm:
+- Pilih ukuran akun ($10K–$200K) dan profit split (80–90%)
+- Set target profit % dan estimasi gain bulanan
+- Aktifkan **Consistency Rules** — max daily loss, max overall drawdown, consistency rule
+- Lihat proyeksi payout & scaling plan 1–12 bulan
 
 ### ⚡ PineScript AI Error Fixer
 
@@ -347,6 +403,14 @@ User Input (kode error)
 
 ## 🚀 Instalasi & Deployment
 
+### ⚠️ Tips Sebelum Mulai
+
+> **Pengguna HP:** Untuk tampilan terbaik, aktifkan **"Tampilan Desktop / Desktop Site"** di browser kamu sebelum membuka ICT Forge.
+> - **Chrome/Brave Android:** Menu ⋮ → centang **"Situs desktop"** / **"Desktop site"**
+> - **Safari iOS:** Tap ikon **AA** di address bar → **"Minta Situs Desktop"**
+>
+> Tanpa mode desktop, beberapa tabel dan komponen UI mungkin tampil terpotong di layar kecil.
+
 ### Akses Langsung (Tanpa Instalasi)
 
 Buka browser dan kunjungi:
@@ -357,16 +421,18 @@ https://sumantokeras56.github.io/ictforge/
 ### Install sebagai PWA (Direkomendasikan)
 
 **Android (Chrome):**
-1. Buka URL di atas di Chrome
-2. Tap menu ⋮ → **"Tambahkan ke layar utama"**
-3. Tap **Install**
-4. ICT Forge siap dipakai seperti app native
+1. Aktifkan Desktop Site terlebih dahulu
+2. Buka URL di atas di Chrome
+3. Tap menu ⋮ → **"Tambahkan ke layar utama"**
+4. Tap **Install**
+5. ICT Forge siap dipakai seperti app native
 
 **iOS (Safari):**
-1. Buka URL di Safari
-2. Tap ikon **Share** (□↑)
-3. Scroll → **"Tambahkan ke Layar Utama"**
-4. Tap **Tambahkan**
+1. Aktifkan Desktop Site terlebih dahulu
+2. Buka URL di Safari
+3. Tap ikon **Share** (□↑)
+4. Scroll → **"Tambahkan ke Layar Utama"**
+5. Tap **Tambahkan**
 
 **Desktop (Chrome/Edge):**
 1. Klik ikon install (📲) di address bar
@@ -405,13 +471,14 @@ ictforge/
 │
 ├── index.html              # App Shell utama — semua tab & UI
 ├── main.js                 # Core logic — clock, calculator, journal, COT, PineScript
+├── journal-enhanced.js     # Journal v2.0 — screenshot, equity curve, mistake tags, compounding
 ├── style.css               # Global styling, dark theme, komponen UI
 ├── realtime-news.js        # Live news engine via newsdata.io API
 ├── sw.js                   # Service Worker — cache, offline, push notifications
 ├── manifest.json           # PWA manifest — icon, shortcuts, display mode
 ├── offline.html            # Halaman fallback saat offline
 │
-├── 📚 Materi ICT (HTML Fragments)
+├── 📚 Materi ICT (tabs/)
 │   ├── overview.html       # Pengenalan SMC & ICT methodology
 │   ├── structure.html      # Market Structure — BOS, ChoCh
 │   ├── liquidity.html      # Liquidity — BSL, SSL, EQH/EQL
@@ -423,12 +490,12 @@ ictforge/
 │   ├── indicators.html     # Panduan Indikator TradingView
 │   └── glossary.html       # Kamus istilah ICT/SMC
 │
-├── 🛠 Tools (HTML Fragments)
+├── 🛠 Tools (tabs/)
 │   ├── calculator.html     # Position size & RR calculator UI
 │   ├── calendar.html       # Economic calendar UI
 │   ├── checklist.html      # Trade checklist UI
 │   ├── cot.html            # COT analyzer UI
-│   ├── journal.html        # Trading journal UI
+│   ├── journal.html        # Trading journal UI (legacy fragment)
 │   └── pinescript.html     # PineScript tools UI
 │
 └── README.md               # Dokumentasi ini
@@ -474,22 +541,26 @@ Edit `main.js` — tambahkan ke array `HIGH_IMPACT_NEWS`:
 
 ## 🗺 Roadmap
 
-### v1.1.0 — Q2 2026
-- [ ] Grafik equity curve di Trading Journal
-- [ ] Filter journal berdasarkan instrumen & tanggal range
-- [ ] Dark/Light mode toggle yang persistent
-- [ ] Export Journal ke PDF (lengkap dengan statistik)
+### v2.0.0 — Q2 2026 ✅ RELEASED
+- [x] Equity Curve visualizer di Trading Journal
+- [x] Screenshot integration per trade
+- [x] Mistake Tagging + analisis psikologi bulanan
+- [x] Compounding Calculator (Simple Growth + Funded Account Planner)
+- [x] Consistency Rules checker untuk prop firm
+- [x] Export Journal ke PDF (lengkap dengan statistik)
+- [x] Backup & Restore Journal via JSON
 
-### v1.2.0 — Q3 2026
+### v2.1.0 — Q3 2026
+- [ ] Filter journal berdasarkan instrumen, tanggal range & tag
+- [ ] Dark/Light mode toggle yang persistent
 - [ ] Multi-account Journal support
 - [ ] Backtesting simple (win rate per setup)
-- [ ] Integrasi TradingView webhook alerts
-- [ ] PWA installable shortcut per fitur
 
-### v2.0.0 — Q4 2026
+### v3.0.0 — Q4 2026
 - [ ] Backend ringan (Cloudflare Workers) untuk API key security
 - [ ] Sync data antar perangkat (optional)
 - [ ] AI Daily Bias — analisis otomatis berbasis COT + Price Action
+- [ ] Integrasi TradingView webhook alerts
 - [ ] Support multi-bahasa (EN/ID)
 
 <br/>
@@ -586,6 +657,6 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 
 <br/>
 
-© 2026 Rizky Saputra · ICT Forge v1.0 · MIT License
+© 2026 Rizky Saputra · ICT Forge v2.0 · MIT License
 
 </div>
