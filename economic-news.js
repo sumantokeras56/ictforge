@@ -142,8 +142,34 @@
             ${article.link?`<span style="color:#9A9890;font-size:10px;margin-left:3px;cursor:pointer;" onclick="window.open('${esc(article.link)}','_blank')">↗</span>`:''}
           </div>
           ${desc?`<div style="font-size:11px;color:#9A9890;line-height:1.55;margin-bottom:8px;">${desc}</div>`:''}
-          <div style="display:flex;flex-wrap:wrap;gap:4px;">
+          <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;">
             ${topics.map(t=>`<span style="font-size:8px;padding:1px 6px;border-radius:2px;background:rgba(201,168,76,0.08);color:#C9A84C;border:1px solid rgba(201,168,76,0.15);">${t.toUpperCase()}</span>`).join('')}
+          </div>
+          <button id="enb-${uid}" onclick="_econNewsToggle('${uid}')" style="width:100%;padding:7px 12px;border-radius:4px;cursor:pointer;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;font-weight:700;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);color:#C9A84C;text-align:center;">
+            📊 Lihat Analisis Lengkap ▾
+          </button>
+          <div id="enr-${uid}" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);">
+            <div style="font-size:8px;letter-spacing:1.5px;color:#C9A84C;font-weight:700;margin-bottom:4px;">📊 IMPACT SCORE</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+              <div style="flex:1;height:4px;background:rgba(255,255,255,0.08);border-radius:2px;">
+                <div style="width:${Math.round((score/15)*100)}%;height:100%;background:${sColor};border-radius:2px;"></div>
+              </div>
+              <span style="font-size:10px;font-weight:700;color:${sColor};">${score}/15 · ${strength}</span>
+            </div>
+            <div style="font-size:8px;letter-spacing:1.5px;color:#C9A84C;font-weight:700;margin-bottom:4px;">📋 ANALISIS</div>
+            <div style="font-size:11px;color:#9A9890;line-height:1.65;margin-bottom:10px;">
+              ${sentiment==='bullish'?`Perkembangan ini berpotensi memberikan tekanan <strong style="color:#2ECC71;">positif</strong>`:sentiment==='bearish'?`Perkembangan ini berpotensi memberikan tekanan <strong style="color:#E74C3C;">negatif</strong>`:`Dampak langsung relatif <strong style="color:#9A9890;">terbatas</strong>`}
+              pada ${country==='id'?'IDR & Pasar Indonesia':'USD & Pasar AS'}.
+              ${topics.includes('rates')?'Perubahan suku bunga memiliki transmisi langsung ke seluruh kelas aset.':topics.includes('inflation')?'Tekanan inflasi berdampak langsung pada ekspektasi kebijakan bank sentral.':topics.includes('labor')?'Data ketenagakerjaan mempengaruhi ekspektasi kebijakan moneter.':topics.includes('trade')?'Dinamika perdagangan mempengaruhi neraca pembayaran dan nilai tukar.':'Perlu observasi lanjutan untuk mengkonfirmasi dampak ke pasar finansial.'}
+            </div>
+            <div style="font-size:8px;letter-spacing:1.5px;color:#C9A84C;font-weight:700;margin-bottom:6px;">🎯 POSITIONING</div>
+            <div style="font-size:11px;color:#9A9890;line-height:1.6;margin-bottom:10px;">
+              ${score>=10?`<span style="color:#2ECC71;font-weight:600;">✅ TRADEABLE</span> — ${strength} catalyst. Konfirmasi dengan price action sebelum entry.`:`<span style="color:#9A9890;">⚠️ NOT TRADEABLE</span> — Gunakan sebagai konteks bias, bukan trigger entry.`}
+            </div>
+            <div style="background:${impact.bg};border:1px solid ${impact.border};border-radius:4px;padding:8px 10px;">
+              <div style="font-size:8px;letter-spacing:1.5px;color:#C9A84C;font-weight:700;margin-bottom:3px;">🏁 BOTTOM LINE</div>
+              <div style="font-size:11px;color:${impact.label};font-weight:700;">${strength} ${sentiment==='bullish'?'Bullish':sentiment==='bearish'?'Bearish':'Neutral'} bias pada ${country==='id'?'IDR':'USD'}. ${score>=10?'Ada potensi trade signal.':'Konteks bias jangka menengah.'}</div>
+            </div>
           </div>
         </div>`;
       });
