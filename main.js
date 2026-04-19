@@ -33,6 +33,10 @@ window.addEventListener('unhandledrejection', function(e) {
 
 
 
+// ── SIDEBAR STATE (deklarasi di atas — dipakai oleh showTab & toggleSidebar) ──
+let _sidebarOpen = false;
+const _isDesktop = () => window.innerWidth >= 900;
+
 function escapeHtml(str) {
   return String(str)
     .replace(/&/g, '&amp;')
@@ -2361,7 +2365,12 @@ function updateAsiaKZCard() {
 }
 
 // ── INIT ──────────────────────────────────────────────────────────
-setInstrument('forex', document.querySelector('.inst-btn.active'));
+// setInstrument butuh DOM dari tab Calculator yang lazy-loaded.
+// Dipanggil di sini hanya jika elemen sudah ada (non-lazy fallback).
+// Untuk lazy-load, dipanggil oleh _onTabLoaded('calculator') di index.html.
+if (document.getElementById('instrName')) {
+  setInstrument('forex', document.querySelector('.inst-btn.active'));
+}
 document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
 const firstTab = document.getElementById('tab-foundational');
 if (firstTab) firstTab.classList.add('active');
@@ -2381,8 +2390,8 @@ setTimeout(updateAsiaKZCard, 500);
 // ── TRANSLATIONS ─────────────────────────────────────────────────
 
 // ── SIDEBAR TOGGLE ────────────────────────────────────────────────
-let _sidebarOpen = false;
-const _isDesktop = () => window.innerWidth >= 900;
+// (deklarasi dipindah ke atas file — lihat bagian awal main.js)
+
 
 function toggleSidebar() {
   _sidebarOpen = !_sidebarOpen;
