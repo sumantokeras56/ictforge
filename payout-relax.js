@@ -420,16 +420,17 @@ document.addEventListener('visibilitychange', async function() {
 });
 
 // ══════════════════════════════════════════════════════════════════
-//  4. BOX BREATHING
+//  4. BOX BREATHING — smooth rAF engine
 // ══════════════════════════════════════════════════════════════════
 
-var _breathInterval   = null;
+var _breathRAF        = null;
 var _breathRunning    = false;
-var _breathPhase      = 0; // 0=inhale,1=hold,2=exhale,3=hold
-var _breathTick       = 0;
+var _breathPhase      = 0;   // 0=inhale 1=hold 2=exhale 3=hold
 var _breathCycle      = 0;
+var _breathPhaseStart = 0;   // performance.now() timestamp
 var BREATH_TOTAL_CYCLES = 4;
 var BREATH_PHASE_SEC    = 4;
+var CIRC                = 553; // 2 * PI * 88
 
 var _breathPhases = [
   { label: 'TARIK NAPAS', color: '#5B9BD5', instruction: 'Hirup udara perlahan<br>melalui hidung...' },
@@ -438,10 +439,25 @@ var _breathPhases = [
   { label: 'TAHAN',       color: '#9B59B6', instruction: 'Tahan. Bersiap<br>untuk siklus berikutnya...' }
 ];
 
+// Cache DOM elements once
+var _bEls = {};
+function _breathEls() {
+  if (!_bEls.count) {
+    _bEls.count  = document.getElementById('breathCountdown');
+    _bEls.label  = document.getElementById('breathPhaseLabel');
+    _bEls.circ   = document.getElementById('breathCircle');
+    _bEls.cycle  = document.getElementById('breathCycleLabel');
+    _bEls.inst   = document.getElementById('breathInstruction');
+    _bEls.btn    = document.getElementById('breathStartBtn');
+  }
+  return _bEls;
+}
+
 function openBreathingModal() {
   var modal = document.getElementById('breathingModal');
   if (modal) {
     modal.style.display = 'flex';
+    _bEls = {}; // reset cache so elements are re-fetched
     resetBreathing();
   }
 }
@@ -454,84 +470,105 @@ function closeBreathingModal() {
 
 function resetBreathing() {
   stopBreathing();
-  _breathPhase = 0; _breathTick = 0; _breathCycle = 0;
-  updateBreathUI(BREATH_PHASE_SEC, 0, 'SIAP', '#5B9BD5', 0);
-  var inst = document.getElementById('breathInstruction');
-  if (inst) inst.innerHTML = 'Temukan posisi nyaman.<br>Kita akan bernapas bersama.';
-  var startBtn = document.getElementById('breathStartBtn');
-  if (startBtn) { startBtn.textContent = '▶ MULAI'; startBtn.onclick = startBreathing; }
-  var cycleEl = document.getElementById('breathCycleLabel');
-  if (cycleEl) cycleEl.textContent = 'Siklus 1 / ' + BREATH_TOTAL_CYCLES;
+  _breathPhase = 0; _breathCycle = 0; _breathPhaseStart = 0;
+  var e = _breathEls();
+  if (e.count) { e.count.style.transition = 'none'; e.count.textContent = BREATH_PHASE_SEC; }
+  if (e.label) { e.label.textContent = 'SIAP'; e.label.style.color = '#5B9BD5'; }
+  if (e.circ)  {
+    e.circ.style.transition = 'none';
+    e.circ.style.stroke = '#5B9BD5';
+    e.circ.style.strokeDashoffset = CIRC;
+  }
+  if (e.cycle) e.cycle.textContent = 'Siklus 1 / ' + BREATH_TOTAL_CYCLES;
+  if (e.inst)  e.inst.innerHTML = 'Temukan posisi nyaman.<br>Kita akan bernapas bersama.';
+  if (e.btn)   { e.btn.textContent = '▶ MULAI'; e.btn.onclick = startBreathing; }
 }
 
-function updateBreathUI(countdown, phasePct, label, color, cycle) {
-  var countEl = document.getElementById('breathCountdown');
-  var labelEl = document.getElementById('breathPhaseLabel');
-  var circEl  = document.getElementById('breathCircle');
-  var cycleEl = document.getElementById('breathCycleLabel');
-  var CIRC    = 553; // 2 * PI * 88
+function _breathTick(timestamp) {
+  if (!_breathRunning) return;
 
-  if (countEl) countEl.textContent = countdown;
-  if (labelEl) { labelEl.textContent = label; labelEl.style.color = color; }
-  if (circEl)  {
-    circEl.style.stroke = color;
-    circEl.style.strokeDashoffset = CIRC - (CIRC * phasePct);
+  if (!_breathPhaseStart) _breathPhaseStart = timestamp;
+  var elapsed  = (timestamp - _breathPhaseStart) / 1000; // seconds
+  var phaseDur = BREATH_PHASE_SEC;
+  var progress = Math.min(elapsed / phaseDur, 1);
+
+  var phase    = _breathPhases[_breathPhase];
+  var secsLeft = Math.ceil(phaseDur - elapsed);
+  if (secsLeft < 1) secsLeft = 1;
+
+  var e = _breathEls();
+
+  // Smooth circle — always real-time
+  if (e.circ) {
+    e.circ.style.transition = 'stroke 0.4s ease';
+    e.circ.style.stroke = phase.color;
+    e.circ.style.strokeDashoffset = CIRC - (CIRC * progress);
   }
-  if (cycleEl) cycleEl.textContent = 'Siklus ' + (cycle + 1) + ' / ' + BREATH_TOTAL_CYCLES;
+
+  // Countdown number — update only when digit changes, with fade
+  if (e.count && e.count.textContent !== String(secsLeft)) {
+    e.count.style.transition = 'opacity 0.15s ease';
+    e.count.style.opacity = '0';
+    var _secsLeft = secsLeft;
+    setTimeout(function() {
+      if (e.count) {
+        e.count.textContent = _secsLeft;
+        e.count.style.opacity = '1';
+      }
+    }, 150);
+  }
+
+  // Label & instruction
+  if (e.label) { e.label.textContent = phase.label; e.label.style.color = phase.color; }
+  if (e.inst)  e.inst.innerHTML = phase.instruction;
+  if (e.cycle) e.cycle.textContent = 'Siklus ' + (_breathCycle + 1) + ' / ' + BREATH_TOTAL_CYCLES;
+
+  // Phase complete?
+  if (progress >= 1) {
+    _breathPhase++;
+    _breathPhaseStart = timestamp;
+
+    if (_breathPhase >= 4) {
+      _breathPhase = 0;
+      _breathCycle++;
+      if (_breathCycle >= BREATH_TOTAL_CYCLES) {
+        stopBreathing();
+        finishBreathing();
+        return;
+      }
+    }
+  }
+
+  _breathRAF = requestAnimationFrame(_breathTick);
 }
 
 function startBreathing() {
   if (_breathRunning) return;
-  _breathRunning = true;
-  _breathPhase = 0; _breathTick = 0;
+  _breathRunning    = true;
+  _breathPhaseStart = 0;
 
-  var startBtn = document.getElementById('breathStartBtn');
-  if (startBtn) { startBtn.textContent = '⏹ STOP'; startBtn.onclick = function() { resetBreathing(); }; }
+  var e = _breathEls();
+  if (e.btn) { e.btn.textContent = '⏹ STOP'; e.btn.onclick = function() { resetBreathing(); }; }
 
-  _breathInterval = setInterval(function() {
-    _breathTick++;
-
-    var phase    = _breathPhases[_breathPhase];
-    var pct      = _breathTick / BREATH_PHASE_SEC;
-    var countdown = BREATH_PHASE_SEC - _breathTick + 1;
-
-    updateBreathUI(countdown, pct, phase.label, phase.color, _breathCycle);
-    var inst = document.getElementById('breathInstruction');
-    if (inst) inst.innerHTML = phase.instruction;
-
-    if (_breathTick >= BREATH_PHASE_SEC) {
-      _breathTick = 0;
-      _breathPhase++;
-      if (_breathPhase >= 4) {
-        _breathPhase = 0;
-        _breathCycle++;
-        if (_breathCycle >= BREATH_TOTAL_CYCLES) {
-          stopBreathing();
-          finishBreathing();
-          return;
-        }
-      }
-    }
-  }, 1000);
+  _breathRAF = requestAnimationFrame(_breathTick);
 }
 
 function stopBreathing() {
   _breathRunning = false;
-  if (_breathInterval) { clearInterval(_breathInterval); _breathInterval = null; }
+  if (_breathRAF) { cancelAnimationFrame(_breathRAF); _breathRAF = null; }
 }
 
 function finishBreathing() {
-  var countEl = document.getElementById('breathCountdown');
-  var labelEl = document.getElementById('breathPhaseLabel');
-  var inst    = document.getElementById('breathInstruction');
-  var circEl  = document.getElementById('breathCircle');
-  var startBtn = document.getElementById('breathStartBtn');
-
-  if (countEl) countEl.textContent = '✓';
-  if (labelEl) { labelEl.textContent = 'SELESAI'; labelEl.style.color = '#2ECC71'; }
-  if (circEl)  { circEl.style.stroke = '#2ECC71'; circEl.style.strokeDashoffset = '0'; }
-  if (inst)    inst.innerHTML = 'Bagus sekali! 🎉<br>Kamu sudah lebih tenang.<br>Jangan buka trade dulu — tunggu<br>5 menit sebelum keputusan berikutnya.';
-  if (startBtn) { startBtn.textContent = '🔄 ULANGI'; startBtn.onclick = function() { resetBreathing(); startBreathing(); }; }
+  var e = _breathEls();
+  if (e.count) { e.count.style.transition = 'none'; e.count.textContent = '✓'; }
+  if (e.label) { e.label.textContent = 'SELESAI'; e.label.style.color = '#2ECC71'; }
+  if (e.circ)  {
+    e.circ.style.transition = 'stroke-dashoffset 0.8s ease, stroke 0.4s ease';
+    e.circ.style.stroke = '#2ECC71';
+    e.circ.style.strokeDashoffset = '0';
+  }
+  if (e.inst)  e.inst.innerHTML = 'Bagus sekali! 🎉<br>Kamu sudah lebih tenang.<br>Jangan buka trade dulu — tunggu<br>5 menit sebelum keputusan berikutnya.';
+  if (e.btn)   { e.btn.textContent = '🔄 ULANGI'; e.btn.onclick = function() { resetBreathing(); startBreathing(); }; }
 }
 
 // ── AUTO-TRIGGER BREATHING SETELAH LOSS ──────────────────────────
