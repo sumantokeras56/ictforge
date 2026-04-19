@@ -3,7 +3,7 @@
 // ✅ Fix: data user (journal, checklist, COT) TIDAK terhapus saat update
 // ✅ Fix: path /ictforge/, tambah JS/CSS ke precache
 
-const CACHE_VERSION  = 'ictforge-v8';
+const CACHE_VERSION  = 'ictforge-v9';
 const FONT_CACHE     = 'ictforge-fonts-v1';
 
 // ─── PENTING: localStorage user TIDAK terdampak oleh cache apapun.
