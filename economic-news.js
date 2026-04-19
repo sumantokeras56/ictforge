@@ -321,10 +321,20 @@
       const qID=encodeURIComponent('ekonomi OR inflasi OR "Bank Indonesia" OR rupiah OR IHSG OR investasi OR ekspor OR impor OR "suku bunga" OR BBM');
       const urlUS = `https://newsdata.io/api/1/news?apikey=${NEWSDATA_API_KEY}&q=${qUS}&country=us&language=en&category=business&size=5`;
       const urlID = `https://newsdata.io/api/1/news?apikey=${NEWSDATA_API_KEY}&q=${qID}&country=id&language=id,en&category=business&size=5`;
-      const proxyBase = 'https://api.allorigins.win/raw?url=';
+      async function fetchWithProxy(url) {
+        const proxies = [
+          u => `https://corsproxy.io/?${encodeURIComponent(u)}`,
+          u => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
+          u => u
+        ];
+        for (const p of proxies) {
+          try { const r = await fetch(p(url)); if (r.ok) return r; } catch(e) { continue; }
+        }
+        throw new Error('Semua proxy gagal');
+      }
       const [rUS,rID]=await Promise.allSettled([
-        fetch(proxyBase + encodeURIComponent(urlUS)),
-        fetch(proxyBase + encodeURIComponent(urlID))
+        fetchWithProxy(urlUS),
+        fetchWithProxy(urlID)
       ]);
       let articles=[];
       if(rUS.status==='fulfilled'&&rUS.value.ok){const d=await rUS.value.json();if(d.status==='success'&&Array.isArray(d.results))d.results.forEach(a=>{a._country='us';articles.push(a);});}
