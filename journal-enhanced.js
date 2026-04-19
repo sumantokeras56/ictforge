@@ -12,6 +12,11 @@ let _pendingScreenshots = []; // [{dataUrl, name}] before save
 // ── MISTAKE TAG SELECTOR INIT ─────────────────────────────────────
 function initMistakeTagSelector() {
   document.querySelectorAll('.mistake-tag-opt').forEach(label => {
+    // Force clear — browser kadang restore checkbox state dari session lama
+    const cb = label.querySelector('input[type=checkbox]');
+    if (cb) cb.checked = false;
+    label.classList.remove('selected');
+
     label.addEventListener('click', () => {
       label.classList.toggle('selected');
       const cb = label.querySelector('input[type=checkbox]');
