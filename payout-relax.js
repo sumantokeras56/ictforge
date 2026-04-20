@@ -622,7 +622,23 @@ function finishBreathing() {
 // ── INIT ─────────────────────────────────────────────────────────
 function _initPayoutRelax() {
   initPayoutBoard();
-  console.log('[Payout+Relax v2.1] Loaded');
+  // DIAGNOSTIC: log state of critical DOM elements
+  var hasFab     = !!document.getElementById('relaxFab');
+  var hasPanel   = !!document.getElementById('relaxPanel');
+  var hasPayout  = !!document.getElementById('payoutCards');
+  var hasBreathe = !!document.getElementById('breathingModal');
+  console.log(
+    '%c[Payout+Relax v2.3.2]%c FAB=%s Panel=%s PayoutCards=%s BreatheModal=%s',
+    'background:#2ECC71;color:#000;padding:2px 6px;border-radius:3px;',
+    'color:#C9A84C;',
+    hasFab ? '✅' : '❌',
+    hasPanel ? '✅' : '❌',
+    hasPayout ? '✅ (journal tab loaded)' : '⏳ (journal tab belum loaded — normal)',
+    hasBreathe ? '✅' : '❌'
+  );
+  if (!hasFab) {
+    console.warn('[Payout+Relax] ⚠ FAB tidak ditemukan. Pastikan versi index.html terbaru (v2.3.2) sudah di-upload & hard-refreshed.');
+  }
 }
 
 if (document.readyState === 'loading') {
