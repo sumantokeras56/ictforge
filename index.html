@@ -1088,6 +1088,11 @@
     window.showTab = function(name, el) {
       loadTab(name);
       if (typeof _origShowTab === 'function') _origShowTab(name, el);
+      // Auto-scroll tab aktif ke tengah navbar
+      var activeEl = el || document.querySelector('.nav-tab.active');
+      if (activeEl) {
+        activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
     };
 
     // ── Preload tabs ─────────────────────────────────────────────────

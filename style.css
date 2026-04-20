@@ -131,16 +131,14 @@
     border-bottom: 1px solid var(--border);
     padding: 0 40px;
     gap: 0;
-    scrollbar-width: thin;
+    scrollbar-width: none;
     position: sticky;
     top: 0;
     z-index: 100;
     cursor: grab;
   }
   .nav-tabs:active { cursor: grabbing; }
-  .nav-tabs::-webkit-scrollbar { height: 4px; }
-  .nav-tabs::-webkit-scrollbar-track { background: var(--dark4); }
-  .nav-tabs::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 4px; }
+  .nav-tabs::-webkit-scrollbar { display: none; }
   .nav-tab {
     flex-shrink: 0;
     padding: 14px 20px;
