@@ -258,12 +258,12 @@ Klik pertanyaan cepat di atas atau ketik pertanyaanmu 👇</div>
 
 <script>
 // ============ STATE ============
-let apiKey = localStorage.getItem('ictforge_groq_key') || '';
+let apiKey = (typeof window.getGroqApiKey === 'function' ? window.getGroqApiKey() : localStorage.getItem('ictforge_groq_key')) || '';
 let chatHistory = [];
 
 // ============ INIT ============
 function initICTForgeAI() {
-  apiKey = localStorage.getItem('ictforge_groq_key') || '';
+  apiKey = (typeof window.getGroqApiKey === 'function' ? window.getGroqApiKey() : localStorage.getItem('ictforge_groq_key')) || '';
   chatHistory = [];
   if (apiKey) {
     var input = document.getElementById('apiKeyInput');
@@ -282,6 +282,7 @@ function saveApiKey() {
   }
   apiKey = key;
   localStorage.setItem('ictforge_groq_key', key);
+  if (typeof window.setGroqApiKey === 'function') window.setGroqApiKey(key);
   showApiStatus('connected', '✓ API Key tersimpan — Siap digunakan!');
   showToast('API Key berhasil disimpan ✓', 'success');
 }
@@ -568,10 +569,16 @@ function scrollChat() {
 }
 
 // ============ TOAST ============
-function showToast(msg, type = '') {
+function showToast(msg, type) {
+  // Delegate to global showToast from main.js if available (has duration support)
+  if (typeof window.showToast === 'function' && window.showToast !== showToast) {
+    window.showToast(msg);
+    return;
+  }
   const t = document.getElementById('toast');
+  if (!t) return;
   t.textContent = msg;
-  t.className = 'toast show ' + type;
+  t.className = 'toast show ' + (type || '');
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 </script>
