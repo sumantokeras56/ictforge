@@ -728,6 +728,134 @@
     </div>
   </div>
 
+  <!-- ══════════════════════════════════════════════════════════════
+       FLOATING RELAX & FOCUS FAB — accessible dari tab mana pun
+       Berisi: Focus Music, Wake Lock, Manual Box Breathing trigger.
+  ══════════════════════════════════════════════════════════════ -->
+  <div id="relaxFab"
+    onclick="toggleRelaxPanel()"
+    aria-label="Buka panel relaksasi & fokus"
+    title="Relaksasi & Fokus"
+    style="position:fixed;bottom:22px;right:22px;z-index:9990;
+    width:54px;height:54px;border-radius:50%;
+    background:linear-gradient(135deg,#18181D,#222228);
+    border:1px solid var(--gold-dim);
+    box-shadow:0 6px 20px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,76,0.15);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;font-size:22px;color:var(--gold);
+    transition:transform 0.15s ease, box-shadow 0.2s ease;
+    user-select:none;">
+    <span id="relaxFabIcon">🧘</span>
+  </div>
+
+  <div id="relaxPanel" style="display:none;position:fixed;bottom:88px;right:22px;z-index:9991;
+    width:300px;max-width:calc(100vw - 32px);
+    background:var(--dark3);border:1px solid var(--border-bright);
+    border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,0.6);
+    padding:18px;font-family:'DM Mono',monospace;">
+
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <div style="font-size:11px;letter-spacing:2px;color:var(--gold-dim);text-transform:uppercase;">
+        🧘 Relaksasi &amp; Fokus
+      </div>
+      <button onclick="toggleRelaxPanel()"
+        style="background:transparent;border:none;color:var(--text-muted);
+        cursor:pointer;font-size:16px;line-height:1;padding:2px 6px;">✕</button>
+    </div>
+
+    <!-- ── FOCUS MUSIC ─────────────────────────────── -->
+    <div style="margin-bottom:16px;">
+      <div style="font-size:10px;color:var(--gold);margin-bottom:8px;letter-spacing:1px;">
+        🎵 FOCUS MUSIC
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;">
+        <button class="music-track-btn active-track" onclick="selectTrack(this,'lofi')"
+          style="font-family:'DM Mono',monospace;font-size:11px;padding:8px;
+          background:transparent;border:1px solid var(--border);color:var(--text-muted);
+          border-radius:6px;cursor:pointer;">🎹 Lo-Fi</button>
+        <button class="music-track-btn" onclick="selectTrack(this,'binaural')"
+          style="font-family:'DM Mono',monospace;font-size:11px;padding:8px;
+          background:transparent;border:1px solid var(--border);color:var(--text-muted);
+          border-radius:6px;cursor:pointer;">🧠 Binaural</button>
+        <button class="music-track-btn" onclick="selectTrack(this,'rain')"
+          style="font-family:'DM Mono',monospace;font-size:11px;padding:8px;
+          background:transparent;border:1px solid var(--border);color:var(--text-muted);
+          border-radius:6px;cursor:pointer;">🌧️ Hujan</button>
+        <button class="music-track-btn" onclick="selectTrack(this,'white')"
+          style="font-family:'DM Mono',monospace;font-size:11px;padding:8px;
+          background:transparent;border:1px solid var(--border);color:var(--text-muted);
+          border-radius:6px;cursor:pointer;">🌫️ White Noise</button>
+      </div>
+      <button id="musicPlayBtn" onclick="toggleMusic()"
+        style="width:100%;font-family:'DM Mono',monospace;font-size:12px;padding:10px;
+        background:rgba(46,204,113,0.12);border:1px solid rgba(46,204,113,0.4);
+        color:var(--green);border-radius:6px;cursor:pointer;letter-spacing:1px;
+        font-weight:700;margin-bottom:10px;">▶ PLAY</button>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:10px;color:var(--text-muted);">🔊</span>
+        <input type="range" min="0" max="100" value="40"
+          oninput="setMusicVolume(this.value)"
+          style="flex:1;accent-color:var(--gold);cursor:pointer;"/>
+        <span id="musicVolLabel" style="font-size:10px;color:var(--text-muted);min-width:32px;text-align:right;">40%</span>
+      </div>
+    </div>
+
+    <!-- ── WAKE LOCK ─────────────────────────────── -->
+    <div style="margin-bottom:14px;padding-top:12px;border-top:1px solid var(--border);">
+      <div style="font-size:10px;color:var(--gold);margin-bottom:8px;letter-spacing:1px;">
+        📺 LAYAR TETAP HIDUP
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+        <span style="font-size:11px;color:var(--text-muted);">
+          Status: <span id="wakeLockStatus" style="color:var(--text-muted);">OFF</span>
+        </span>
+        <button id="wakeLockBtn" onclick="toggleWakeLock()"
+          style="font-family:'DM Mono',monospace;font-size:11px;padding:7px 14px;
+          background:var(--dark4);border:1px solid var(--border);color:var(--text-muted);
+          border-radius:6px;cursor:pointer;">Aktifkan</button>
+      </div>
+    </div>
+
+    <!-- ── MANUAL BREATHING ─────────────────────────────── -->
+    <div style="padding-top:12px;border-top:1px solid var(--border);">
+      <div style="font-size:10px;color:var(--gold);margin-bottom:8px;letter-spacing:1px;">
+        😮‍💨 BOX BREATHING
+      </div>
+      <div style="font-size:10px;color:var(--text-muted);margin-bottom:8px;line-height:1.5;">
+        Otomatis muncul setelah catat LOSS — atau mulai kapan saja untuk netralkan emosi.
+      </div>
+      <button onclick="openBreathingModal(); toggleRelaxPanel();"
+        style="width:100%;font-family:'DM Mono',monospace;font-size:11px;padding:9px;
+        background:rgba(91,155,213,0.12);border:1px solid rgba(91,155,213,0.4);
+        color:var(--blue);border-radius:6px;cursor:pointer;letter-spacing:0.5px;">
+        🌬️ MULAI 1 MENIT BREATHING
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Toggle Relax Panel — small helper di global scope
+    function toggleRelaxPanel() {
+      var panel = document.getElementById('relaxPanel');
+      var icon  = document.getElementById('relaxFabIcon');
+      if (!panel) return;
+      var isOpen = panel.style.display === 'block';
+      panel.style.display = isOpen ? 'none' : 'block';
+      if (icon) icon.textContent = isOpen ? '🧘' : '✕';
+    }
+    // Tutup panel jika klik di luar
+    document.addEventListener('click', function(e) {
+      var panel = document.getElementById('relaxPanel');
+      var fab   = document.getElementById('relaxFab');
+      if (!panel || panel.style.display !== 'block') return;
+      if (panel.contains(e.target) || (fab && fab.contains(e.target))) return;
+      panel.style.display = 'none';
+      var icon = document.getElementById('relaxFabIcon');
+      if (icon) icon.textContent = '🧘';
+    });
+  </script>
+
   <!-- PAYOUT + RELAX STYLES -->
   <style>
     .payout-emoji-opt {
@@ -755,11 +883,32 @@
       0%{background-position:200% 0}
       100%{background-position:-200% 0}
     }
+    @keyframes pulse {
+      0%,100%{opacity:1}
+      50%{opacity:0.6}
+    }
     .music-track-btn { transition:all 0.15s; }
     .active-track {
       background:rgba(201,168,76,0.1) !important;
       border-color:var(--gold-dim) !important;
       color:var(--gold) !important;
+    }
+    #relaxFab:hover {
+      transform:translateY(-2px);
+      box-shadow:0 10px 30px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,168,76,0.35);
+    }
+    #relaxFab:active { transform:translateY(0); }
+    /* Pulse halus saat musik play */
+    #relaxFab.playing {
+      animation:fabPulse 2.2s ease-in-out infinite;
+    }
+    @keyframes fabPulse {
+      0%,100% { box-shadow:0 6px 20px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,76,0.15), 0 0 0 0 rgba(201,168,76,0.4); }
+      50%     { box-shadow:0 6px 20px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,76,0.35), 0 0 0 12px rgba(201,168,76,0); }
+    }
+    @media (max-width: 520px) {
+      #relaxFab { bottom:16px; right:16px; width:48px; height:48px; font-size:20px; }
+      #relaxPanel { bottom:76px; right:16px; left:16px; width:auto; }
     }
   </style>
 
@@ -877,6 +1026,8 @@
         if (tabId === 'journal') {
           // Re-init mistake tags (DOM now exists)
           if (typeof initMistakeTagSelector === 'function') initMistakeTagSelector();
+          // Init Papan Payout (DOM baru ada setelah tab journal ter-load)
+          if (typeof initPayoutBoard === 'function') initPayoutBoard();
           // Render journal (use renderJournal — renderJournalTable is an alias in app-core.js)
           if (typeof renderJournal === 'function') renderJournal();
           // Daily bias note

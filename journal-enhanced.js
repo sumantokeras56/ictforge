@@ -10,18 +10,51 @@
 let _pendingScreenshots = [];
 
 // ── MISTAKE TAG SELECTOR ──────────────────────────────────────────
-// Tidak pakai checkbox — pakai data-selected attribute agar tidak
-// ada double-click issue dari label+input interaction
+// BUG FIX v2.3:
+// Penyebab "cacat" sebelumnya:
+//   <label> membungkus <input type="checkbox" style="display:none">.
+//   Saat user klik <label>, browser melakukan "implicit activation" yaitu
+//   meneruskan klik ke <input>. Klik sintetik tersebut lalu bubble kembali
+//   ke <label>, sehingga onclick handler terpanggil DUA kali dari satu klik
+//   user → state toggle on→off → tag terlihat tidak merespon.
+// Solusi:
+//   1. Hapus <input type="checkbox"> dari DOM (kita pakai data-selected).
+//   2. Pindahkan <label> ke element non-form (ganti ke span via JS, atau
+//      cukup preventDefault untuk menonaktifkan label activation).
+//   3. Guard agar tidak re-attach handler berkali-kali setiap tab di-reload.
 function initMistakeTagSelector() {
   document.querySelectorAll('.mistake-tag-opt').forEach(function(el) {
+    // Hindari re-attach handler berulang kali
+    if (el.__mistakeReady) {
+      // Reset state saja, jangan pasang handler lagi
+      el.setAttribute('data-selected', 'false');
+      el.classList.remove('selected');
+      return;
+    }
+    el.__mistakeReady = true;
+
+    // Hapus hidden checkbox — ini sumber utama bug double-click
+    var innerInput = el.querySelector('input[type="checkbox"]');
+    if (innerInput) innerInput.remove();
+
     el.setAttribute('data-selected', 'false');
     el.classList.remove('selected');
-    el.style.cssText += ';cursor:pointer;-webkit-tap-highlight-color:transparent;';
-    el.onclick = function() {
-      var isSelected = this.getAttribute('data-selected') === 'true';
-      this.setAttribute('data-selected', isSelected ? 'false' : 'true');
-      this.classList.toggle('selected', !isSelected);
-    };
+
+    // Set gaya ringan tanpa cssText (cssText += membuat bloat setiap
+    // kali tab di-reload dan menambah duplikasi rule)
+    el.style.cursor = 'pointer';
+    el.style.webkitTapHighlightColor = 'transparent';
+
+    el.addEventListener('click', function(e) {
+      // Double safety: cegah default activation label + stop
+      // event dari child element (kalau ada) memanggil handler lagi
+      e.preventDefault();
+      if (e.target !== el && e.target.closest('.mistake-tag-opt') !== el) return;
+
+      var isSelected = el.getAttribute('data-selected') === 'true';
+      el.setAttribute('data-selected', isSelected ? 'false' : 'true');
+      el.classList.toggle('selected', !isSelected);
+    });
   });
 }
 

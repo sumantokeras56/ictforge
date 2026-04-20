@@ -26,12 +26,18 @@ var _payoutEditOpen = false;
 
 function initPayoutBoard() {
   _payoutTargets = safeJSONParse(localStorage.getItem('ict-payout-targets'), []);
+  // Hanya jalankan jika DOM payout sudah ada (tab journal sudah loaded)
+  var container = document.getElementById('payoutCards');
+  if (!container) return;
   initPayoutEmojiPicker();
   renderPayoutCards();
 }
 
 function initPayoutEmojiPicker() {
-  document.querySelectorAll('.payout-emoji-opt').forEach(function(el) {
+  var opts = document.querySelectorAll('.payout-emoji-opt');
+  if (!opts.length) return;
+  opts.forEach(function(el) {
+    el.classList.remove('selected');
     el.onclick = function() {
       document.querySelectorAll('.payout-emoji-opt').forEach(function(e) { e.classList.remove('selected'); });
       this.classList.add('selected');
@@ -39,8 +45,8 @@ function initPayoutEmojiPicker() {
     };
   });
   // Select first by default
-  var first = document.querySelector('.payout-emoji-opt');
-  if (first) { first.classList.add('selected'); _payoutSelectedEmoji = first.getAttribute('data-emoji'); }
+  opts[0].classList.add('selected');
+  _payoutSelectedEmoji = opts[0].getAttribute('data-emoji');
 }
 
 function togglePayoutEdit() {
@@ -324,6 +330,7 @@ var _masterGainNode = null;
 
 function toggleMusic() {
   var btn = document.getElementById('musicPlayBtn');
+  var fab = document.getElementById('relaxFab');
   if (_musicPlaying) {
     stopAllMusic();
     if (_masterGainNode) {
@@ -334,6 +341,7 @@ function toggleMusic() {
     }
     _musicPlaying = false;
     if (btn) { btn.textContent = '▶ PLAY'; btn.style.color = 'var(--green)'; btn.style.borderColor = 'rgba(46,204,113,0.4)'; btn.style.background = 'rgba(46,204,113,0.12)'; }
+    if (fab) fab.classList.remove('playing');
     showToast('🎵 Musik dimatikan');
   } else {
     playMusic(_currentTrack);
@@ -356,7 +364,9 @@ function playMusic(track) {
 
   _musicPlaying = true;
   var btn = document.getElementById('musicPlayBtn');
+  var fab = document.getElementById('relaxFab');
   if (btn) { btn.textContent = '⏸ PAUSE'; btn.style.color = 'var(--gold)'; btn.style.borderColor = 'rgba(201,168,76,0.4)'; btn.style.background = 'rgba(201,168,76,0.1)'; }
+  if (fab) fab.classList.add('playing');
 
   var trackNames = { lofi:'Lo-Fi Hip Hop', binaural:'Binaural Beats', rain:'Rain & Thunder', white:'White Noise' };
   showToast('🎵 ' + (trackNames[track] || track) + ' — Playing');
