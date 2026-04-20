@@ -1908,6 +1908,8 @@ function exportCOTResults() {
 }
 
 // ==================== TRADING JOURNAL (localStorage) ====================
+// NOTE: journalEntries is managed by AppState in app-core.js.
+// This declaration is kept for legacy compatibility.
 let journalEntries = [];
 
 function loadJournal() {
@@ -2002,7 +2004,14 @@ function deleteJournalEntry(index) {
 function clearJournal() {
   if (confirm('Hapus SEMUA data trading journal? Tindakan ini tidak bisa dibatalkan.')) {
     journalEntries = [];
-    saveJournal();
+    if (typeof AppState !== 'undefined') {
+      AppState.journal = [];
+      AppState.save();
+    } else {
+      localStorage.setItem('ict-journal', JSON.stringify([]));
+    }
+    if (typeof renderJournal === 'function') renderJournal();
+    if (typeof showToast === 'function') showToast('🗑 Semua data journal dihapus');
   }
 }
 
@@ -2178,7 +2187,15 @@ function restoreJournal(input) {
         journalEntries = data;
         showToast('✅ Restore selesai — ' + data.length + ' trade dipulihkan!');
       }
-      saveJournal();
+      // Sync to AppState then save
+      if (typeof AppState !== 'undefined') {
+        AppState.journal = AppState._migrate(journalEntries);
+        journalEntries = AppState.journal;
+        AppState.save();
+      } else {
+        localStorage.setItem('ict-journal', JSON.stringify(journalEntries));
+      }
+      if (typeof renderJournal === 'function') renderJournal();
     } catch (err) {
       showToast('❌ Gagal restore: file rusak atau format salah');
     }
@@ -2379,7 +2396,7 @@ loadChecklist();
 loadFromURL();
 loadJournal();
 renderEconomicCalendar();
-renderEventCountdownGrid();
+// renderEventCountdownGrid() called from updateClock — guarded by app-core.js
 initTooltips();
 setTimeout(updateAsiaKZCard, 500);
 

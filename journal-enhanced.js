@@ -92,12 +92,12 @@ function viewScreenshot(idx, source, entryIdx) {
   if (!url) return;
   var modal = document.getElementById('screenshotModal');
   var img   = document.getElementById('screenshotModalImg');
-  if (modal && img) { img.src = url; modal.style.display = 'flex'; }
+  if (modal && img) { img.src = url; modal.classList.add('open'); }
 }
 
 function closeScreenshotModal() {
   var modal = document.getElementById('screenshotModal');
-  if (modal) modal.style.display = 'none';
+  if (modal) modal.classList.remove('open');
 }
 
 // ── addJournalEntry (override) ────────────────────────────────────
