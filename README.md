@@ -13,7 +13,7 @@
 
 **Smart Money Concepts Trading Platform**
 
-[![Version](https://img.shields.io/badge/version-2.0.0-C9A84C?style=for-the-badge&logo=github)](https://github.com/sumantokeras56/ictforge)
+[![Version](https://img.shields.io/badge/version-2.4.0-C9A84C?style=for-the-badge&logo=github)](https://github.com/sumantokeras56/ictforge)
 [![License](https://img.shields.io/badge/license-MIT-2ECC71?style=for-the-badge)](LICENSE)
 [![PWA](https://img.shields.io/badge/PWA-ready-5B9BD5?style=for-the-badge&logo=googlechrome)](https://sumantokeras56.github.io/ictforge/)
 [![Deploy](https://img.shields.io/badge/deploy-GitHub%20Pages-181717?style=for-the-badge&logo=github)](https://sumantokeras56.github.io/ictforge/)
@@ -253,20 +253,22 @@ ICT Forge — Zero-dependency, Vanilla Web Stack
 ┌─────────────────────────────────────────────────────────────┐
 │                        BROWSER                               │
 │                                                             │
-│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐  │
-│  │  index.html  │───▶│   main.js    │───▶│   style.css  │  │
-│  │  (App Shell) │    │ (Core Logic) │    │  (Theming)   │  │
-│  └──────────────┘    └──────┬───────┘    └──────────────┘  │
-│                             │                               │
-│                    ┌────────▼────────┐                      │
-│                    │ realtime-news.js│                      │
-│                    │ (News Engine)   │                      │
-│                    └────────┬────────┘                      │
-│                             │                               │
-│                    ┌────────▼────────┐                      │
-│                    │journal-enhanced │                      │
-│                    │.js (Journal v2) │                      │
-│                    └────────┬────────┘                      │
+│  ┌──────────────┐                          ┌─────────────┐  │
+│  │  index.html  │                          │  style.css  │  │
+│  │  (App Shell) │                          │  (Theming)  │  │
+│  └──────┬───────┘                          └─────────────┘  │
+│         │ loads (ordered <script> tags)                     │
+│         ▼                                                   │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │                   JS MODULES                          │  │
+│  │                                                       │  │
+│  │  main.js             — Clock, COT, PineScript, init   │  │
+│  │  app-core.js         — Trade core, calculator, bias   │  │
+│  │  journal-enhanced.js — Journal v2, equity, screenshot │  │
+│  │  payout-relax.js     — Payout board, Relax FAB        │  │
+│  │  economic-news.js    — Economic calendar engine       │  │
+│  │  realtime-news.js    — Live news via newsdata.io      │  │
+│  └──────────────────────────┬───────────────────────────┘  │
 │                             │                               │
 │         ┌───────────────────┼───────────────────┐          │
 │         ▼                   ▼                   ▼          │
@@ -286,15 +288,17 @@ ICT Forge — Zero-dependency, Vanilla Web Stack
 └─────────────────────────────────────────────────────────────┘
 ```
 
+> 💡 **Tidak ada ES Modules atau bundler.** Semua file JS dimuat via `<script>` tag berurutan di `index.html`, sehingga semua fungsi tersedia di scope global — diperlukan untuk `onclick` attributes di HTML tab.
+
 ### Cache Strategy
 
 | Resource Type | Strategy | Cache Name |
 |---|---|---|
-| App HTML | Network-first → Cache fallback | `ictforge-v3` |
-| JS / CSS | Network-first → Cache fallback | `ictforge-v3` |
+| App HTML | Network-first → Cache fallback | `ictforge-v13` |
+| JS / CSS | Network-first → Cache fallback | `ictforge-v13` |
 | Google Fonts | Cache-first (stabil) | `ictforge-fonts-v1` |
 | API calls | Bypass (tidak di-cache) | — |
-| Offline fallback | Serve `offline.html` | `ictforge-v3` |
+| Offline fallback | Serve `offline.html` | `ictforge-v13` |
 
 <br/>
 
@@ -470,13 +474,19 @@ python3 -m http.server 8000
 ictforge/
 │
 ├── index.html              # App Shell utama — semua tab & UI
-├── main.js                 # Core logic — clock, calculator, journal, COT, PineScript
-├── journal-enhanced.js     # Journal v2.0 — screenshot, equity curve, mistake tags, compounding
-├── style.css               # Global styling, dark theme, komponen UI
+├── main.js                 # Core — clock, COT, PineScript, session notif, init
+├── app-core.js             # Trade core — kalkulator, daily bias, instrumen
+├── journal-enhanced.js     # Journal v2.0 — screenshot, equity curve, compounding
+├── payout-relax.js         # Payout board & Relax FAB / breathe modal
+├── economic-news.js        # Economic calendar engine — High Impact Events 2026
 ├── realtime-news.js        # Live news engine via newsdata.io API
+├── style.css               # Global styling, dark theme, komponen UI
 ├── sw.js                   # Service Worker — cache, offline, push notifications
 ├── manifest.json           # PWA manifest — icon, shortcuts, display mode
 ├── offline.html            # Halaman fallback saat offline
+├── icon.png                # App icon (juga dipakai sebagai favicon)
+├── icon-192.png            # PWA icon 192×192
+├── icon-512.png            # PWA icon 512×512
 │
 ├── 📚 Materi ICT (tabs/)
 │   ├── overview.html       # Pengenalan SMC & ICT methodology
@@ -495,8 +505,9 @@ ictforge/
 │   ├── calendar.html       # Economic calendar UI
 │   ├── checklist.html      # Trade checklist UI
 │   ├── cot.html            # COT analyzer UI
-│   ├── journal.html        # Trading journal UI (legacy fragment)
-│   └── pinescript.html     # PineScript tools UI
+│   ├── journal.html        # Trading journal UI
+│   ├── pinescript.html     # PineScript tools UI
+│   └── ictforge-ai.html    # ICT Forge AI assistant UI
 │
 └── README.md               # Dokumentasi ini
 ```
@@ -529,7 +540,7 @@ Buat worker yang panggil `newsdata.io/api/1/latest` dengan key di env var, lalu 
 
 Edit `sw.js` baris 4:
 ```javascript
-const CACHE_VERSION = 'ictforge-v4'; // increment untuk force refresh
+const CACHE_VERSION = 'ictforge-v14'; // increment untuk force refresh
 ```
 
 ### Menambahkan Event Kalender Custom
@@ -545,7 +556,7 @@ Edit `main.js` — tambahkan ke array `HIGH_IMPACT_NEWS`:
 
 ## 🗺 Roadmap
 
-### v2.0.0 — Q2 2026 ✅ RELEASED
+### v2.4.0 — Q2 2026 ✅ RELEASED
 - [x] Equity Curve visualizer di Trading Journal
 - [x] Screenshot integration per trade
 - [x] Mistake Tagging + analisis psikologi bulanan
@@ -553,6 +564,9 @@ Edit `main.js` — tambahkan ke array `HIGH_IMPACT_NEWS`:
 - [x] Consistency Rules checker untuk prop firm
 - [x] Export Journal ke PDF (lengkap dengan statistik)
 - [x] Backup & Restore Journal via JSON
+- [x] Refactor modular — `main.js` dipecah ke `app-core.js`, `payout-relax.js`, `economic-news.js`
+- [x] Payout Board & Relax FAB
+- [x] Favicon fix — `icon.png` digunakan sebagai favicon (eliminasi 404)
 
 ### v2.1.0 — Q3 2026
 - [ ] Filter journal berdasarkan instrumen, tanggal range & tag
@@ -661,6 +675,6 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 
 <br/>
 
-© 2026 Rizky Saputra · ICT Forge v2.0 · MIT License
+© 2026 Rizky Saputra · ICT Forge v2.4 · MIT License
 
 </div>
