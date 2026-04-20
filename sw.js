@@ -5,7 +5,7 @@
 // ✅ v11: Mistake Tags REMOVED + Payout Board + Relax FAB (force refresh)
 // ✅ v12: Precache lengkap — semua JS module + 16 tab HTML untuk offline penuh
 
-const CACHE_VERSION  = 'ictforge-v12';
+const CACHE_VERSION  = 'ictforge-v13';
 const FONT_CACHE     = 'ictforge-fonts-v1';
 
 // ─── PENTING: localStorage user TIDAK terdampak oleh cache apapun.
