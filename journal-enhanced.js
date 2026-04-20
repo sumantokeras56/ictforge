@@ -1,75 +1,20 @@
 // ══════════════════════════════════════════════════════════════════
-//  JOURNAL ENHANCED v2.1
+//  JOURNAL ENHANCED v2.4
 //  + Screenshot Integration
 //  + Equity Curve Modal
-//  + Mistake Tagging (fixed click)
 //  + Compounding Calculator (Simple + Funded)
+//  − Mistake Tagging (dihapus per permintaan user)
 // ══════════════════════════════════════════════════════════════════
 
 // ── STATE ─────────────────────────────────────────────────────────
 let _pendingScreenshots = [];
 
-// ── MISTAKE TAG SELECTOR ──────────────────────────────────────────
-// BUG FIX v2.3:
-// Penyebab "cacat" sebelumnya:
-//   <label> membungkus <input type="checkbox" style="display:none">.
-//   Saat user klik <label>, browser melakukan "implicit activation" yaitu
-//   meneruskan klik ke <input>. Klik sintetik tersebut lalu bubble kembali
-//   ke <label>, sehingga onclick handler terpanggil DUA kali dari satu klik
-//   user → state toggle on→off → tag terlihat tidak merespon.
-// Solusi:
-//   1. Hapus <input type="checkbox"> dari DOM (kita pakai data-selected).
-//   2. Pindahkan <label> ke element non-form (ganti ke span via JS, atau
-//      cukup preventDefault untuk menonaktifkan label activation).
-//   3. Guard agar tidak re-attach handler berkali-kali setiap tab di-reload.
-function initMistakeTagSelector() {
-  document.querySelectorAll('.mistake-tag-opt').forEach(function(el) {
-    // Hindari re-attach handler berulang kali
-    if (el.__mistakeReady) {
-      // Reset state saja, jangan pasang handler lagi
-      el.setAttribute('data-selected', 'false');
-      el.classList.remove('selected');
-      return;
-    }
-    el.__mistakeReady = true;
-
-    // Hapus hidden checkbox — ini sumber utama bug double-click
-    var innerInput = el.querySelector('input[type="checkbox"]');
-    if (innerInput) innerInput.remove();
-
-    el.setAttribute('data-selected', 'false');
-    el.classList.remove('selected');
-
-    // Set gaya ringan tanpa cssText (cssText += membuat bloat setiap
-    // kali tab di-reload dan menambah duplikasi rule)
-    el.style.cursor = 'pointer';
-    el.style.webkitTapHighlightColor = 'transparent';
-
-    el.addEventListener('click', function(e) {
-      // Double safety: cegah default activation label + stop
-      // event dari child element (kalau ada) memanggil handler lagi
-      e.preventDefault();
-      if (e.target !== el && e.target.closest('.mistake-tag-opt') !== el) return;
-
-      var isSelected = el.getAttribute('data-selected') === 'true';
-      el.setAttribute('data-selected', isSelected ? 'false' : 'true');
-      el.classList.toggle('selected', !isSelected);
-    });
-  });
-}
-
-function getSelectedMistakeTags() {
-  return [...document.querySelectorAll('.mistake-tag-opt[data-selected="true"]')]
-    .map(function(el) { return el.getAttribute('data-tag'); })
-    .filter(Boolean);
-}
-
-function clearMistakeTags() {
-  document.querySelectorAll('.mistake-tag-opt').forEach(function(el) {
-    el.setAttribute('data-selected', 'false');
-    el.classList.remove('selected');
-  });
-}
+// NOTE: Fungsi initMistakeTagSelector / getSelectedMistakeTags /
+// clearMistakeTags telah dihapus. Stub no-op di bawah mencegah
+// ReferenceError kalau file lain masih memanggilnya.
+function initMistakeTagSelector() { /* removed */ }
+function getSelectedMistakeTags() { return []; }
+function clearMistakeTags() { /* removed */ }
 
 // ── SCREENSHOT HANDLING ────────────────────────────────────────────
 function handleScreenshotSelect(input) {
@@ -148,13 +93,12 @@ function addJournalEntry() {
   if (isNaN(entry) || isNaN(sl) || isNaN(tp)) { showToast('⚠️ Isi Entry, SL, TP dengan angka valid'); return; }
   if (isNaN(rr) || rr <= 0) { showToast('⚠️ Isi R:R dengan angka positif'); return; }
 
-  var tags        = getSelectedMistakeTags();
   var screenshots = _pendingScreenshots.map(function(s) { return s.dataUrl; });
 
   journalEntries.unshift({
     date: new Date().toISOString(),
     symbol: symbol, side: side, entry: entry, sl: sl, tp: tp, rr: rr,
-    result: result, note: note || '', tags: tags, screenshots: screenshots
+    result: result, note: note || '', screenshots: screenshots
   });
 
   saveJournal();
@@ -162,7 +106,6 @@ function addJournalEntry() {
     var el = document.getElementById(id); if (el) el.value = '';
   });
   if (document.getElementById('journalResult')) document.getElementById('journalResult').value = 'pending';
-  clearMistakeTags();
   _pendingScreenshots = [];
   renderScreenshotPreviews();
   showToast('✅ Trade berhasil ditambahkan!');
@@ -183,20 +126,13 @@ function renderJournal() {
     var resultCls  = entry.result === 'win' ? 'style="color:var(--green);"' : entry.result === 'loss' ? 'style="color:var(--red);"' : '';
     var resultText = entry.result === 'win' ? '✅ WIN' : entry.result === 'loss' ? '❌ LOSS' : '⏳ Pending';
 
-    var tagsHtml = (entry.tags || []).length
-      ? (entry.tags || []).map(function(t) {
-          var safeCls = (t === 'PERFECT' ? 'perfect' : '');
-          return '<span class="mistake-badge ' + safeCls + '">' + escapeHtml(String(t)) + '</span>';
-        }).join(' ')
-      : '<span style="color:var(--text-muted);font-size:10px;">—</span>';
-
     var ssHtml = (entry.screenshots || []).length
-      ? '<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;">' +
+      ? '<div style="display:flex;gap:4px;flex-wrap:wrap;">' +
         (entry.screenshots || []).map(function(_, si) {
           return '<div class="screenshot-thumb" style="width:32px;height:32px;" onclick="viewScreenshot(' + si + ',\'entry\',' + originalIdx + ')">' +
             '<img src="' + entry.screenshots[si] + '" alt="ss"/></div>';
         }).join('') + '</div>'
-      : '';
+      : '<span style="color:var(--text-muted);font-size:10px;">—</span>';
 
     row.innerHTML =
       '<td style="font-size:11px;">' + escapeHtml(date) + '</td>' +
@@ -207,7 +143,7 @@ function renderJournal() {
       '<td>' + escapeHtml(String(entry.tp)) + '</td>' +
       '<td>1:' + escapeHtml(String(entry.rr)) + '</td>' +
       '<td ' + resultCls + '>' + resultText + '</td>' +
-      '<td style="min-width:80px;">' + tagsHtml + ssHtml + '</td>' +
+      '<td style="min-width:60px;">' + ssHtml + '</td>' +
       '<td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;font-size:11px;">' + escapeHtml(entry.note || '-') + '</td>' +
       '<td><button class="action-btn" onclick="deleteJournalEntry(' + originalIdx + ')" style="padding:4px 8px;font-size:10px;">🗑</button></td>';
 
@@ -231,38 +167,6 @@ function renderJournal() {
   s('statAvgRR', avgRR);
 
   requestAnimationFrame(drawEquityCurve);
-  renderMistakeTagSummary();
-}
-
-// ── MISTAKE TAG SUMMARY ───────────────────────────────────────────
-function renderMistakeTagSummary() {
-  var container = document.getElementById('mistakeTagSummary');
-  if (!container) return;
-  var now = new Date(), month = now.getMonth(), year = now.getFullYear();
-  var tagCount = {};
-  journalEntries.forEach(function(e) {
-    var d = new Date(e.date);
-    if (d.getMonth() !== month || d.getFullYear() !== year) return;
-    (e.tags || []).forEach(function(t) { tagCount[t] = (tagCount[t] || 0) + 1; });
-  });
-  var entries = Object.entries(tagCount).sort(function(a, b) { return b[1] - a[1]; });
-  if (!entries.length) {
-    container.innerHTML = '<span style="color:var(--text-muted);font-size:11px;font-family:\'DM Mono\',monospace;">Belum ada data mistake tag bulan ini</span>';
-    return;
-  }
-  var tagLabels = { FOMO:'😱 FOMO', REVENGE:'🔥 Revenge', OVERLEV:'⚠️ Over-Leverage', LATE:'⏰ Late Entry', NOPA:'📋 No Plan', MOVED_SL:'🚫 Moved SL', EARLY_EXIT:'🏃 Early Exit', NEWS:'📰 News', TILT:'🤯 Tilt', PERFECT:'✅ Perfect' };
-  container.innerHTML = entries.map(function(item) {
-    // item.tag is user-generated, must be escaped
-    var tag = item[0], count = item[1];
-    var isPerfect = tag === 'PERFECT';
-    var clr = isPerfect ? 'var(--green)' : '#e74c3c';
-    var bg  = isPerfect ? 'rgba(46,204,113,0.08)' : 'rgba(231,76,60,0.08)';
-    var bdr = isPerfect ? 'rgba(46,204,113,0.25)' : 'rgba(231,76,60,0.2)';
-    return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:' + bg + ';border:1px solid ' + bdr + ';border-radius:8px;padding:8px 14px;min-width:80px;text-align:center;">' +
-      '<div style="font-family:\'DM Mono\',monospace;font-size:11px;color:' + clr + ';">' + (tagLabels[tag] || tag) + '</div>' +
-      '<div style="font-family:\'DM Mono\',monospace;font-size:18px;font-weight:700;color:' + clr + ';">' + count + '×</div>' +
-      '</div>';
-  }).join('');
 }
 
 // ── EQUITY MODAL ──────────────────────────────────────────────────
@@ -629,8 +533,6 @@ function runFundedCalculator() {
 
 // ── INIT ──────────────────────────────────────────────────────────
 function _initJournalEnhanced() {
-  initMistakeTagSelector();
-
   // Restore last active journal tab
   try {
     var lastTab = localStorage.getItem('ictforge_journal_tab') || 'trades';
@@ -639,7 +541,7 @@ function _initJournalEnhanced() {
     switchJournalTab('trades');
   }
 
-  console.log('[Journal Enhanced v2.2] Loaded — tab switcher + mistake tags');
+  console.log('[Journal Enhanced v2.4] Loaded — mistake tags removed');
 }
 
 if (document.readyState === 'loading') {

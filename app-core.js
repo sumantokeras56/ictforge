@@ -1,7 +1,8 @@
 // ══════════════════════════════════════════════════════════════════════
 //  ICT FORGE — APP CORE v3.0
 //  Centralized State · Init System · Event Delegation · Bug Fixes
-//  Fixes: Journal CRUD, Trade Detail, Edit Pending, Mistake Tags,
+//  Fixes: Journal CRUD, Trade Detail, Edit Pending,
+//  Compounding Calculator, Screenshots, AI Review,
 //         AI Integration, API Key Unification, Schema v2, Performance
 // ══════════════════════════════════════════════════════════════════════
 
@@ -182,18 +183,8 @@
   // ─────────────────────────────────────────────────────────────────
   // 3. JOURNAL RENDER (production-grade override)
   // ─────────────────────────────────────────────────────────────────
-  var MISTAKE_LABELS = {
-    FOMO:       '😱 FOMO',
-    REVENGE:    '🔥 Revenge',
-    OVERLEV:    '⚠️ Over-Lev',
-    LATE:       '⏰ Late Entry',
-    NOPA:       '📋 No Plan',
-    MOVED_SL:   '🚫 Moved SL',
-    EARLY_EXIT: '🏃 Early Exit',
-    NEWS:       '📰 News',
-    TILT:       '🤯 Tilt',
-    PERFECT:    '✅ Perfect'
-  };
+  // NOTE v2.4: Mistake Tags dihapus per permintaan user.
+  // Kolom ke-9 di tabel sekarang menampilkan thumbnail screenshot.
 
   window.renderJournal = function () {
     AppState.journal = window.journalEntries || AppState.journal;
@@ -210,7 +201,6 @@
         '📋 Belum ada trade. Tambahkan trade pertama kamu!</td></tr>';
       _updateStats({ total:0, wins:0, totalRR:0, pfNum:0, pfDen:0 });
       if (typeof drawEquityCurve === 'function') drawEquityCurve();
-      if (typeof renderMistakeTagSummary === 'function') renderMistakeTagSummary();
       return;
     }
 
@@ -228,17 +218,16 @@
                       entry.result === 'loss' ? '❌ LOSS' : '⏳ Pending';
       var isPending = entry.result === 'pending';
 
-      var tagsHtml = (entry.tags || []).length
-        ? (entry.tags).map(function (t) {
-            var cls = t === 'PERFECT' ? 'mistake-badge perfect' : 'mistake-badge';
-            return '<span class="' + cls + '">' + esc(MISTAKE_LABELS[t] || t) + '</span>';
-          }).join(' ')
-        : '<span style="color:var(--text-muted);font-size:10px;">—</span>';
-
       var ssCount = (entry.screenshots || []).length;
       var ssHtml  = ssCount
-        ? '<span style="font-size:10px;color:var(--blue);margin-left:4px;" title="' + ssCount + ' screenshot">📸' + ssCount + '</span>'
-        : '';
+        ? '<div style="display:flex;gap:3px;flex-wrap:wrap;">' +
+          (entry.screenshots).slice(0, 3).map(function (url, si) {
+            return '<div class="screenshot-thumb" style="width:28px;height:28px;" onclick="event.stopPropagation();viewScreenshot(' + si + ',\'entry\',' + AppState._findIdx(entry.id) + ')">' +
+              '<img src="' + esc(url) + '" alt="ss"/></div>';
+          }).join('') +
+          (ssCount > 3 ? '<span style="font-size:10px;color:var(--text-muted);align-self:center;">+' + (ssCount - 3) + '</span>' : '') +
+          '</div>'
+        : '<span style="color:var(--text-muted);font-size:10px;">—</span>';
 
       var aiHtml = entry.aiReview
         ? '<span style="font-size:10px;color:var(--green);margin-left:4px;" title="AI Review tersedia">🤖</span>'
@@ -255,7 +244,7 @@
         '<td>' + esc(String(entry.tp    || '')) + '</td>' +
         '<td>1:' + esc(String(entry.rr   || '')) + '</td>' +
         '<td ' + rClass + '>' + rText + '</td>' +
-        '<td style="min-width:80px;">' + tagsHtml + ssHtml + '</td>' +
+        '<td style="min-width:60px;">' + ssHtml + '</td>' +
         '<td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;font-size:11px;">' + esc(entry.note || '—') + '</td>' +
         '<td style="white-space:nowrap;">' +
           (isPending
@@ -277,7 +266,6 @@
     tbody.innerHTML = html;
     _updateStats(stats);
     if (typeof drawEquityCurve           === 'function') requestAnimationFrame(drawEquityCurve);
-    if (typeof renderMistakeTagSummary   === 'function') renderMistakeTagSummary();
   };
 
   // ── Also expose as renderJournalTable (legacy call in _onTabLoaded) ──
@@ -316,12 +304,11 @@
     if (btn && btn._submitting) return;
     if (btn) { btn._submitting = true; setTimeout(function () { btn._submitting = false; }, 1500); }
 
-    var tags = typeof getSelectedMistakeTags === 'function' ? getSelectedMistakeTags() : [];
     var screenshots = (typeof _pendingScreenshots !== 'undefined' && Array.isArray(_pendingScreenshots))
       ? _pendingScreenshots.map(function (s) { return s.dataUrl; })
       : [];
 
-    var newEntry = AppState.addEntry({ symbol: symbol, side: side, entry: entry, sl: sl, tp: tp, rr: rr, result: result, note: note, tags: tags, screenshots: screenshots });
+    var newEntry = AppState.addEntry({ symbol: symbol, side: side, entry: entry, sl: sl, tp: tp, rr: rr, result: result, note: note, screenshots: screenshots });
 
     // Clear form
     ['journalSymbol','journalEntry','journalSL','journalTP','journalRr','journalNote'].forEach(function (id) {
@@ -329,7 +316,6 @@
     });
     var resEl = document.getElementById('journalResult');
     if (resEl) resEl.value = 'pending';
-    if (typeof clearMistakeTags === 'function') clearMistakeTags();
     if (typeof _pendingScreenshots !== 'undefined') { window._pendingScreenshots = []; }
     if (typeof renderScreenshotPreviews === 'function') renderScreenshotPreviews();
 
@@ -476,13 +462,6 @@
     var resText = entry.result === 'win'  ? '✅ WIN' :
                   entry.result === 'loss' ? '❌ LOSS' : '⏳ Pending';
 
-    var tagsHtml = (entry.tags || []).length
-      ? (entry.tags).map(function (t) {
-          var cls = t === 'PERFECT' ? 'mistake-badge perfect' : 'mistake-badge';
-          return '<span class="' + cls + '">' + esc(MISTAKE_LABELS[t] || t) + '</span>';
-        }).join(' ')
-      : '<span style="color:var(--text-muted);">—</span>';
-
     var ssHtml = (entry.screenshots || []).length
       ? '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;">' +
         (entry.screenshots).map(function (url, si) {
@@ -528,10 +507,6 @@
       '<div style="margin-bottom:12px;">' +
         '<div style="font-family:\'DM Mono\',monospace;font-size:10px;letter-spacing:2px;color:var(--gold-dim);margin-bottom:6px;">📝 CATATAN</div>' +
         '<div style="background:var(--dark4);border-radius:6px;padding:12px;font-size:13px;color:var(--text);line-height:1.6;">' + esc(entry.note || '—') + '</div>' +
-      '</div>' +
-      '<div style="margin-bottom:12px;">' +
-        '<div style="font-family:\'DM Mono\',monospace;font-size:10px;letter-spacing:2px;color:var(--gold-dim);margin-bottom:6px;">🏷️ MISTAKE TAGS</div>' +
-        '<div>' + tagsHtml + '</div>' +
       '</div>' +
       '<div style="margin-bottom:12px;">' +
         '<div style="font-family:\'DM Mono\',monospace;font-size:10px;letter-spacing:2px;color:var(--gold-dim);margin-bottom:6px;">📸 SCREENSHOTS</div>' +
@@ -582,8 +557,7 @@
       'Entry: ' + entry.entry + ' | SL: ' + entry.sl + ' | TP: ' + entry.tp + '\n' +
       'R:R: ' + rrCalc + '\n' +
       'Result: ' + (entry.result === 'win' ? 'WIN ✅' : 'LOSS ❌') + '\n' +
-      'Catatan trader: ' + (entry.note || 'tidak ada') + '\n' +
-      'Mistake tags: ' + ((entry.tags || []).join(', ') || 'tidak ada') + '\n\n' +
+      'Catatan trader: ' + (entry.note || 'tidak ada') + '\n\n' +
       'Berikan review singkat dan konstruktif dalam Bahasa Indonesia.';
 
     fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -661,59 +635,15 @@
   }
 
   // ─────────────────────────────────────────────────────────────────
-  // 11. MISTAKE TAG INIT (deferred — waits for journal tab DOM)
+  // 11. (removed — mistake tags dihapus per permintaan user v2.4)
+  //     Stub globals tetap di-register agar code lain yang mungkin
+  //     masih memanggil getSelectedMistakeTags/clearMistakeTags tidak crash.
   // ─────────────────────────────────────────────────────────────────
-  function _initMistakeTagsWhenReady() {
-    // Use MutationObserver to watch for mistake tags being inserted into DOM
-    if (typeof MutationObserver === 'undefined') {
-      setTimeout(function () { _tryInitMistakeTags(); }, 3000);
-      return;
-    }
-    var observer = new MutationObserver(function (mutations) {
-      if (document.querySelector('.mistake-tag-opt')) {
-        _tryInitMistakeTags();
-        observer.disconnect();
-      }
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-    // Also try immediately
-    _tryInitMistakeTags();
-  }
-
-  function _tryInitMistakeTags() {
-    var opts = document.querySelectorAll('.mistake-tag-opt');
-    if (!opts.length) return;
-    opts.forEach(function (el) {
-      // Remove old listeners by cloning
-      var fresh = el.cloneNode(true);
-      el.parentNode.replaceChild(fresh, el);
-      fresh.setAttribute('data-selected', 'false');
-      fresh.classList.remove('selected');
-      fresh.style.cssText += ';cursor:pointer;-webkit-tap-highlight-color:transparent;';
-      fresh.addEventListener('click', function (e) {
-        e.stopPropagation();
-        var isSelected = this.getAttribute('data-selected') === 'true';
-        this.setAttribute('data-selected', isSelected ? 'false' : 'true');
-        this.classList.toggle('selected', !isSelected);
-      });
-    });
-  }
-
-  // Make getSelectedMistakeTags work even if journal-enhanced overrides fail
   if (typeof window.getSelectedMistakeTags !== 'function') {
-    window.getSelectedMistakeTags = function () {
-      return Array.from(document.querySelectorAll('.mistake-tag-opt[data-selected="true"]'))
-        .map(function (el) { return el.getAttribute('data-tag'); })
-        .filter(Boolean);
-    };
+    window.getSelectedMistakeTags = function () { return []; };
   }
   if (typeof window.clearMistakeTags !== 'function') {
-    window.clearMistakeTags = function () {
-      document.querySelectorAll('.mistake-tag-opt').forEach(function (el) {
-        el.setAttribute('data-selected', 'false');
-        el.classList.remove('selected');
-      });
-    };
+    window.clearMistakeTags = function () { /* no-op */ };
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -884,9 +814,6 @@
     // Setup event delegation
     _initEventDelegation();
 
-    // Watch for mistake tags insertion
-    _initMistakeTagsWhenReady();
-
     // Init daily bias note (deferred)
     window.initDailyBiasNote();
 
@@ -928,7 +855,7 @@
     setTimeout(initApp, 0);
   }
 
-  // ── Patch _onTabLoaded to also re-init mistake tags after journal tab loads ──
+  // ── Patch _onTabLoaded to re-render journal after journal tab loads ──
   // The tab lazy loader calls _onTabLoaded(tabId) — we hook in after it.
   var _tabLoadHookInstalled = false;
   function _installTabLoadHook() {
@@ -941,15 +868,14 @@
         window._loadTab = function (tabId) {
           origLoadTab(tabId);
         };
-        // Hook into showTab to re-init when journal becomes visible
+        // Hook into showTab to re-render when journal becomes visible
         var origShowTab = window.showTab;
         window.showTab = function (name, el) {
           if (typeof origShowTab === 'function') origShowTab(name, el);
           if (name === 'journal') {
-            // Re-render and re-init after a short delay for DOM to settle
+            // Re-render after a short delay for DOM to settle
             setTimeout(function () {
               window.renderJournal();
-              _tryInitMistakeTags();
               window.initDailyBiasNote();
             }, 100);
           }

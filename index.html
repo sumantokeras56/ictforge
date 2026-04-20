@@ -687,7 +687,7 @@
    📲 Install ICT Forge ke Homescreen
   </div>
   
-  <script src="main.js?v=2.3.2"></script>
+  <script src="main.js?v=2.4"></script>
  
   <!-- BREATHING MODAL -->
   <div id="breathingModal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,5,0.95);backdrop-filter:blur(8px);align-items:center;justify-content:center;flex-direction:column;">
@@ -729,17 +729,17 @@
   </div>
 
   <!-- ══════════════════════════════════════════════════════════════
-       VERSION BADGE v2.3.2 — Bukti bahwa versi baru sudah ter-load.
+       VERSION BADGE v2.4 — Bukti bahwa versi baru sudah ter-load.
        Klik 3x untuk hide. Hapus blok ini saat sudah konfirmasi oke.
   ══════════════════════════════════════════════════════════════ -->
   <div id="versionBadge"
-    title="v2.3.2 — Payout Board + Relax FAB + Mistake Tag fix"
+    title="v2.4 — Mistake Tags removed + Payout Board + Relax FAB"
     style="position:fixed;bottom:6px;left:6px;z-index:9989;
     font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;
     padding:3px 8px;background:rgba(0,0,0,0.6);color:var(--gold);
     border:1px solid var(--gold-dim);border-radius:4px;
     pointer-events:auto;cursor:pointer;user-select:none;opacity:0.55;">
-    v2.3.2 ✓
+    v2.4 ✓
   </div>
   <script>
     (function(){
@@ -752,7 +752,7 @@
         t = setTimeout(function(){ clicks = 0; }, 600);
         if (clicks >= 3) b.style.display = 'none';
       });
-      console.log('%c[ICT Forge] v2.3.2 loaded — Papan Payout + Relax FAB + Mistake Fix',
+      console.log('%c[ICT Forge] v2.4 loaded — Papan Payout + Relax FAB + Mistake Tags REMOVED',
         'background:#C9A84C;color:#000;padding:4px 8px;border-radius:3px;font-weight:700;');
     })();
   </script>
@@ -941,15 +941,15 @@
     }
   </style>
 
-  <script src="journal-enhanced.js?v=2.3.2"></script>
-  <script src="app-core.js?v=2.3.2"></script>
-  <script src="payout-relax.js?v=2.3.2"></script>
-  <script src="economic-news.js?v=2.3.2"></script>
+  <script src="journal-enhanced.js?v=2.4"></script>
+  <script src="app-core.js?v=2.4"></script>
+  <script src="payout-relax.js?v=2.4"></script>
+  <script src="economic-news.js?v=2.4"></script>
   <!--
      realtime-news.js di-load PALING AKHIR:
      membutuhkan HIGH_IMPACT_NEWS (main.js) + updateEventCountdowns (main.js)
   -->
-  <script src="realtime-news.js?v=2.3.2"></script>
+  <script src="realtime-news.js?v=2.4"></script>
 
   <!-- ── TAB LAZY LOADER v3.0 ─────────────────────────────────────────
        FIXED: Tab HTML files contain their own <div class="section" id="tab-X">
@@ -1053,8 +1053,6 @@
         if (tabId === 'checklist')   { if(typeof loadChecklist==='function') loadChecklist(); if(typeof updateProgress==='function') updateProgress(); }
         if (tabId === 'calculator')  { if(typeof setInstrument==='function') { var btn=document.querySelector('.inst-btn.active'); setInstrument('forex', btn); } }
         if (tabId === 'journal') {
-          // Re-init mistake tags (DOM now exists)
-          if (typeof initMistakeTagSelector === 'function') initMistakeTagSelector();
           // Init Papan Payout (DOM baru ada setelah tab journal ter-load)
           if (typeof initPayoutBoard === 'function') initPayoutBoard();
           // Render journal (use renderJournal — renderJournalTable is an alias in app-core.js)
