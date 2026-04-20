@@ -366,8 +366,11 @@ function switchJournalTab(tab) {
     btnTools.style.fontWeight   = !isTradesTab ? '700' : '400';
   }
 
-  // Save last active tab to localStorage
-  try { localStorage.setItem('ictforge_journal_tab', tab); } catch(e) {}
+  // Save last active tab to localStorage (unified key + legacy sync for 1 version)
+  try {
+    localStorage.setItem('ict-journal-tab', tab);
+    localStorage.setItem('ictforge_journal_tab', tab); // legacy — remove in v2.5
+  } catch(e) {}
 }
 
 // ── COMPOUNDING ───────────────────────────────────────────────────
@@ -533,15 +536,17 @@ function runFundedCalculator() {
 
 // ── INIT ──────────────────────────────────────────────────────────
 function _initJournalEnhanced() {
-  // Restore last active journal tab
+  // Restore last active journal tab (unified key → legacy → default)
   try {
-    var lastTab = localStorage.getItem('ictforge_journal_tab') || 'trades';
+    var lastTab = localStorage.getItem('ict-journal-tab') ||
+                  localStorage.getItem('ictforge_journal_tab') ||
+                  'trades';
     switchJournalTab(lastTab);
   } catch(e) {
     switchJournalTab('trades');
   }
 
-  console.log('[Journal Enhanced v2.4] Loaded — mistake tags removed');
+  console.log('[Journal Enhanced v2.4.1] Loaded — mistake tags removed');
 }
 
 if (document.readyState === 'loading') {

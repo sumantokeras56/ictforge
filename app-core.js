@@ -31,6 +31,44 @@
   };
 
   // ─────────────────────────────────────────────────────────────────
+  //  LOCALSTORAGE KEY MIGRATION (v2.4.1)
+  //  Tujuan: rapikan inkonsistensi penamaan (ict-* vs ictforge_*).
+  //  Standar baru: 'ict-*' (dash-case). Mengapa ict-*? Karena 90%+ key
+  //  di codebase sudah pakai pola ini (ict-journal, ict-checklist,
+  //  ict-theme, ict-ps-apikey, ict-payout-targets, dst).
+  //
+  //  MIGRATION RULES:
+  //  - Non-destructive: key lama TIDAK dihapus (safety net 1 versi)
+  //  - Idempotent: aman dijalankan berkali-kali
+  //  - Hanya copy kalau target key belum ada (prevent overwrite)
+  // ─────────────────────────────────────────────────────────────────
+  var MIGRATIONS = {
+    'ictforge_groq_key':    'ict-groq-apikey',
+    'ictforge_journal_tab': 'ict-journal-tab'
+  };
+
+  function migrateLocalStorageKeys() {
+    try {
+      var migrated = 0;
+      Object.keys(MIGRATIONS).forEach(function (oldKey) {
+        var newKey = MIGRATIONS[oldKey];
+        var oldVal = localStorage.getItem(oldKey);
+        var newVal = localStorage.getItem(newKey);
+        if (oldVal && !newVal) {
+          localStorage.setItem(newKey, oldVal);
+          migrated++;
+        }
+      });
+      if (migrated > 0) {
+        console.log('[AppCore] Migrated ' + migrated + ' localStorage key(s) to unified naming.');
+      }
+    } catch (e) {
+      console.warn('[AppCore] Migration failed (non-fatal):', e.message);
+    }
+  }
+  window.migrateLocalStorageKeys = migrateLocalStorageKeys;
+
+  // ─────────────────────────────────────────────────────────────────
   // 1. CENTRALIZED STATE
   // ─────────────────────────────────────────────────────────────────
   var AppState = {
@@ -803,6 +841,10 @@
   // ─────────────────────────────────────────────────────────────────
   function initApp() {
     console.log('[AppCore v3.0] initApp() starting...');
+
+    // Migrate any old localStorage keys to unified naming FIRST
+    // (must run before AppState.load() or any key-dependent code)
+    migrateLocalStorageKeys();
 
     // Load journal data
     AppState.load();

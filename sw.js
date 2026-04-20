@@ -1,11 +1,14 @@
-// ICT Forge — Service Worker v3.1
+// ICT Forge — Service Worker v3.2
 // ✅ Fix: notifikasi HP (showNotification via SW, bukan new Notification)
 // ✅ Fix: data user (journal, checklist, COT) TIDAK terhapus saat update
 // ✅ Fix: path /ictforge/, tambah JS/CSS ke precache
 // ✅ v11: Mistake Tags REMOVED + Payout Board + Relax FAB (force refresh)
 // ✅ v12: Precache lengkap — semua JS module + 16 tab HTML untuk offline penuh
+// ✅ v13: (tidak ada catatan eksplisit)
+// ✅ v14: + og-image.png, icon PNG, manifest baru, localStorage key migration
+//         (app-core.js updated) — force refresh wajib untuk apply migrasi.
 
-const CACHE_VERSION  = 'ictforge-v13';
+const CACHE_VERSION  = 'ictforge-v14';
 const FONT_CACHE     = 'ictforge-fonts-v1';
 
 // ─── PENTING: localStorage user TIDAK terdampak oleh cache apapun.
@@ -26,6 +29,10 @@ const PRECACHE_URLS = [
   '/ictforge/payout-relax.js',
   '/ictforge/economic-news.js',
   '/ictforge/realtime-news.js',
+  // Brand assets (icon PNG + og-image untuk social sharing)
+  '/ictforge/icon-192.png',
+  '/ictforge/icon-512.png',
+  '/ictforge/og-image.png',
   // Tab HTML (lazy-loaded — tanpa ini, offline user tidak bisa buka tab)
   '/ictforge/tabs/overview.html',
   '/ictforge/tabs/foundational.html',
