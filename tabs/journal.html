@@ -1,10 +1,10 @@
   <!-- ════════════════════════════════════════════
-       TRADING JOURNAL — v2.1
+       TRADING JOURNAL — v2.4
        + Screenshot Integration
-       + Equity Curve Visualizer (upgraded)
-       + Mistake Tagging
+       + Equity Curve Visualizer
        + Compounding Calculator
-       + Visual Divider: Journal ↔ Tools Section
+       + Papan Payout (Motivator)
+       − Mistake Tagging (removed per user request)
   ════════════════════════════════════════════ -->
   <div class="section" id="tab-journal">
     <div class="section-header">
@@ -122,21 +122,6 @@
         </div>
       </div>
 
-      <!-- ── MISTAKE TAGS SUMMARY ───────────────────────────────── -->
-      <div style="margin-bottom:20px;">
-        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
-          text-transform:uppercase;color:var(--gold-dim);margin-bottom:8px;">
-          🏷️ ANALISIS KESALAHAN (MONTH TO DATE)
-        </div>
-        <div id="mistakeTagSummary" style="display:flex;flex-wrap:wrap;gap:8px;
-          background:var(--dark3);border:1px solid var(--border);
-          border-radius:8px;padding:12px;min-height:44px;align-items:center;">
-          <span style="color:var(--text-muted);font-size:11px;font-family:'DM Mono',monospace;">
-            Belum ada data mistake tag bulan ini
-          </span>
-        </div>
-      </div>
-
       <!-- ── DAILY BIAS NOTE ───────────────────────────────────── -->
       <div style="margin-bottom:20px;">
         <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
@@ -174,27 +159,6 @@
           <option value="loss">❌ LOSS</option>
         </select>
         <input id="journalNote" placeholder="Catatan (opsional)" type="text"/>
-
-        <!-- ── MISTAKE TAGS ─────────────────────────────────────── -->
-        <!-- NOTE v2.3: pakai <span> bukan <label>, dan tanpa hidden
-             <input type="checkbox">. Sebelumnya label + hidden checkbox
-             menyebabkan double-click bug (klik 1x → toggle on → off). -->
-        <div style="grid-column:1/-1;">
-          <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;
-            color:var(--gold-dim);margin-bottom:8px;">🏷️ MISTAKE TAGS (pilih semua yang relevan)</div>
-          <div id="mistakeTagsSelector" style="display:flex;flex-wrap:wrap;gap:6px;">
-            <span class="mistake-tag-opt" data-tag="FOMO">😱 FOMO</span>
-            <span class="mistake-tag-opt" data-tag="REVENGE">🔥 Revenge Trade</span>
-            <span class="mistake-tag-opt" data-tag="OVERLEV">⚠️ Over-Leverage</span>
-            <span class="mistake-tag-opt" data-tag="LATE">⏰ Late Entry</span>
-            <span class="mistake-tag-opt" data-tag="NOPA">📋 No Plan</span>
-            <span class="mistake-tag-opt" data-tag="MOVED_SL">🚫 Moved SL</span>
-            <span class="mistake-tag-opt" data-tag="EARLY_EXIT">🏃 Early Exit</span>
-            <span class="mistake-tag-opt" data-tag="NEWS">📰 Traded News</span>
-            <span class="mistake-tag-opt" data-tag="TILT">🤯 Tilt/Emotions</span>
-            <span class="mistake-tag-opt" data-tag="PERFECT" style="border-color:rgba(46,204,113,0.4);color:var(--green);">✅ Perfect Execution</span>
-          </div>
-        </div>
 
         <!-- ── SCREENSHOT UPLOAD ────────────────────────────────── -->
         <div style="grid-column:1/-1;">
@@ -258,7 +222,7 @@
               <th>TP</th>
               <th>R:R</th>
               <th>Result</th>
-              <th>Tags</th>
+              <th>Screenshot</th>
               <th>Catatan</th>
               <th>Aksi</th>
             </tr>
@@ -457,25 +421,6 @@
   </div>
 
   <style>
-    .mistake-tag-opt {
-      display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;cursor:pointer;
-      border:1px solid rgba(201,168,76,0.25);font-family:'DM Mono',monospace;font-size:11px;
-      color:var(--text-muted);background:var(--dark3);transition:all 0.15s;user-select:none;
-    }
-    .mistake-tag-opt.selected {
-      background:rgba(201,168,76,0.18);border-color:var(--gold-dim);color:var(--gold);
-    }
-    .mistake-tag-opt[data-tag="PERFECT"].selected {
-      background:rgba(46,204,113,0.18);border-color:rgba(46,204,113,0.5);color:var(--green);
-    }
-    .mistake-badge {
-      display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:10px;
-      font-size:9px;font-family:'DM Mono',monospace;font-weight:600;
-      background:rgba(231,76,60,0.15);color:#e74c3c;border:1px solid rgba(231,76,60,0.3);
-    }
-    .mistake-badge.perfect {
-      background:rgba(46,204,113,0.15);color:var(--green);border-color:rgba(46,204,113,0.3);
-    }
     .screenshot-thumb {
       position:relative;width:64px;height:64px;border-radius:6px;overflow:hidden;
       border:1px solid var(--border);cursor:pointer;flex-shrink:0;transition:border-color 0.15s;
