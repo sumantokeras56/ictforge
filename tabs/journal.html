@@ -17,6 +17,81 @@
 
     <div class="journal-wrapper">
 
+      <!-- ══════════════════════════════════════════════════════════
+           PAYOUT BOARD — MOTIVATOR
+           Progress bar menuju target payout / target pembelian
+           (mis. PC ASUS/MSI). Terisi otomatis dari journal entries.
+      ══════════════════════════════════════════════════════════ -->
+      <div class="payout-board" style="margin-bottom:22px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;
+          margin-bottom:10px;gap:8px;flex-wrap:wrap;">
+          <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;
+            text-transform:uppercase;color:var(--gold-dim);display:flex;align-items:center;gap:8px;">
+            <span>🎯 PAPAN PAYOUT · MOTIVATOR</span>
+          </div>
+          <button id="payoutEditBtn" onclick="togglePayoutEdit()"
+            style="font-family:'DM Mono',monospace;font-size:11px;padding:6px 12px;
+            background:rgba(201,168,76,0.1);border:1px solid var(--gold-dim);
+            color:var(--gold);border-radius:6px;cursor:pointer;letter-spacing:0.5px;">
+            ✏️ Edit Target
+          </button>
+        </div>
+
+        <!-- Edit Panel (toggle) -->
+        <div id="payoutEditPanel" style="display:none;background:var(--dark3);
+          border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:12px;">
+          <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);
+            margin-bottom:10px;letter-spacing:0.5px;">➕ TAMBAH TARGET BARU</div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+            gap:10px;margin-bottom:12px;">
+            <input id="payoutTargetName" type="text" placeholder="Nama target (misal: PC MSI Katana)"
+              style="background:var(--dark4);border:1px solid var(--border);border-radius:6px;
+              padding:9px 11px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;outline:none;"/>
+            <input id="payoutTargetValue" type="number" step="any" placeholder="Harga target ($)"
+              style="background:var(--dark4);border:1px solid var(--border);border-radius:6px;
+              padding:9px 11px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;outline:none;"/>
+            <input id="payoutAccountSize" type="number" step="any" placeholder="Modal akun ($)"
+              style="background:var(--dark4);border:1px solid var(--border);border-radius:6px;
+              padding:9px 11px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;outline:none;"/>
+            <input id="payoutSplit" type="number" step="1" value="90" placeholder="Profit split % (default 90)"
+              style="background:var(--dark4);border:1px solid var(--border);border-radius:6px;
+              padding:9px 11px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;outline:none;"/>
+          </div>
+
+          <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);
+            margin-bottom:6px;letter-spacing:0.5px;">PILIH ICON</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">
+            <span class="payout-emoji-opt" data-emoji="🎯">🎯</span>
+            <span class="payout-emoji-opt" data-emoji="💻">💻 PC</span>
+            <span class="payout-emoji-opt" data-emoji="🖥️">🖥️ Monitor</span>
+            <span class="payout-emoji-opt" data-emoji="🎮">🎮 Gaming</span>
+            <span class="payout-emoji-opt" data-emoji="🏠">🏠 Rumah</span>
+            <span class="payout-emoji-opt" data-emoji="🚗">🚗 Mobil</span>
+            <span class="payout-emoji-opt" data-emoji="✈️">✈️ Travel</span>
+            <span class="payout-emoji-opt" data-emoji="💰">💰 Cash</span>
+            <span class="payout-emoji-opt" data-emoji="💎">💎 Investasi</span>
+            <span class="payout-emoji-opt" data-emoji="🏆">🏆 Milestone</span>
+          </div>
+
+          <button onclick="savePayoutTarget()"
+            style="font-family:'DM Mono',monospace;font-size:12px;padding:9px 22px;
+            background:var(--gold);color:var(--dark);border:none;border-radius:6px;
+            cursor:pointer;font-weight:700;letter-spacing:0.5px;">
+            💾 SIMPAN TARGET
+          </button>
+          <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);
+            margin-top:10px;line-height:1.5;">
+            💡 <strong>Rumus progress:</strong> 1R = 1% modal × split%. Progress bar
+            terisi dari akumulasi <strong style="color:var(--green)">WIN</strong> −
+            <strong style="color:var(--red)">LOSS</strong> di journal.
+          </div>
+        </div>
+
+        <!-- Cards container -->
+        <div id="payoutCards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;"></div>
+      </div>
+
       <!-- ── STATS ROW ──────────────────────────────────────────── -->
       <div class="journal-stats" id="journalStats">
         <div class="journal-stat">📊 Total Trades: <span id="statTotal">0</span></div>
@@ -101,40 +176,23 @@
         <input id="journalNote" placeholder="Catatan (opsional)" type="text"/>
 
         <!-- ── MISTAKE TAGS ─────────────────────────────────────── -->
+        <!-- NOTE v2.3: pakai <span> bukan <label>, dan tanpa hidden
+             <input type="checkbox">. Sebelumnya label + hidden checkbox
+             menyebabkan double-click bug (klik 1x → toggle on → off). -->
         <div style="grid-column:1/-1;">
           <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;
             color:var(--gold-dim);margin-bottom:8px;">🏷️ MISTAKE TAGS (pilih semua yang relevan)</div>
           <div id="mistakeTagsSelector" style="display:flex;flex-wrap:wrap;gap:6px;">
-            <label class="mistake-tag-opt" data-tag="FOMO">
-              <input type="checkbox" value="FOMO" style="display:none;"> 😱 FOMO
-            </label>
-            <label class="mistake-tag-opt" data-tag="REVENGE">
-              <input type="checkbox" value="REVENGE" style="display:none;"> 🔥 Revenge Trade
-            </label>
-            <label class="mistake-tag-opt" data-tag="OVERLEV">
-              <input type="checkbox" value="OVERLEV" style="display:none;"> ⚠️ Over-Leverage
-            </label>
-            <label class="mistake-tag-opt" data-tag="LATE">
-              <input type="checkbox" value="LATE" style="display:none;"> ⏰ Late Entry
-            </label>
-            <label class="mistake-tag-opt" data-tag="NOPA">
-              <input type="checkbox" value="NOPA" style="display:none;"> 📋 No Plan
-            </label>
-            <label class="mistake-tag-opt" data-tag="MOVED_SL">
-              <input type="checkbox" value="MOVED_SL" style="display:none;"> 🚫 Moved SL
-            </label>
-            <label class="mistake-tag-opt" data-tag="EARLY_EXIT">
-              <input type="checkbox" value="EARLY_EXIT" style="display:none;"> 🏃 Early Exit
-            </label>
-            <label class="mistake-tag-opt" data-tag="NEWS">
-              <input type="checkbox" value="NEWS" style="display:none;"> 📰 Traded News
-            </label>
-            <label class="mistake-tag-opt" data-tag="TILT">
-              <input type="checkbox" value="TILT" style="display:none;"> 🤯 Tilt/Emotions
-            </label>
-            <label class="mistake-tag-opt" data-tag="PERFECT" style="border-color:rgba(46,204,113,0.4);color:var(--green);">
-              <input type="checkbox" value="PERFECT" style="display:none;"> ✅ Perfect Execution
-            </label>
+            <span class="mistake-tag-opt" data-tag="FOMO">😱 FOMO</span>
+            <span class="mistake-tag-opt" data-tag="REVENGE">🔥 Revenge Trade</span>
+            <span class="mistake-tag-opt" data-tag="OVERLEV">⚠️ Over-Leverage</span>
+            <span class="mistake-tag-opt" data-tag="LATE">⏰ Late Entry</span>
+            <span class="mistake-tag-opt" data-tag="NOPA">📋 No Plan</span>
+            <span class="mistake-tag-opt" data-tag="MOVED_SL">🚫 Moved SL</span>
+            <span class="mistake-tag-opt" data-tag="EARLY_EXIT">🏃 Early Exit</span>
+            <span class="mistake-tag-opt" data-tag="NEWS">📰 Traded News</span>
+            <span class="mistake-tag-opt" data-tag="TILT">🤯 Tilt/Emotions</span>
+            <span class="mistake-tag-opt" data-tag="PERFECT" style="border-color:rgba(46,204,113,0.4);color:var(--green);">✅ Perfect Execution</span>
           </div>
         </div>
 
