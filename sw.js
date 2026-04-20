@@ -2,8 +2,9 @@
 // ✅ Fix: notifikasi HP (showNotification via SW, bukan new Notification)
 // ✅ Fix: data user (journal, checklist, COT) TIDAK terhapus saat update
 // ✅ Fix: path /ictforge/, tambah JS/CSS ke precache
+// ✅ v10: Payout Board + Relax FAB + Mistake Tag bug fix (force refresh)
 
-const CACHE_VERSION  = 'ictforge-v9';
+const CACHE_VERSION  = 'ictforge-v10';
 const FONT_CACHE     = 'ictforge-fonts-v1';
 
 // ─── PENTING: localStorage user TIDAK terdampak oleh cache apapun.
