@@ -1,10 +1,11 @@
-// ICT Forge — Service Worker v3.0
+// ICT Forge — Service Worker v3.1
 // ✅ Fix: notifikasi HP (showNotification via SW, bukan new Notification)
 // ✅ Fix: data user (journal, checklist, COT) TIDAK terhapus saat update
 // ✅ Fix: path /ictforge/, tambah JS/CSS ke precache
 // ✅ v11: Mistake Tags REMOVED + Payout Board + Relax FAB (force refresh)
+// ✅ v12: Precache lengkap — semua JS module + 16 tab HTML untuk offline penuh
 
-const CACHE_VERSION  = 'ictforge-v11';
+const CACHE_VERSION  = 'ictforge-v12';
 const FONT_CACHE     = 'ictforge-fonts-v1';
 
 // ─── PENTING: localStorage user TIDAK terdampak oleh cache apapun.
@@ -12,23 +13,54 @@ const FONT_CACHE     = 'ictforge-fonts-v1';
 // Journal, checklist, COT, settings = localStorage → SELALU AMAN.
 
 const PRECACHE_URLS = [
+  // App shell
   '/ictforge/',
   '/ictforge/index.html',
   '/ictforge/offline.html',
   '/ictforge/manifest.json',
-  '/ictforge/main.js',
   '/ictforge/style.css',
-  '/ictforge/realtime-news.js'
+  // JS modules (semua yang di-load oleh index.html)
+  '/ictforge/main.js',
+  '/ictforge/app-core.js',
+  '/ictforge/journal-enhanced.js',
+  '/ictforge/payout-relax.js',
+  '/ictforge/economic-news.js',
+  '/ictforge/realtime-news.js',
+  // Tab HTML (lazy-loaded — tanpa ini, offline user tidak bisa buka tab)
+  '/ictforge/tabs/overview.html',
+  '/ictforge/tabs/foundational.html',
+  '/ictforge/tabs/structure.html',
+  '/ictforge/tabs/liquidity.html',
+  '/ictforge/tabs/pd-arrays.html',
+  '/ictforge/tabs/amd.html',
+  '/ictforge/tabs/killzones.html',
+  '/ictforge/tabs/8am-strategy.html',
+  '/ictforge/tabs/models.html',
+  '/ictforge/tabs/calculator.html',
+  '/ictforge/tabs/checklist.html',
+  '/ictforge/tabs/cot.html',
+  '/ictforge/tabs/calendar.html',
+  '/ictforge/tabs/journal.html',
+  '/ictforge/tabs/glossary.html',
+  '/ictforge/tabs/indicators.html',
+  '/ictforge/tabs/pinescript.html',
+  '/ictforge/tabs/ictforge-ai.html'
 ];
 
 // ─── INSTALL ─────────────────────────────────────────────────────────────────
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE_VERSION).then(c =>
-      c.addAll(PRECACHE_URLS).catch(err => {
-        console.warn('[SW] Precache partial fail (ok):', err);
-      })
-    ).then(() => self.skipWaiting())
+    caches.open(CACHE_VERSION).then(cache => {
+      // Cache satu-per-satu agar 1 file gagal tidak bikin precache batal total.
+      // (cache.addAll() rejects jika ada 1 file gagal — kita mau toleran).
+      return Promise.all(
+        PRECACHE_URLS.map(url =>
+          cache.add(url).catch(err => {
+            console.warn('[SW] Precache skip:', url, err.message);
+          })
+        )
+      );
+    }).then(() => self.skipWaiting())
   );
 });
 
@@ -54,8 +86,11 @@ self.addEventListener('fetch', e => {
   const method = e.request.method;
 
   if (method !== 'GET') return;
-  if (url.includes('api.anthropic.com')) return;
-  if (url.includes('newsdata.io')) return;
+  // Bypass external API calls — jangan di-cache (data live, private, atau CORS-sensitive)
+  if (url.includes('api.anthropic.com'))  return;
+  if (url.includes('api.groq.com'))       return;   // Groq API (PineScript AI Fixer)
+  if (url.includes('newsdata.io'))        return;
+  if (url.includes('workers.dev'))        return;   // Cloudflare Workers proxy
   if (url.includes('chrome-extension://')) return;
 
   // Google Fonts: cache-first

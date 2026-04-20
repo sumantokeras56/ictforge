@@ -76,13 +76,14 @@ function _loadApiKey() {
   try {
     const raw = localStorage.getItem('ict-ps-apikey');
     if (!raw) return '';
-    // Support legacy plaintext keys (migrate on first read)
-    try { atob(raw); } catch(e) { return raw; } // not base64 = legacy plaintext
+    // Support legacy plaintext keys (migrate on first read).
+    // If raw isn't valid base64, it's legacy plaintext — return as-is.
+    try { atob(raw); } catch(e) { return raw; }
     const decoded = _obfDecode(raw);
-    // If decoded looks like a valid Anthropic key, return it
-    if (decoded.startsWith('sk-ant-')) return decoded;
-    // Otherwise treat as legacy and return raw (will be re-encoded on next save)
-    return raw;
+    // Always return decoded value — caller decides if format is valid.
+    // (Previous version returned raw-encoded string for non-Anthropic keys,
+    //  which produced garbled output when user switched providers.)
+    return decoded || raw;
   } catch(e) { return ''; }
 }
 
@@ -4332,12 +4333,14 @@ Format output harus persis:
     if (resultEl) resultEl.style.display = 'block';
     if (textEl) textEl.textContent = responseText;
 
-    // Save API key per-provider
+    // Save API key per-provider (no cross-pollution antara Claude/Groq)
     const saveCb = document.getElementById('ps-ai-save-key');
     if (saveCb?.checked) {
       const keyName = isGroq ? 'ict-ps-groq-key' : 'ict-ps-claude-key';
       localStorage.setItem(keyName, apiKey);
-      _saveApiKey(apiKey);
+      // Obfuscated storage HANYA untuk Claude — mencegah Groq key tersimpan
+      // di slot Claude (dulu bikin output garbled saat ganti provider).
+      if (!isGroq) _saveApiKey(apiKey);
     }
     showToast('✅ AI berhasil menganalisis kode!');
 
@@ -4354,7 +4357,10 @@ function loadSavedAPIKey() {
   const provider = localStorage.getItem('ict-ai-provider') || 'claude';
   window._psAIProvider = provider;
   const keyName = provider === 'groq' ? 'ict-ps-groq-key' : 'ict-ps-claude-key';
-  const saved = localStorage.getItem(keyName) || _loadApiKey();
+  // Fallback ke obfuscated storage HANYA untuk Claude (Groq key tidak pernah
+  // disimpan di sana — mencegah output garbled saat user switch provider).
+  const fallback = provider === 'groq' ? '' : _loadApiKey();
+  const saved = localStorage.getItem(keyName) || fallback;
   if (saved) {
     const inp = document.getElementById('ps-ai-apikey');
     const cb  = document.getElementById('ps-ai-save-key');

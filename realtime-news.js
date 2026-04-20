@@ -8,10 +8,17 @@
   'use strict';
 
   // ── CONFIG ────────────────────────────────────────────────────────
-  // ⚠️ PERINGATAN KEAMANAN: API key ini terlihat publik di source code.
-  // Untuk produksi, gunakan backend proxy atau environment variable.
-  // Ganti dengan key Anda sendiri dari: https://newsdata.io
-  const NEWSDATA_API_KEY = window._NEWSDATA_KEY || 'pub_720f8970bca242bdb33001f15e59c9b2';
+  // 🔐 API key SENGAJA tidak di-hardcode. Cara supply:
+  //   1. Inject via HTML sebelum script ini:
+  //      <script>window._NEWSDATA_KEY = 'pub_XXXXXX';</script>
+  //   2. Simpan per-device via localStorage:
+  //      localStorage.setItem('ict-newsdata-key', 'pub_XXXXXX');
+  //   3. (Rekomendasi) Pakai Cloudflare Workers proxy — worker simpan key
+  //      server-side, tidak perlu key di client sama sekali.
+  // Dapatkan API key gratis: https://newsdata.io/register
+  const NEWSDATA_API_KEY = window._NEWSDATA_KEY ||
+                           localStorage.getItem('ict-newsdata-key') ||
+                           '';
   const CACHE_KEY        = 'ict-live-news-cache';
   const CACHE_TS_KEY     = 'ict-live-news-ts';
   const CACHE_TTL_MS     = 6 * 60 * 60 * 1000; // 6 jam (hemat quota API)
@@ -97,6 +104,15 @@
   async function fetchLiveNews() {
     if (fetchInProgress) return;
     fetchInProgress = true;
+
+    // ── Bail early jika tidak ada API key — fallback ke static data diam-diam.
+    // Static HIGH_IMPACT_NEWS dari main.js akan tetap jalan → aplikasi tidak rusak.
+    if (!NEWSDATA_API_KEY) {
+      console.info('[ICT Forge News] Tidak ada API key — menggunakan jadwal static 2026.');
+      showNewsStatus('ℹ️ Menggunakan jadwal static — tambahkan API key newsdata.io untuk live updates', 'warn');
+      fetchInProgress = false;
+      return;
+    }
 
     try {
       // Cek cache dulu

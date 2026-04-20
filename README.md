@@ -509,17 +509,21 @@ ictforge/
 
 ### Mengganti API Key Newsdata.io
 
-Edit `realtime-news.js` baris 14:
-```javascript
-// Daftarkan API key gratis di https://newsdata.io
-const NEWSDATA_API_KEY = window._NEWSDATA_KEY || 'YOUR_API_KEY_HERE';
-```
+> 🔐 **Update v2.0.1:** API key sudah **tidak di-hardcode** di source code. Kamu harus supply key sendiri (gratis di [newsdata.io](https://newsdata.io/register)). Kalau tidak, aplikasi tetap jalan dengan jadwal economic calendar static 2026 — live news hanya tidak tersedia.
 
-Atau inject via HTML sebelum script dimuat:
+**Pilihan 1 — Inject via HTML** (recommended untuk deployment):
 ```html
-<script>window._NEWSDATA_KEY = 'YOUR_API_KEY_HERE';</script>
+<script>window._NEWSDATA_KEY = 'pub_XXXXXXXXXXXX';</script>
 <script src="realtime-news.js"></script>
 ```
+
+**Pilihan 2 — Simpan per-device via browser console:**
+```javascript
+localStorage.setItem('ict-newsdata-key', 'pub_XXXXXXXXXXXX');
+```
+
+**Pilihan 3 — Cloudflare Workers proxy** (paling aman, key server-side):
+Buat worker yang panggil `newsdata.io/api/1/latest` dengan key di env var, lalu ubah `WORKER` URL di `realtime-news.js` line 127.
 
 ### Mengatur Cache Version (setelah update)
 
